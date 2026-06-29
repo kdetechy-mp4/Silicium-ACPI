@@ -193,11 +193,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, One)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xD8, 0x01,  // .....@..
-                    /* 0008 */  0x00, 0xC0, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x29, 0x01, 0x00, 0x00, 0x79, 0x00         // .)...y.
+                    Memory32Fixed (ReadWrite,
+                        0x01D84000,         // Address Base
+                        0x0001C000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000129,
+                    }
                 })
                 Return (RBUF) /* \_SB_.UFS0._CRS.RBUF */
             }
@@ -232,7 +237,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM24BF")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -240,11 +245,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x7C, 0x00,  // .....@|.
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0xAC, 0x02, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x007C4000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002AC,
+                    }
                 })
                 Return (RBUF) /* \_SB_.SDC1._CRS.RBUF */
             }
@@ -271,8 +281,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GIO0, 
+                \_SB.PEP0, 
+                \_SB.GIO0
             })
             Name (_HID, "QCOM2466")  // _HID: Hardware ID
             Name (_UID, One)  // _UID: Unique ID
@@ -280,20 +290,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x5D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x80, 0x08,  // .....@..
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0xEF, 0x00, 0x00, 0x00, 0x8C, 0x20, 0x00,  // ...... .
-                    /* 0018 */  0x01, 0x00, 0x01, 0x00, 0x1D, 0x00, 0x01, 0x00,  // ........
-                    /* 0020 */  0x00, 0x88, 0x13, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0028 */  0x23, 0x00, 0x00, 0x00, 0xC0, 0x00, 0x5C, 0x5F,  // #.....\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00,  // SB.GIO0.
-                    /* 0038 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x08,  // . ......
-                    /* 0040 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0048 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x5C,  // ...#...\
-                    /* 0050 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0058 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                    Memory32Fixed (ReadWrite,
+                        0x08804000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000EF,
+                    }
+                    GpioInt (Edge, ActiveBoth, SharedAndWake, PullUp, 0x1388,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C0
+                        }
+                    GpioIo (Shared, PullUp, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x005C
+                        }
                 })
                 Return (RBUF) /* \_SB_.SDC2._CRS.RBUF */
             }
@@ -312,7 +330,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM0427")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -334,7 +352,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.SPMI, 
+                \_SB.SPMI
             })
             Name (_HID, "QCOM092B")  // _HID: Hardware ID
             Name (_CID, "PNP0CA3")  // _CID: Compatible ID
@@ -390,7 +408,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IC14, 
+                \_SB.IC14
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -399,31 +417,36 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0xB8)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8E, 0x19, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x01, 0x06, 0x00, 0xA0, 0x86, 0x01, 0x00,  // ........
-                    /* 0010 */  0x08, 0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x49,  // ..\_SB.I
-                    /* 0018 */  0x43, 0x31, 0x34, 0x00, 0x8E, 0x19, 0x00, 0x01,  // C14.....
-                    /* 0020 */  0x00, 0x01, 0x02, 0x00, 0x00, 0x01, 0x06, 0x00,  // ........
-                    /* 0028 */  0xA0, 0x86, 0x01, 0x00, 0x09, 0x00, 0x5C, 0x5F,  // ......\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x49, 0x43, 0x31, 0x34, 0x00,  // SB.IC14.
-                    /* 0038 */  0x8E, 0x19, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00,  // ........
-                    /* 0040 */  0x00, 0x01, 0x06, 0x00, 0xA0, 0x86, 0x01, 0x00,  // ........
-                    /* 0048 */  0x0C, 0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x49,  // ..\_SB.I
-                    /* 0050 */  0x43, 0x31, 0x34, 0x00, 0x8E, 0x19, 0x00, 0x01,  // C14.....
-                    /* 0058 */  0x00, 0x01, 0x02, 0x00, 0x00, 0x01, 0x06, 0x00,  // ........
-                    /* 0060 */  0xA0, 0x86, 0x01, 0x00, 0x0D, 0x00, 0x5C, 0x5F,  // ......\_
-                    /* 0068 */  0x53, 0x42, 0x2E, 0x49, 0x43, 0x31, 0x34, 0x00,  // SB.IC14.
-                    /* 0070 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                    /* 0078 */  0x00, 0x03, 0xC8, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0080 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x16,  // ...#....
-                    /* 0088 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0090 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // 01.. ...
-                    /* 0098 */  0x01, 0x00, 0x00, 0x00, 0x03, 0xC8, 0x00, 0x00,  // ........
-                    /* 00A0 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 00A8 */  0x00, 0x00, 0x17, 0x01, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 00B0 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x79, 0x00   // .PM01.y.
+                    I2cSerialBusV2 (0x0008, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x0009, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x000C, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x000D, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioIo (Exclusive, PullNone, 0x0000, 0x00C8, IoRestrictionNone,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0116
+                        }
+                    GpioIo (Exclusive, PullNone, 0x0000, 0x00C8, IoRestrictionNone,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0117
+                        }
                 })
                 Return (RBUF) /* \_SB_.PML0._CRS.RBUF */
             }
@@ -436,14 +459,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0x01, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x00000201,
+                    }
                 })
                 Return (RBUF) /* \_SB_.PM01._CRS.RBUF */
             }
@@ -504,9 +529,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PMIC, , 
-                \_SB.ABD, , 
-                \_SB.SCM0, 
+                \_SB.PMIC, 
+                \_SB.ABD, 
+                \_SB.SCM0
             })
             Method (GEPT, 0, NotSerialized)
             {
@@ -587,7 +612,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMGK, 
+                \_SB.PMGK
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -610,48 +635,60 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x011A)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x0B,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x08,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00,  // 01.. ...
-                    /* 0028 */  0x01, 0x00, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 0038 */  0x00, 0x00, 0x09, 0x01, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 0040 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20,  // .PM01.. 
-                    /* 0048 */  0x00, 0x01, 0x00, 0x01, 0x00, 0x09, 0x00, 0x01,  // ........
-                    /* 0050 */  0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // ........
-                    /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x0A, 0x01, 0x5C,  // .#.....\
-                    /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31,  // _SB.PM01
-                    /* 0068 */  0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00,  // .. .....
-                    /* 0070 */  0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17,  // ........
-                    /* 0078 */  0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00,  // ....#...
-                    /* 0080 */  0x0B, 0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50,  // ..\_SB.P
-                    /* 0088 */  0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01,  // M01.. ..
-                    /* 0090 */  0x00, 0x01, 0x00, 0x0B, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0098 */  0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23,  // .......#
-                    /* 00A0 */  0x00, 0x00, 0x00, 0x10, 0x02, 0x5C, 0x5F, 0x53,  // .....\_S
-                    /* 00A8 */  0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C,  // B.PM01..
-                    /* 00B0 */  0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09, 0x00,  //  .......
-                    /* 00B8 */  0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00,  // ........
-                    /* 00C0 */  0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x11, 0x02,  // ..#.....
-                    /* 00C8 */  0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30,  // \_SB.PM0
-                    /* 00D0 */  0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01,  // 1.. ....
-                    /* 00D8 */  0x00, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,  // ........
-                    /* 00E0 */  0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00,  // .....#..
-                    /* 00E8 */  0x00, 0x12, 0x02, 0x5C, 0x5F, 0x53, 0x42, 0x2E,  // ...\_SB.
-                    /* 00F0 */  0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20, 0x00,  // PM01.. .
-                    /* 00F8 */  0x01, 0x00, 0x01, 0x00, 0x09, 0x00, 0x01, 0x00,  // ........
-                    /* 0100 */  0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0108 */  0x23, 0x00, 0x00, 0x00, 0x13, 0x02, 0x5C, 0x5F,  // #.....\_
-                    /* 0110 */  0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00,  // SB.PM01.
-                    /* 0118 */  0x79, 0x00                                       // y.
+                    GpioInt (Edge, ActiveLow, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0108
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0109
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x010A
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x010B
+                        }
+                    GpioInt (Edge, ActiveLow, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0210
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0211
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0212
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0213
+                        }
                 })
                 Return (RBUF) /* \_SB_.BCL1._CRS.RBUF */
             }
@@ -679,8 +716,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.ABD, 
+                \_SB.GLNK, 
+                \_SB.ABD
             })
             Name (LKUP, Zero)
             Method (_STA, 0, NotSerialized)  // _STA: Status
@@ -2617,7 +2654,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPCC, 
+                \_SB.IPCC
             })
             Method (_SUB, 0, NotSerialized)  // _SUB: Subsystem ID
             {
@@ -2816,21 +2853,52 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x65)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x11, 0x01, 0x1A, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x11, 0x01, 0x1C, 0x02,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x11, 0x01, 0x1B,  // ........
-                    /* 0018 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x11, 0x01,  // ........
-                    /* 0020 */  0x1D, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0028 */  0x01, 0x25, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // .%......
-                    /* 0030 */  0x01, 0x01, 0x3E, 0x00, 0x00, 0x00, 0x89, 0x06,  // ..>.....
-                    /* 0038 */  0x00, 0x01, 0x01, 0x3F, 0x00, 0x00, 0x00, 0x89,  // ...?....
-                    /* 0040 */  0x06, 0x00, 0x01, 0x01, 0x33, 0x00, 0x00, 0x00,  // ....3...
-                    /* 0048 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x65, 0x02, 0x00,  // .....e..
-                    /* 0050 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x0D, 0x01,  // ........
-                    /* 0058 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x13,  // ........
-                    /* 0060 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021A,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021C,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021B,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021D,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000025,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000003E,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000003F,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000033,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000265,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000010D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000113,
+                    }
                 })
             }
 
@@ -2899,7 +2967,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Return (STNX) /* \_SB_.PEP0.STNX */
             }
 
-            Name (STNX, Package (0x0B)
+            Name (STNX, Package (0x0A)
             {
                 "DMPO", 
                 "MMVD", 
@@ -2910,8 +2978,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 "DMPL", 
                 "DMWE", 
                 "XMPL", 
-                "XMPT", 
-                "DMEP"
+                "XMPT"
             })
             Name (DCVS, Zero)
             Method (PGDS, 0, NotSerialized)
@@ -3156,6 +3223,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
         Scope (\_SB.PEP0)
         {
+            Method (PREL, 0, NotSerialized)
+            {
+                Name (PREX, Package (0x03)
+                {
+                    "DM0G", 
+                    "DM5G", 
+                    "DMEP"
+                })
+                Return (PREX) /* \_SB_.PEP0.PREL.PREX */
+            }
+        }
+
+        Scope (\_SB.PEP0)
+        {
             Method (PEPH, 0, NotSerialized)
             {
                 Return (Package (0x01)
@@ -3238,6 +3319,1198 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     }
                 }
             })
+        }
+
+        Scope (\_SB.PEP0)
+        {
+            Method (G0MD, 0, NotSerialized)
+            {
+                Name (GPCC, Package (0x01)
+                {
+                    Package (0x04)
+                    {
+                        "DEVICE", 
+                        0x82, 
+                        "\\_SB.GPU0", 
+                        Package (0x0C)
+                        {
+                            "COMPONENT", 
+                            Zero, 
+                            Package (0x03)
+                            {
+                                "FSTATE", 
+                                Zero, 
+                                Package (0x17)
+                                {
+                                    "EXIT", 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "FOOTSWITCH", 
+                                        Package (0x03)
+                                        {
+                                            "disp_cc_mdss_core_gdsc", 
+                                            One, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_pclk0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_esc0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_intf_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO6_B", 
+                                            One, 
+                                            0x00124F80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO10_C", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "TLMMGPIO", 
+                                        Package (0x06)
+                                        {
+                                            0x52, 
+                                            One, 
+                                            One, 
+                                            Zero, 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "TLMMGPIO", 
+                                        Package (0x06)
+                                        {
+                                            0x17, 
+                                            One, 
+                                            Zero, 
+                                            One, 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }
+                                }
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "INIT_FSTATE", 
+                                Zero
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "PRELOAD_FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                Zero, 
+                                Package (0x02)
+                                {
+                                    "PSTATE", 
+                                    Zero
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                One, 
+                                Package (0x0D)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_pclk0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_esc0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_intf_clk", 
+                                            One
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x02, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x03, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x04, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x05, 
+                                Package (0x07)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            0x02
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }
+                        }
+                    }
+                })
+                Return (GPCC) /* \_SB_.PEP0.G0MD.GPCC */
+            }
+
+            Method (G5MD, 0, NotSerialized)
+            {
+                Name (GPCC, Package (0x01)
+                {
+                    Package (0x04)
+                    {
+                        "DEVICE", 
+                        0x82, 
+                        "\\_SB.GPU0", 
+                        Package (0x0B)
+                        {
+                            "COMPONENT", 
+                            0x05, 
+                            Package (0x03)
+                            {
+                                "FSTATE", 
+                                Zero, 
+                                Package (0x1C)
+                                {
+                                    "EXIT", 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "FOOTSWITCH", 
+                                        Package (0x03)
+                                        {
+                                            "disp_cc_mdss_core_gdsc", 
+                                            One, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_pipe_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb30_prim_sleep_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_com_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_pixel_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_intf_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO6_B", 
+                                            One, 
+                                            0x00124F80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO1_B", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO1_C", 
+                                            One, 
+                                            0x001B7740, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO2_B", 
+                                            One, 
+                                            0x002EE000, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO10_C", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }
+                                }
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "INIT_FSTATE", 
+                                Zero
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "PRELOAD_FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                Zero, 
+                                Package (0x02)
+                                {
+                                    "PSTATE", 
+                                    Zero
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                One, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x02, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x03, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x04, 
+                                Package (0x06)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_pixel_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_intf_clk", 
+                                            One
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }
+                        }
+                    }
+                })
+                Return (GPCC) /* \_SB_.PEP0.G5MD.GPCC */
+            }
         }
 
         Scope (\_SB.PEP0)
@@ -8910,6 +10183,372 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
         Scope (\_SB.PEP0)
         {
+            Method (PEMD, 0, NotSerialized)
+            {
+                Return (PEMC) /* \_SB_.PEP0.PEMC */
+            }
+
+            Name (PEMC, Package (0x02)
+            {
+                Package (0x03)
+                {
+                    "DEVICE", 
+                    "\\_SB.PCI0", 
+                    Package (0x06)
+                    {
+                        "COMPONENT", 
+                        Zero, 
+                        Package (0x03)
+                        {
+                            "FSTATE", 
+                            Zero, 
+                            Package (0x17)
+                            {
+                                "EXIT", 
+                                Package (0x02)
+                                {
+                                    "TLMMGPIO", 
+                                    Package (0x06)
+                                    {
+                                        0x40, 
+                                        One, 
+                                        Zero, 
+                                        One, 
+                                        0x03, 
+                                        0x04
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS11_B", 
+                                        0x02, 
+                                        0x001C5200, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS2_C", 
+                                        0x02, 
+                                        0x000E86C0, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS12_B", 
+                                        0x02, 
+                                        0x00132A40, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_LDO11_C", 
+                                        One, 
+                                        0x002AB980, 
+                                        One, 
+                                        0x07, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS10_B", 
+                                        0x02, 
+                                        0x001B7740, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "FOOTSWITCH", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_gdsc", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "BUSARB", 
+                                    Package (0x05)
+                                    {
+                                        0x03, 
+                                        "ICBID_MASTER_APPSS_PROC", 
+                                        "ICBID_SLAVE_PCIE_0_CFG", 
+                                        0x047868C0, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "BUSARB", 
+                                    Package (0x05)
+                                    {
+                                        0x03, 
+                                        "ICBID_MASTER_PCIE_0", 
+                                        "ICBID_SLAVE_EBI1", 
+                                        0xB2D05E00, 
+                                        0xB2D05E00
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x09)
+                                    {
+                                        "gcc_pcie_0_pipe_clk", 
+                                        0x06, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_aux_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_pipe_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_slv_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_slv_q2a_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_throttle_core_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_throttle_pcie_ahb_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_mstr_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_aggre_noc_pcie_0_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_cfg_ahb_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x04)
+                                    {
+                                        "gcc_pcie_0_aux_clk", 
+                                        0x08, 
+                                        0x0124F800, 
+                                        0x03
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x04)
+                                    {
+                                        "gcc_pcie0_phy_rchng_clk", 
+                                        0x08, 
+                                        0x05F5E100, 
+                                        0x03
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "TLMMGPIO", 
+                                    Package (0x07)
+                                    {
+                                        0x5F, 
+                                        Zero, 
+                                        One, 
+                                        Zero, 
+                                        0x03, 
+                                        Zero, 
+                                        Zero
+                                    }
+                                }
+                            }
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            One
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "INIT_FSTATE", 
+                            Zero
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "PRELOAD_FSTATE", 
+                            One
+                        }
+                    }
+                }, 
+
+                Package (0x08)
+                {
+                    "DEVICE", 
+                    "\\_SB.PCI0.RP1", 
+                    Package (0x04)
+                    {
+                        "COMPONENT", 
+                        Zero, 
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            Zero
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            One
+                        }
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        Zero
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        One
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        0x02
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        0x03
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "ABANDON_DSTATE", 
+                        Zero
+                    }
+                }
+            })
+        }
+
+        Scope (\_SB.PEP0)
+        {
             Method (LPMX, 0, NotSerialized)
             {
                 Return (LPXC) /* \_SB_.PEP0.LPXC */
@@ -9071,11 +10710,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xDC, 0x01,  // .....@..
-                    /* 0008 */  0x00, 0x40, 0x02, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x30, 0x01, 0x00, 0x00, 0x79, 0x00         // .0...y.
+                    Memory32Fixed (ReadWrite,
+                        0x01DC4000,         // Address Base
+                        0x00024000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000130,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAM1._CRS.RBUF */
             }
@@ -9089,11 +10733,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA8, 0x03,  // .....@..
-                    /* 0008 */  0x00, 0x20, 0x03, 0x00, 0x89, 0x06, 0x00, 0x01,  // . ......
-                    /* 0010 */  0x01, 0xC4, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x03A84000,         // Address Base
+                        0x00032000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000C4,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAM5._CRS.RBUF */
             }
@@ -9107,11 +10756,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x06, 0x06,  // .....@..
-                    /* 0008 */  0x00, 0x50, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // .P......
-                    /* 0010 */  0x01, 0xC7, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x06064000,         // Address Base
+                        0x00015000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000C7,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAME._CRS.RBUF */
             }
@@ -9125,11 +10779,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x70, 0x0A,  // .....@p.
-                    /* 0008 */  0x00, 0x70, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // .p......
-                    /* 0010 */  0x01, 0xA4, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0A704000,         // Address Base
+                        0x00017000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000A4,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAMF._CRS.RBUF */
             }
@@ -9142,19 +10801,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, 0x03)  // _UID: Unique ID
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.QGP0, , 
-                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.QGP0, 
+                \_SB.MMU0
             })
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_STR, Unicode ("QUP_0_SE_2"))  // _STR: Description String
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x80, 0x98, 0x00,  // ........
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x7B, 0x02, 0x00, 0x00, 0x79, 0x00         // .{...y.
+                    Memory32Fixed (ReadWrite,
+                        0x00988000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000027B,
+                    }
                 })
                 Return (RBUF) /* \_SB_.SPI3._CRS.RBUF */
             }
@@ -9167,22 +10831,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, 0x08)  // _UID: Unique ID
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_STR, Unicode ("QUP_0_SE_7,4W,BT"))  // _STR: Description String
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x3A)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xC0, 0x99, 0x00,  // ........
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x80, 0x02, 0x00, 0x00, 0x8C, 0x20, 0x00,  // ...... .
-                    /* 0018 */  0x01, 0x00, 0x01, 0x00, 0x03, 0x00, 0x02, 0x00,  // ........
-                    /* 0020 */  0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0028 */  0x23, 0x00, 0x00, 0x00, 0x1F, 0x00, 0x5C, 0x5F,  // #.....\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00,  // SB.GIO0.
-                    /* 0038 */  0x79, 0x00                                       // y.
+                    Memory32Fixed (ReadWrite,
+                        0x0099C000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000280,
+                    }
+                    GpioInt (Edge, ActiveLow, Exclusive, PullDown, 0x0000,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x001F
+                        }
                 })
                 Return (RBUF) /* \_SB_.UAR8._CRS.RBUF */
             }
@@ -9200,19 +10870,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, 0x0E)  // _UID: Unique ID
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.QGP1, , 
-                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.QGP1, 
+                \_SB.MMU0
             })
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_STR, Unicode ("QUP_1_SE_5"))  // _STR: Description String
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA9, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x86, 0x01, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x00A94000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000186,
+                    }
                 })
                 Return (RBUF) /* \_SB_.IC14._CRS.RBUF */
             }
@@ -9241,8 +10916,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PILC, , 
-                \_SB.RPEN, 
+                \_SB.PILC, 
+                \_SB.RPEN
             })
             Name (_HID, "QCOM092F")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -9256,15 +10931,15 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x09)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PILC, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.ARPC, , 
-                \_SB.TFTP, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.PILC, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.ARPC, 
+                \_SB.TFTP, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM091B")  // _HID: Hardware ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
@@ -9274,10 +10949,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x06, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000206,
+                    }
                 })
                 Return (RBUF) /* \_SB_.ADSP._CRS.RBUF */
             }
@@ -9288,11 +10965,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
                 Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
-                    Name (RBUF, Buffer (0x17)
+                    Name (RBUF, ResourceTemplate ()
                     {
-                        /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xAC, 0x03,  // ........
-                        /* 0008 */  0x00, 0xC0, 0x02, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                        /* 0010 */  0x01, 0xC3, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                        Memory32Fixed (ReadWrite,
+                            0x03AC0000,         // Address Base
+                            0x0002C000,         // Address Length
+                            )
+                        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                        {
+                            0x000000C3,
+                        }
                     })
                     Return (RBUF) /* \_SB_.ADSP.SLM1._CRS.RBUF */
                 }
@@ -9303,8 +10985,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Name (_ADR, One)  // _ADR: Address
                 Name (_DEP, Package (0x02)  // _DEP: Dependencies
                 {
-                    \_SB.MMU0, , 
-                    \_SB.IMM0, 
+                    \_SB.MMU0, 
+                    \_SB.IMM0
                 })
                 Method (_STA, 0, NotSerialized)  // _STA: Status
                 {
@@ -9329,30 +11011,44 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
-                        Name (RBUF, Buffer (0xA9)
+                        Name (RBUF, ResourceTemplate ()
                         {
-                            /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                            /* 0008 */  0x00, 0x03, 0x40, 0x06, 0x00, 0x00, 0x17, 0x00,  // ..@.....
-                            /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x53,  // ...#...S
-                            /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                            /* 0020 */  0x4F, 0x30, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // O0.. ...
-                            /* 0028 */  0x01, 0x00, 0x00, 0x00, 0x03, 0x40, 0x06, 0x00,  // .....@..
-                            /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                            /* 0038 */  0x00, 0x00, 0x3E, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ..>.\_SB
-                            /* 0040 */  0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00, 0x8C, 0x20,  // .GIO0.. 
-                            /* 0048 */  0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x03,  // ........
-                            /* 0050 */  0x40, 0x06, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // @.......
-                            /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x5C,  // .#...?.\
-                            /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30,  // _SB.GIO0
-                            /* 0068 */  0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00,  // .. .....
-                            /* 0070 */  0x15, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17,  // ........
-                            /* 0078 */  0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00,  // ....#...
-                            /* 0080 */  0x00, 0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47,  // ..\_SB.G
-                            /* 0088 */  0x49, 0x4F, 0x30, 0x00, 0x89, 0x06, 0x00, 0x03,  // IO0.....
-                            /* 0090 */  0x01, 0x10, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                            /* 0098 */  0x03, 0x01, 0xBB, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                            /* 00A0 */  0x00, 0x03, 0x01, 0xCA, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 00A8 */  0x00                                             // .
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x0053
+                                }
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x003E
+                                }
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x003F
+                                }
+                            GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDown, 0x0000,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x0100
+                                }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x00000210,
+                            }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x000000BB,
+                            }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x000000CA,
+                            }
                         })
                         Return (RBUF) /* \_SB_.ADSP.ADCM.AUCD._CRS.RBUF */
                     }
@@ -9384,23 +11080,25 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_DEP, Package (0x09)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GLNK, , 
-                \_SB.PILC, , 
-                \_SB.RFS0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.IPC0, , 
-                \_SB.TFTP, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.GLNK, 
+                \_SB.PILC, 
+                \_SB.RFS0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.IPC0, 
+                \_SB.TFTP, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM091C")  // _HID: Hardware ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x28, 0x01, 0x00,  // .....(..
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000128,
+                    }
                 })
                 Return (RBUF) /* \_SB_.AMSS._CRS.RBUF */
             }
@@ -9412,10 +11110,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.PILC, , 
-                \_SB.RPEN, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.PILC, 
+                \_SB.RPEN
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9429,7 +11127,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9443,9 +11141,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.PEP0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9457,23 +11155,25 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x08)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PILC, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.ARPC, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.PILC, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.ARPC, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM09B0")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x62, 0x02, 0x00,  // .....b..
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000262,
+                    }
                 })
                 Return (RBUF) /* \_SB_.NSP0._CRS.RBUF */
             }
@@ -9486,8 +11186,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.NSP0, , 
-                \_SB.SBTD, 
+                \_SB.NSP0, 
+                \_SB.SBTD
             })
         }
 
@@ -9503,7 +11203,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9595,18 +11295,23 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM0983")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Alias (\_SB.SVMJ, _HRV)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x17)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x60, 0x09,  // ......`.
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0x2A, 0x01, 0x00, 0x00, 0x79, 0x00         // .*...y.
+                    Memory32Fixed (ReadWrite,
+                        0x09600000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012A,
+                    }
                 })
             }
         }
@@ -9619,87 +11324,276 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.SVMJ, _HRV)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x0257)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x15,  // ........
-                    /* 0008 */  0x00, 0x00, 0x10, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0x83, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x03, 0x01, 0x84, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x03, 0x01, 0x85, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x03, 0x01, 0x86, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x87, 0x00, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x88, 0x00,  // ........
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x89,  // ........
-                    /* 0048 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0050 */  0x8A, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0058 */  0x01, 0x8B, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0060 */  0x03, 0x01, 0x8C, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0068 */  0x00, 0x03, 0x01, 0x8D, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0070 */  0x06, 0x00, 0x03, 0x01, 0x8E, 0x00, 0x00, 0x00,  // ........
-                    /* 0078 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x8F, 0x00, 0x00,  // ........
-                    /* 0080 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x90, 0x00,  // ........
-                    /* 0088 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x91,  // ........
-                    /* 0090 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0098 */  0x92, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00A0 */  0x01, 0x93, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00A8 */  0x03, 0x01, 0x94, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00B0 */  0x00, 0x03, 0x01, 0x95, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 00B8 */  0x06, 0x00, 0x03, 0x01, 0x96, 0x00, 0x00, 0x00,  // ........
-                    /* 00C0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xD5, 0x00, 0x00,  // ........
-                    /* 00C8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD6, 0x00,  // ........
-                    /* 00D0 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD7,  // ........
-                    /* 00D8 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 00E0 */  0xD8, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00E8 */  0x01, 0xD9, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00F0 */  0x03, 0x01, 0xDA, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00F8 */  0x00, 0x03, 0x01, 0xDB, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0100 */  0x06, 0x00, 0x03, 0x01, 0xDC, 0x00, 0x00, 0x00,  // ........
-                    /* 0108 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xDD, 0x00, 0x00,  // ........
-                    /* 0110 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xDE, 0x00,  // ........
-                    /* 0118 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xDF,  // ........
-                    /* 0120 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0128 */  0xE0, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0130 */  0x01, 0x5B, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .[......
-                    /* 0138 */  0x03, 0x01, 0x5C, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..\.....
-                    /* 0140 */  0x00, 0x03, 0x01, 0x5D, 0x01, 0x00, 0x00, 0x89,  // ...]....
-                    /* 0148 */  0x06, 0x00, 0x03, 0x01, 0x5E, 0x01, 0x00, 0x00,  // ....^...
-                    /* 0150 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x5F, 0x01, 0x00,  // ....._..
-                    /* 0158 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x60, 0x01,  // ......`.
-                    /* 0160 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x61,  // .......a
-                    /* 0168 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0170 */  0x62, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // b.......
-                    /* 0178 */  0x01, 0x63, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .c......
-                    /* 0180 */  0x03, 0x01, 0x64, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..d.....
-                    /* 0188 */  0x00, 0x03, 0x01, 0x65, 0x01, 0x00, 0x00, 0x89,  // ...e....
-                    /* 0190 */  0x06, 0x00, 0x03, 0x01, 0x66, 0x01, 0x00, 0x00,  // ....f...
-                    /* 0198 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x67, 0x01, 0x00,  // .....g..
-                    /* 01A0 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x68, 0x01,  // ......h.
-                    /* 01A8 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x69,  // .......i
-                    /* 01B0 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 01B8 */  0x6A, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // j.......
-                    /* 01C0 */  0x01, 0x6B, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .k......
-                    /* 01C8 */  0x03, 0x01, 0x6C, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..l.....
-                    /* 01D0 */  0x00, 0x03, 0x01, 0x6D, 0x01, 0x00, 0x00, 0x89,  // ...m....
-                    /* 01D8 */  0x06, 0x00, 0x03, 0x01, 0x6E, 0x01, 0x00, 0x00,  // ....n...
-                    /* 01E0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x6F, 0x01, 0x00,  // .....o..
-                    /* 01E8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x70, 0x01,  // ......p.
-                    /* 01F0 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x71,  // .......q
-                    /* 01F8 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0200 */  0x72, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // r.......
-                    /* 0208 */  0x01, 0x73, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .s......
-                    /* 0210 */  0x03, 0x01, 0x74, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..t.....
-                    /* 0218 */  0x00, 0x03, 0x01, 0x75, 0x01, 0x00, 0x00, 0x89,  // ...u....
-                    /* 0220 */  0x06, 0x00, 0x03, 0x01, 0x76, 0x01, 0x00, 0x00,  // ....v...
-                    /* 0228 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x77, 0x01, 0x00,  // .....w..
-                    /* 0230 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x78, 0x01,  // ......x.
-                    /* 0238 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x79,  // .......y
-                    /* 0240 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0248 */  0xAB, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0250 */  0x01, 0xAC, 0x01, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x15000000,         // Address Base
+                        0x00100000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000083,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000084,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000085,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000086,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000087,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000088,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000089,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000090,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000091,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000092,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000093,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000094,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000095,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000096,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D5,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D6,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D7,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D8,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D9,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000E0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000160,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000161,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000162,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000163,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000164,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000165,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000166,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000167,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000168,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000169,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000170,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000171,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000172,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000173,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000174,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000175,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000176,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000177,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000178,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000179,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001AB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001AC,
+                    }
                 })
             }
         }
@@ -9712,7 +11606,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.SVMJ, _HRV)
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9721,23 +11615,56 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x71)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xDA, 0x03,  // ........
-                    /* 0008 */  0x00, 0x00, 0x02, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0xC3, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x03, 0x01, 0xC6, 0x02, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x03, 0x01, 0xC7, 0x02, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x03, 0x01, 0xC8, 0x02, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xC9, 0x02, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xCA, 0x02,  // ........
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xCB,  // ........
-                    /* 0048 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0050 */  0xCC, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0058 */  0x01, 0xCD, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0060 */  0x03, 0x01, 0xCE, 0x02, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0068 */  0x00, 0x03, 0x01, 0xCF, 0x02, 0x00, 0x00, 0x79,  // .......y
-                    /* 0070 */  0x00                                             // .
+                    Memory32Fixed (ReadWrite,
+                        0x03DA0000,         // Address Base
+                        0x00020000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C6,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C7,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C8,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C9,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CF,
+                    }
                 })
             }
         }
@@ -9776,44 +11703,79 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (0x0A)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.MMU1, , 
-                \_SB.IMM0, , 
-                \_SB.IMM1, , 
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.PILC, , 
-                \_SB.RPEN, , 
-                \_SB.TREE, , 
-                \_SB.SCM0, 
+                \_SB.MMU0, 
+                \_SB.MMU1, 
+                \_SB.IMM0, 
+                \_SB.IMM1, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.PILC, 
+                \_SB.RPEN, 
+                \_SB.TREE, 
+                \_SB.SCM0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (ABUF, Buffer (0xB8)
+                Name (ABUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xE0, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x00, 0x20, 0x00, 0x86, 0x09, 0x00, 0x01,  // .. .....
-                    /* 0010 */  0x00, 0x00, 0x8E, 0x08, 0x00, 0x00, 0x01, 0x00,  // ........
-                    /* 0018 */  0x89, 0x06, 0x00, 0x01, 0x01, 0x73, 0x00, 0x00,  // .....s..
-                    /* 0020 */  0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xD0,  // ........
-                    /* 0028 */  0x03, 0x10, 0xF0, 0x03, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0030 */  0x01, 0x00, 0x00, 0xD6, 0x03, 0x00, 0xF0, 0x03,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x01, 0x01, 0x4C, 0x01,  // ......L.
-                    /* 0040 */  0x00, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0048 */  0x29, 0x0B, 0x00, 0x00, 0x01, 0x00, 0x86, 0x09,  // ).......
-                    /* 0050 */  0x00, 0x01, 0x00, 0x00, 0x49, 0x0B, 0x00, 0x00,  // ....I...
-                    /* 0058 */  0x01, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0060 */  0xD9, 0x03, 0x00, 0x90, 0x00, 0x00, 0x86, 0x09,  // ........
-                    /* 0068 */  0x00, 0x01, 0x00, 0x00, 0xDE, 0x03, 0x00, 0x00,  // ........
-                    /* 0070 */  0x01, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0078 */  0x20, 0x0C, 0xFF, 0xFF, 0x00, 0x00, 0x86, 0x09,  //  .......
-                    /* 0080 */  0x00, 0x01, 0x00, 0x00, 0xA0, 0x0A, 0x00, 0x00,  // ........
-                    /* 0088 */  0x20, 0x00, 0x89, 0x06, 0x00, 0x01, 0x01, 0xCE,  //  .......
-                    /* 0090 */  0x00, 0x00, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // .... ...
-                    /* 0098 */  0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 00A0 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 00A8 */  0x00, 0x00, 0x2C, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ..,.\_SB
-                    /* 00B0 */  0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00, 0x79, 0x00   // .GIO0.y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AE00000,         // Address Base
+                        0x00200000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x088E0000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000073,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x03D00000,         // Address Base
+                        0x0003F010,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03D60000,         // Address Base
+                        0x0003F000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000014C,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x0B290000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0B490000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03D90000,         // Address Base
+                        0x00009000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03DE0000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0C200000,         // Address Base
+                        0x0000FFFF,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AA00000,         // Address Base
+                        0x00200000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000CE,
+                    }
+                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0010
+                        }
                 })
                 Return (ABUF) /* \_SB_.GPU0._CRS.ABUF */
             }
@@ -9927,1074 +11889,558 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_ROM, 3, NotSerialized)  // _ROM: Read-Only Memory
             {
-                Name (PCFG, Buffer (0x2150)
+                Name (PCFG, Buffer (0x112E)
                 {
                     /* 0000 */  0x3C, 0x3F, 0x78, 0x6D, 0x6C, 0x20, 0x76, 0x65,  // <?xml ve
                     /* 0008 */  0x72, 0x73, 0x69, 0x6F, 0x6E, 0x3D, 0x27, 0x31,  // rsion='1
                     /* 0010 */  0x2E, 0x30, 0x27, 0x20, 0x65, 0x6E, 0x63, 0x6F,  // .0' enco
                     /* 0018 */  0x64, 0x69, 0x6E, 0x67, 0x3D, 0x27, 0x75, 0x74,  // ding='ut
                     /* 0020 */  0x66, 0x2D, 0x38, 0x27, 0x3F, 0x3E, 0x0A, 0x3C,  // f-8'?>.<
-                    /* 0028 */  0x50, 0x61, 0x6E, 0x65, 0x6C, 0x4E, 0x61, 0x6D,  // PanelNam
-                    /* 0030 */  0x65, 0x3E, 0x4E, 0x54, 0x33, 0x36, 0x36, 0x37,  // e>NT3667
-                    /* 0038 */  0x32, 0x65, 0x3C, 0x2F, 0x50, 0x61, 0x6E, 0x65,  // 2e</Pane
-                    /* 0040 */  0x6C, 0x4E, 0x61, 0x6D, 0x65, 0x3E, 0x0A, 0x3C,  // lName>.<
-                    /* 0048 */  0x50, 0x61, 0x6E, 0x65, 0x6C, 0x44, 0x65, 0x73,  // PanelDes
-                    /* 0050 */  0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6F, 0x6E,  // cription
-                    /* 0058 */  0x3E, 0x44, 0x53, 0x49, 0x20, 0x56, 0x69, 0x64,  // >DSI Vid
-                    /* 0060 */  0x65, 0x6F, 0x20, 0x4D, 0x6F, 0x64, 0x65, 0x20,  // eo Mode 
-                    /* 0068 */  0x50, 0x61, 0x6E, 0x65, 0x6C, 0x20, 0x28, 0x31,  // Panel (1
-                    /* 0070 */  0x30, 0x38, 0x30, 0x78, 0x32, 0x34, 0x30, 0x38,  // 080x2408
-                    /* 0078 */  0x20, 0x32, 0x34, 0x62, 0x70, 0x70, 0x29, 0x3C,  //  24bpp)<
-                    /* 0080 */  0x2F, 0x50, 0x61, 0x6E, 0x65, 0x6C, 0x44, 0x65,  // /PanelDe
-                    /* 0088 */  0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6F,  // scriptio
-                    /* 0090 */  0x6E, 0x3E, 0x0A, 0x3C, 0x47, 0x72, 0x6F, 0x75,  // n>.<Grou
-                    /* 0098 */  0x70, 0x20, 0x69, 0x64, 0x3D, 0x27, 0x45, 0x44,  // p id='ED
-                    /* 00A0 */  0x49, 0x44, 0x20, 0x43, 0x6F, 0x6E, 0x66, 0x69,  // ID Confi
-                    /* 00A8 */  0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6F, 0x6E,  // guration
-                    /* 00B0 */  0x27, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // '>.    <
-                    /* 00B8 */  0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61, 0x63, 0x74,  // Manufact
-                    /* 00C0 */  0x75, 0x72, 0x65, 0x49, 0x44, 0x3E, 0x30, 0x78,  // ureID>0x
-                    /* 00C8 */  0x31, 0x30, 0x34, 0x44, 0x3C, 0x2F, 0x4D, 0x61,  // 104D</Ma
-                    /* 00D0 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
-                    /* 00D8 */  0x65, 0x49, 0x44, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // eID>.   
-                    /* 00E0 */  0x20, 0x3C, 0x50, 0x72, 0x6F, 0x64, 0x75, 0x63,  //  <Produc
-                    /* 00E8 */  0x74, 0x43, 0x6F, 0x64, 0x65, 0x3E, 0x37, 0x32,  // tCode>72
-                    /* 00F0 */  0x38, 0x30, 0x3C, 0x2F, 0x50, 0x72, 0x6F, 0x64,  // 80</Prod
-                    /* 00F8 */  0x75, 0x63, 0x74, 0x43, 0x6F, 0x64, 0x65, 0x3E,  // uctCode>
-                    /* 0100 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53, 0x65,  // .    <Se
-                    /* 0108 */  0x72, 0x69, 0x61, 0x6C, 0x4E, 0x75, 0x6D, 0x62,  // rialNumb
-                    /* 0110 */  0x65, 0x72, 0x3E, 0x30, 0x78, 0x30, 0x30, 0x30,  // er>0x000
-                    /* 0118 */  0x30, 0x30, 0x31, 0x3C, 0x2F, 0x53, 0x65, 0x72,  // 001</Ser
-                    /* 0120 */  0x69, 0x61, 0x6C, 0x4E, 0x75, 0x6D, 0x62, 0x65,  // ialNumbe
-                    /* 0128 */  0x72, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // r>.    <
-                    /* 0130 */  0x57, 0x65, 0x65, 0x6B, 0x6F, 0x66, 0x4D, 0x61,  // WeekofMa
-                    /* 0138 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
-                    /* 0140 */  0x65, 0x3E, 0x30, 0x78, 0x30, 0x31, 0x3C, 0x2F,  // e>0x01</
-                    /* 0148 */  0x57, 0x65, 0x65, 0x6B, 0x6F, 0x66, 0x4D, 0x61,  // WeekofMa
-                    /* 0150 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
-                    /* 0158 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 0160 */  0x59, 0x65, 0x61, 0x72, 0x6F, 0x66, 0x4D, 0x61,  // YearofMa
-                    /* 0168 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
-                    /* 0170 */  0x65, 0x3E, 0x30, 0x78, 0x31, 0x42, 0x3C, 0x2F,  // e>0x1B</
-                    /* 0178 */  0x59, 0x65, 0x61, 0x72, 0x6F, 0x66, 0x4D, 0x61,  // YearofMa
-                    /* 0180 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
-                    /* 0188 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 0190 */  0x45, 0x44, 0x49, 0x44, 0x56, 0x65, 0x72, 0x73,  // EDIDVers
-                    /* 0198 */  0x69, 0x6F, 0x6E, 0x3E, 0x31, 0x3C, 0x2F, 0x45,  // ion>1</E
-                    /* 01A0 */  0x44, 0x49, 0x44, 0x56, 0x65, 0x72, 0x73, 0x69,  // DIDVersi
-                    /* 01A8 */  0x6F, 0x6E, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // on>.    
-                    /* 01B0 */  0x3C, 0x45, 0x44, 0x49, 0x44, 0x52, 0x65, 0x76,  // <EDIDRev
-                    /* 01B8 */  0x69, 0x73, 0x69, 0x6F, 0x6E, 0x3E, 0x33, 0x3C,  // ision>3<
-                    /* 01C0 */  0x2F, 0x45, 0x44, 0x49, 0x44, 0x52, 0x65, 0x76,  // /EDIDRev
-                    /* 01C8 */  0x69, 0x73, 0x69, 0x6F, 0x6E, 0x3E, 0x0A, 0x20,  // ision>. 
-                    /* 01D0 */  0x20, 0x20, 0x20, 0x3C, 0x56, 0x69, 0x64, 0x65,  //    <Vide
-                    /* 01D8 */  0x6F, 0x49, 0x6E, 0x70, 0x75, 0x74, 0x44, 0x65,  // oInputDe
-                    /* 01E0 */  0x66, 0x69, 0x6E, 0x69, 0x74, 0x69, 0x6F, 0x6E,  // finition
-                    /* 01E8 */  0x3E, 0x30, 0x78, 0x38, 0x30, 0x3C, 0x2F, 0x56,  // >0x80</V
-                    /* 01F0 */  0x69, 0x64, 0x65, 0x6F, 0x49, 0x6E, 0x70, 0x75,  // ideoInpu
-                    /* 01F8 */  0x74, 0x44, 0x65, 0x66, 0x69, 0x6E, 0x69, 0x74,  // tDefinit
-                    /* 0200 */  0x69, 0x6F, 0x6E, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // ion>.   
-                    /* 0208 */  0x20, 0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F,  //  <Horizo
-                    /* 0210 */  0x6E, 0x74, 0x61, 0x6C, 0x53, 0x63, 0x72, 0x65,  // ntalScre
-                    /* 0218 */  0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65, 0x3E, 0x30,  // enSize>0
-                    /* 0220 */  0x78, 0x30, 0x37, 0x3C, 0x2F, 0x48, 0x6F, 0x72,  // x07</Hor
-                    /* 0228 */  0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x53,  // izontalS
-                    /* 0230 */  0x63, 0x72, 0x65, 0x65, 0x6E, 0x53, 0x69, 0x7A,  // creenSiz
-                    /* 0238 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 0240 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 0248 */  0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53, 0x69,  // ScreenSi
-                    /* 0250 */  0x7A, 0x65, 0x3E, 0x30, 0x78, 0x30, 0x43, 0x3C,  // ze>0x0C<
-                    /* 0258 */  0x2F, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61,  // /Vertica
-                    /* 0260 */  0x6C, 0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53,  // lScreenS
-                    /* 0268 */  0x69, 0x7A, 0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // ize>.   
-                    /* 0270 */  0x20, 0x3C, 0x44, 0x69, 0x73, 0x70, 0x6C, 0x61,  //  <Displa
-                    /* 0278 */  0x79, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x66, 0x65,  // yTransfe
-                    /* 0280 */  0x72, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74,  // rCharact
-                    /* 0288 */  0x65, 0x72, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73,  // eristics
-                    /* 0290 */  0x3E, 0x30, 0x78, 0x37, 0x38, 0x3C, 0x2F, 0x44,  // >0x78</D
-                    /* 0298 */  0x69, 0x73, 0x70, 0x6C, 0x61, 0x79, 0x54, 0x72,  // isplayTr
-                    /* 02A0 */  0x61, 0x6E, 0x73, 0x66, 0x65, 0x72, 0x43, 0x68,  // ansferCh
-                    /* 02A8 */  0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x69,  // aracteri
-                    /* 02B0 */  0x73, 0x74, 0x69, 0x63, 0x73, 0x3E, 0x0A, 0x20,  // stics>. 
-                    /* 02B8 */  0x20, 0x20, 0x20, 0x3C, 0x46, 0x65, 0x61, 0x74,  //    <Feat
-                    /* 02C0 */  0x75, 0x72, 0x65, 0x53, 0x75, 0x70, 0x70, 0x6F,  // ureSuppo
-                    /* 02C8 */  0x72, 0x74, 0x3E, 0x30, 0x78, 0x32, 0x3C, 0x2F,  // rt>0x2</
-                    /* 02D0 */  0x46, 0x65, 0x61, 0x74, 0x75, 0x72, 0x65, 0x53,  // FeatureS
-                    /* 02D8 */  0x75, 0x70, 0x70, 0x6F, 0x72, 0x74, 0x3E, 0x0A,  // upport>.
-                    /* 02E0 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x52, 0x65, 0x64,  //     <Red
-                    /* 02E8 */  0x2E, 0x47, 0x72, 0x65, 0x65, 0x6E, 0x42, 0x69,  // .GreenBi
-                    /* 02F0 */  0x74, 0x73, 0x3E, 0x30, 0x78, 0x41, 0x35, 0x3C,  // ts>0xA5<
-                    /* 02F8 */  0x2F, 0x52, 0x65, 0x64, 0x2E, 0x47, 0x72, 0x65,  // /Red.Gre
-                    /* 0300 */  0x65, 0x6E, 0x42, 0x69, 0x74, 0x73, 0x3E, 0x0A,  // enBits>.
-                    /* 0308 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x42, 0x6C, 0x75,  //     <Blu
-                    /* 0310 */  0x65, 0x2E, 0x57, 0x68, 0x69, 0x74, 0x65, 0x42,  // e.WhiteB
-                    /* 0318 */  0x69, 0x74, 0x73, 0x3E, 0x30, 0x78, 0x35, 0x38,  // its>0x58
-                    /* 0320 */  0x3C, 0x2F, 0x42, 0x6C, 0x75, 0x65, 0x2E, 0x57,  // </Blue.W
-                    /* 0328 */  0x68, 0x69, 0x74, 0x65, 0x42, 0x69, 0x74, 0x73,  // hiteBits
-                    /* 0330 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x52,  // >.    <R
-                    /* 0338 */  0x65, 0x64, 0x58, 0x3E, 0x30, 0x78, 0x41, 0x36,  // edX>0xA6
-                    /* 0340 */  0x3C, 0x2F, 0x52, 0x65, 0x64, 0x58, 0x3E, 0x0A,  // </RedX>.
-                    /* 0348 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x52, 0x65, 0x64,  //     <Red
-                    /* 0350 */  0x59, 0x3E, 0x30, 0x78, 0x35, 0x34, 0x3C, 0x2F,  // Y>0x54</
-                    /* 0358 */  0x52, 0x65, 0x64, 0x59, 0x3E, 0x0A, 0x20, 0x20,  // RedY>.  
-                    /* 0360 */  0x20, 0x20, 0x3C, 0x47, 0x72, 0x65, 0x65, 0x6E,  //   <Green
-                    /* 0368 */  0x58, 0x3E, 0x30, 0x78, 0x33, 0x33, 0x3C, 0x2F,  // X>0x33</
-                    /* 0370 */  0x47, 0x72, 0x65, 0x65, 0x6E, 0x58, 0x3E, 0x0A,  // GreenX>.
-                    /* 0378 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x47, 0x72, 0x65,  //     <Gre
-                    /* 0380 */  0x65, 0x6E, 0x59, 0x3E, 0x30, 0x78, 0x42, 0x33,  // enY>0xB3
-                    /* 0388 */  0x3C, 0x2F, 0x47, 0x72, 0x65, 0x65, 0x6E, 0x59,  // </GreenY
-                    /* 0390 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x42,  // >.    <B
-                    /* 0398 */  0x6C, 0x75, 0x65, 0x58, 0x3E, 0x30, 0x78, 0x32,  // lueX>0x2
-                    /* 03A0 */  0x36, 0x3C, 0x2F, 0x42, 0x6C, 0x75, 0x65, 0x58,  // 6</BlueX
-                    /* 03A8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x42,  // >.    <B
-                    /* 03B0 */  0x6C, 0x75, 0x65, 0x59, 0x3E, 0x30, 0x78, 0x31,  // lueY>0x1
-                    /* 03B8 */  0x32, 0x3C, 0x2F, 0x42, 0x6C, 0x75, 0x65, 0x59,  // 2</BlueY
-                    /* 03C0 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x57,  // >.    <W
-                    /* 03C8 */  0x68, 0x69, 0x74, 0x65, 0x58, 0x3E, 0x30, 0x78,  // hiteX>0x
-                    /* 03D0 */  0x34, 0x46, 0x3C, 0x2F, 0x57, 0x68, 0x69, 0x74,  // 4F</Whit
-                    /* 03D8 */  0x65, 0x58, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // eX>.    
-                    /* 03E0 */  0x3C, 0x57, 0x68, 0x69, 0x74, 0x65, 0x59, 0x3E,  // <WhiteY>
-                    /* 03E8 */  0x30, 0x78, 0x35, 0x34, 0x3C, 0x2F, 0x57, 0x68,  // 0x54</Wh
-                    /* 03F0 */  0x69, 0x74, 0x65, 0x59, 0x3E, 0x0A, 0x20, 0x20,  // iteY>.  
-                    /* 03F8 */  0x20, 0x20, 0x3C, 0x45, 0x73, 0x74, 0x61, 0x62,  //   <Estab
-                    /* 0400 */  0x6C, 0x69, 0x73, 0x68, 0x65, 0x64, 0x54, 0x69,  // lishedTi
-                    /* 0408 */  0x6D, 0x69, 0x6E, 0x67, 0x73, 0x49, 0x3E, 0x30,  // mingsI>0
-                    /* 0410 */  0x78, 0x30, 0x3C, 0x2F, 0x45, 0x73, 0x74, 0x61,  // x0</Esta
-                    /* 0418 */  0x62, 0x6C, 0x69, 0x73, 0x68, 0x65, 0x64, 0x54,  // blishedT
-                    /* 0420 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x49, 0x3E,  // imingsI>
-                    /* 0428 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x45, 0x73,  // .    <Es
-                    /* 0430 */  0x74, 0x61, 0x62, 0x6C, 0x69, 0x73, 0x68, 0x65,  // tablishe
-                    /* 0438 */  0x64, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73,  // dTimings
-                    /* 0440 */  0x49, 0x49, 0x3E, 0x30, 0x78, 0x30, 0x3C, 0x2F,  // II>0x0</
-                    /* 0448 */  0x45, 0x73, 0x74, 0x61, 0x62, 0x6C, 0x69, 0x73,  // Establis
-                    /* 0450 */  0x68, 0x65, 0x64, 0x54, 0x69, 0x6D, 0x69, 0x6E,  // hedTimin
-                    /* 0458 */  0x67, 0x73, 0x49, 0x49, 0x3E, 0x0A, 0x20, 0x20,  // gsII>.  
-                    /* 0460 */  0x20, 0x20, 0x3C, 0x4D, 0x61, 0x6E, 0x75, 0x66,  //   <Manuf
-                    /* 0468 */  0x61, 0x63, 0x74, 0x75, 0x72, 0x65, 0x73, 0x54,  // acturesT
-                    /* 0470 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x3E, 0x30, 0x78,  // iming>0x
-                    /* 0478 */  0x30, 0x3C, 0x2F, 0x4D, 0x61, 0x6E, 0x75, 0x66,  // 0</Manuf
-                    /* 0480 */  0x61, 0x63, 0x74, 0x75, 0x72, 0x65, 0x73, 0x54,  // acturesT
-                    /* 0488 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x3E, 0x0A, 0x20,  // iming>. 
-                    /* 0490 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 0498 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 04A0 */  0x6E, 0x67, 0x73, 0x31, 0x2F, 0x3E, 0x0A, 0x20,  // ngs1/>. 
-                    /* 04A8 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 04B0 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 04B8 */  0x6E, 0x67, 0x73, 0x32, 0x2F, 0x3E, 0x0A, 0x20,  // ngs2/>. 
-                    /* 04C0 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 04C8 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 04D0 */  0x6E, 0x67, 0x73, 0x33, 0x2F, 0x3E, 0x0A, 0x20,  // ngs3/>. 
-                    /* 04D8 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 04E0 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 04E8 */  0x6E, 0x67, 0x73, 0x34, 0x2F, 0x3E, 0x0A, 0x20,  // ngs4/>. 
-                    /* 04F0 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 04F8 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 0500 */  0x6E, 0x67, 0x73, 0x35, 0x2F, 0x3E, 0x0A, 0x20,  // ngs5/>. 
-                    /* 0508 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 0510 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 0518 */  0x6E, 0x67, 0x73, 0x36, 0x2F, 0x3E, 0x0A, 0x20,  // ngs6/>. 
-                    /* 0520 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x74, 0x61, 0x6E,  //    <Stan
-                    /* 0528 */  0x64, 0x61, 0x72, 0x64, 0x54, 0x69, 0x6D, 0x69,  // dardTimi
-                    /* 0530 */  0x6E, 0x67, 0x73, 0x37, 0x2F, 0x3E, 0x0A, 0x20,  // ngs7/>. 
-                    /* 0538 */  0x20, 0x20, 0x20, 0x3C, 0x53, 0x69, 0x67, 0x6E,  //    <Sign
-                    /* 0540 */  0x61, 0x6C, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67,  // alTiming
-                    /* 0548 */  0x49, 0x6E, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63,  // Interfac
-                    /* 0550 */  0x65, 0x2F, 0x3E, 0x0A, 0x3C, 0x2F, 0x47, 0x72,  // e/>.</Gr
-                    /* 0558 */  0x6F, 0x75, 0x70, 0x3E, 0x0A, 0x3C, 0x47, 0x72,  // oup>.<Gr
-                    /* 0560 */  0x6F, 0x75, 0x70, 0x20, 0x69, 0x64, 0x3D, 0x27,  // oup id='
-                    /* 0568 */  0x44, 0x65, 0x74, 0x61, 0x69, 0x6C, 0x65, 0x64,  // Detailed
-                    /* 0570 */  0x20, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67, 0x27,  //  Timing'
-                    /* 0578 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x48,  // >.    <H
-                    /* 0580 */  0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61,  // orizonta
-                    /* 0588 */  0x6C, 0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53,  // lScreenS
-                    /* 0590 */  0x69, 0x7A, 0x65, 0x4D, 0x4D, 0x3E, 0x30, 0x78,  // izeMM>0x
-                    /* 0598 */  0x34, 0x34, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69,  // 44</Hori
-                    /* 05A0 */  0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x53, 0x63,  // zontalSc
-                    /* 05A8 */  0x72, 0x65, 0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65,  // reenSize
-                    /* 05B0 */  0x4D, 0x4D, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // MM>.    
-                    /* 05B8 */  0x3C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61,  // <Vertica
-                    /* 05C0 */  0x6C, 0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53,  // lScreenS
-                    /* 05C8 */  0x69, 0x7A, 0x65, 0x4D, 0x4D, 0x3E, 0x30, 0x78,  // izeMM>0x
-                    /* 05D0 */  0x37, 0x38, 0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74,  // 78</Vert
-                    /* 05D8 */  0x69, 0x63, 0x61, 0x6C, 0x53, 0x63, 0x72, 0x65,  // icalScre
-                    /* 05E0 */  0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65, 0x4D, 0x4D,  // enSizeMM
-                    /* 05E8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x48,  // >.    <H
-                    /* 05F0 */  0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61,  // orizonta
-                    /* 05F8 */  0x6C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61,  // lVertica
-                    /* 0600 */  0x6C, 0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53,  // lScreenS
-                    /* 0608 */  0x69, 0x7A, 0x65, 0x4D, 0x4D, 0x3E, 0x30, 0x78,  // izeMM>0x
-                    /* 0610 */  0x30, 0x30, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69,  // 00</Hori
-                    /* 0618 */  0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x56, 0x65,  // zontalVe
-                    /* 0620 */  0x72, 0x74, 0x69, 0x63, 0x61, 0x6C, 0x53, 0x63,  // rticalSc
-                    /* 0628 */  0x72, 0x65, 0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65,  // reenSize
-                    /* 0630 */  0x4D, 0x4D, 0x3E, 0x0A, 0x3C, 0x2F, 0x47, 0x72,  // MM>.</Gr
-                    /* 0638 */  0x6F, 0x75, 0x70, 0x3E, 0x0A, 0x3C, 0x47, 0x72,  // oup>.<Gr
-                    /* 0640 */  0x6F, 0x75, 0x70, 0x20, 0x69, 0x64, 0x3D, 0x27,  // oup id='
-                    /* 0648 */  0x41, 0x63, 0x74, 0x69, 0x76, 0x65, 0x20, 0x54,  // Active T
-                    /* 0650 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x27, 0x3E, 0x0A,  // iming'>.
-                    /* 0658 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x48, 0x6F, 0x72,  //     <Hor
-                    /* 0660 */  0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x41,  // izontalA
-                    /* 0668 */  0x63, 0x74, 0x69, 0x76, 0x65, 0x3E, 0x31, 0x30,  // ctive>10
-                    /* 0670 */  0x38, 0x30, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69,  // 80</Hori
-                    /* 0678 */  0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x41, 0x63,  // zontalAc
-                    /* 0680 */  0x74, 0x69, 0x76, 0x65, 0x3E, 0x0A, 0x20, 0x20,  // tive>.  
-                    /* 0688 */  0x20, 0x20, 0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A,  //   <Horiz
-                    /* 0690 */  0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x46, 0x72, 0x6F,  // ontalFro
-                    /* 0698 */  0x6E, 0x74, 0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E,  // ntPorch>
-                    /* 06A0 */  0x37, 0x36, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69,  // 76</Hori
-                    /* 06A8 */  0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x46, 0x72,  // zontalFr
-                    /* 06B0 */  0x6F, 0x6E, 0x74, 0x50, 0x6F, 0x72, 0x63, 0x68,  // ontPorch
-                    /* 06B8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x48,  // >.    <H
-                    /* 06C0 */  0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61,  // orizonta
-                    /* 06C8 */  0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50, 0x6F, 0x72,  // lBackPor
-                    /* 06D0 */  0x63, 0x68, 0x3E, 0x35, 0x36, 0x3C, 0x2F, 0x48,  // ch>56</H
-                    /* 06D8 */  0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61,  // orizonta
-                    /* 06E0 */  0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50, 0x6F, 0x72,  // lBackPor
-                    /* 06E8 */  0x63, 0x68, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // ch>.    
-                    /* 06F0 */  0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // <Horizon
-                    /* 06F8 */  0x74, 0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63, 0x50,  // talSyncP
-                    /* 0700 */  0x75, 0x6C, 0x73, 0x65, 0x3E, 0x31, 0x32, 0x3C,  // ulse>12<
-                    /* 0708 */  0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // /Horizon
-                    /* 0710 */  0x74, 0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63, 0x50,  // talSyncP
-                    /* 0718 */  0x75, 0x6C, 0x73, 0x65, 0x3E, 0x0A, 0x20, 0x20,  // ulse>.  
-                    /* 0720 */  0x20, 0x20, 0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A,  //   <Horiz
-                    /* 0728 */  0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x53, 0x79, 0x6E,  // ontalSyn
-                    /* 0730 */  0x63, 0x53, 0x6B, 0x65, 0x77, 0x3E, 0x30, 0x3C,  // cSkew>0<
-                    /* 0738 */  0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // /Horizon
-                    /* 0740 */  0x74, 0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63, 0x53,  // talSyncS
-                    /* 0748 */  0x6B, 0x65, 0x77, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // kew>.   
-                    /* 0750 */  0x20, 0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F,  //  <Horizo
-                    /* 0758 */  0x6E, 0x74, 0x61, 0x6C, 0x4C, 0x65, 0x66, 0x74,  // ntalLeft
-                    /* 0760 */  0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x30,  // Border>0
-                    /* 0768 */  0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F,  // </Horizo
-                    /* 0770 */  0x6E, 0x74, 0x61, 0x6C, 0x4C, 0x65, 0x66, 0x74,  // ntalLeft
-                    /* 0778 */  0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x0A,  // Border>.
-                    /* 0780 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x48, 0x6F, 0x72,  //     <Hor
-                    /* 0788 */  0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x52,  // izontalR
-                    /* 0790 */  0x69, 0x67, 0x68, 0x74, 0x42, 0x6F, 0x72, 0x64,  // ightBord
-                    /* 0798 */  0x65, 0x72, 0x3E, 0x30, 0x3C, 0x2F, 0x48, 0x6F,  // er>0</Ho
-                    /* 07A0 */  0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C,  // rizontal
-                    /* 07A8 */  0x52, 0x69, 0x67, 0x68, 0x74, 0x42, 0x6F, 0x72,  // RightBor
-                    /* 07B0 */  0x64, 0x65, 0x72, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // der>.   
-                    /* 07B8 */  0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63,  //  <Vertic
-                    /* 07C0 */  0x61, 0x6C, 0x41, 0x63, 0x74, 0x69, 0x76, 0x65,  // alActive
-                    /* 07C8 */  0x3E, 0x32, 0x34, 0x30, 0x38, 0x3C, 0x2F, 0x56,  // >2408</V
-                    /* 07D0 */  0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C, 0x41,  // erticalA
-                    /* 07D8 */  0x63, 0x74, 0x69, 0x76, 0x65, 0x3E, 0x0A, 0x20,  // ctive>. 
-                    /* 07E0 */  0x20, 0x20, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74,  //    <Vert
-                    /* 07E8 */  0x69, 0x63, 0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E,  // icalFron
-                    /* 07F0 */  0x74, 0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E, 0x34,  // tPorch>4
-                    /* 07F8 */  0x36, 0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74, 0x69,  // 6</Verti
-                    /* 0800 */  0x63, 0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E, 0x74,  // calFront
-                    /* 0808 */  0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E, 0x0A, 0x20,  // Porch>. 
-                    /* 0810 */  0x20, 0x20, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74,  //    <Vert
-                    /* 0818 */  0x69, 0x63, 0x61, 0x6C, 0x42, 0x61, 0x63, 0x6B,  // icalBack
-                    /* 0820 */  0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E, 0x31, 0x30,  // Porch>10
-                    /* 0828 */  0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63,  // </Vertic
-                    /* 0830 */  0x61, 0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50, 0x6F,  // alBackPo
-                    /* 0838 */  0x72, 0x63, 0x68, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // rch>.   
-                    /* 0840 */  0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63,  //  <Vertic
-                    /* 0848 */  0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63, 0x50, 0x75,  // alSyncPu
-                    /* 0850 */  0x6C, 0x73, 0x65, 0x3E, 0x31, 0x30, 0x3C, 0x2F,  // lse>10</
-                    /* 0858 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 0860 */  0x53, 0x79, 0x6E, 0x63, 0x50, 0x75, 0x6C, 0x73,  // SyncPuls
-                    /* 0868 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 0870 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 0878 */  0x53, 0x79, 0x6E, 0x63, 0x53, 0x6B, 0x65, 0x77,  // SyncSkew
-                    /* 0880 */  0x3E, 0x30, 0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74,  // >0</Vert
-                    /* 0888 */  0x69, 0x63, 0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63,  // icalSync
-                    /* 0890 */  0x53, 0x6B, 0x65, 0x77, 0x3E, 0x0A, 0x20, 0x20,  // Skew>.  
-                    /* 0898 */  0x20, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69,  //   <Verti
-                    /* 08A0 */  0x63, 0x61, 0x6C, 0x54, 0x6F, 0x70, 0x42, 0x6F,  // calTopBo
-                    /* 08A8 */  0x72, 0x64, 0x65, 0x72, 0x3E, 0x30, 0x3C, 0x2F,  // rder>0</
-                    /* 08B0 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 08B8 */  0x54, 0x6F, 0x70, 0x42, 0x6F, 0x72, 0x64, 0x65,  // TopBorde
-                    /* 08C0 */  0x72, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // r>.    <
-                    /* 08C8 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 08D0 */  0x42, 0x6F, 0x74, 0x74, 0x6F, 0x6D, 0x42, 0x6F,  // BottomBo
-                    /* 08D8 */  0x72, 0x64, 0x65, 0x72, 0x3E, 0x30, 0x3C, 0x2F,  // rder>0</
-                    /* 08E0 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
-                    /* 08E8 */  0x42, 0x6F, 0x74, 0x74, 0x6F, 0x6D, 0x42, 0x6F,  // BottomBo
-                    /* 08F0 */  0x72, 0x64, 0x65, 0x72, 0x3E, 0x0A, 0x20, 0x20,  // rder>.  
-                    /* 08F8 */  0x20, 0x20, 0x3C, 0x49, 0x6E, 0x76, 0x65, 0x72,  //   <Inver
-                    /* 0900 */  0x74, 0x44, 0x61, 0x74, 0x61, 0x50, 0x6F, 0x6C,  // tDataPol
-                    /* 0908 */  0x61, 0x72, 0x69, 0x74, 0x79, 0x3E, 0x46, 0x61,  // arity>Fa
-                    /* 0910 */  0x6C, 0x73, 0x65, 0x3C, 0x2F, 0x49, 0x6E, 0x76,  // lse</Inv
-                    /* 0918 */  0x65, 0x72, 0x74, 0x44, 0x61, 0x74, 0x61, 0x50,  // ertDataP
-                    /* 0920 */  0x6F, 0x6C, 0x61, 0x72, 0x69, 0x74, 0x79, 0x3E,  // olarity>
-                    /* 0928 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x49, 0x6E,  // .    <In
-                    /* 0930 */  0x76, 0x65, 0x72, 0x74, 0x56, 0x73, 0x79, 0x6E,  // vertVsyn
-                    /* 0938 */  0x63, 0x50, 0x6F, 0x6C, 0x61, 0x69, 0x72, 0x74,  // cPolairt
-                    /* 0940 */  0x79, 0x3E, 0x46, 0x61, 0x6C, 0x73, 0x65, 0x3C,  // y>False<
-                    /* 0948 */  0x2F, 0x49, 0x6E, 0x76, 0x65, 0x72, 0x74, 0x56,  // /InvertV
-                    /* 0950 */  0x73, 0x79, 0x6E, 0x63, 0x50, 0x6F, 0x6C, 0x61,  // syncPola
-                    /* 0958 */  0x69, 0x72, 0x74, 0x79, 0x3E, 0x0A, 0x20, 0x20,  // irty>.  
-                    /* 0960 */  0x20, 0x20, 0x3C, 0x49, 0x6E, 0x76, 0x65, 0x72,  //   <Inver
-                    /* 0968 */  0x74, 0x48, 0x73, 0x79, 0x6E, 0x63, 0x50, 0x6F,  // tHsyncPo
-                    /* 0970 */  0x6C, 0x61, 0x72, 0x69, 0x74, 0x79, 0x3E, 0x46,  // larity>F
-                    /* 0978 */  0x61, 0x6C, 0x73, 0x65, 0x3C, 0x2F, 0x49, 0x6E,  // alse</In
-                    /* 0980 */  0x76, 0x65, 0x72, 0x74, 0x48, 0x73, 0x79, 0x6E,  // vertHsyn
-                    /* 0988 */  0x63, 0x50, 0x6F, 0x6C, 0x61, 0x72, 0x69, 0x74,  // cPolarit
-                    /* 0990 */  0x79, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // y>.    <
-                    /* 0998 */  0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x43, 0x6F,  // BorderCo
-                    /* 09A0 */  0x6C, 0x6F, 0x72, 0x3E, 0x30, 0x78, 0x30, 0x3C,  // lor>0x0<
-                    /* 09A8 */  0x2F, 0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x43,  // /BorderC
-                    /* 09B0 */  0x6F, 0x6C, 0x6F, 0x72, 0x3E, 0x0A, 0x3C, 0x2F,  // olor>.</
-                    /* 09B8 */  0x47, 0x72, 0x6F, 0x75, 0x70, 0x3E, 0x0A, 0x3C,  // Group>.<
-                    /* 09C0 */  0x47, 0x72, 0x6F, 0x75, 0x70, 0x20, 0x69, 0x64,  // Group id
-                    /* 09C8 */  0x3D, 0x27, 0x44, 0x69, 0x73, 0x70, 0x6C, 0x61,  // ='Displa
-                    /* 09D0 */  0x79, 0x20, 0x49, 0x6E, 0x74, 0x65, 0x72, 0x66,  // y Interf
-                    /* 09D8 */  0x61, 0x63, 0x65, 0x27, 0x3E, 0x0A, 0x20, 0x20,  // ace'>.  
-                    /* 09E0 */  0x20, 0x20, 0x3C, 0x49, 0x6E, 0x74, 0x65, 0x72,  //   <Inter
-                    /* 09E8 */  0x66, 0x61, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65,  // faceType
-                    /* 09F0 */  0x3E, 0x38, 0x3C, 0x2F, 0x49, 0x6E, 0x74, 0x65,  // >8</Inte
-                    /* 09F8 */  0x72, 0x66, 0x61, 0x63, 0x65, 0x54, 0x79, 0x70,  // rfaceTyp
-                    /* 0A00 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 0A08 */  0x49, 0x6E, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63,  // Interfac
-                    /* 0A10 */  0x65, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x46, 0x6F,  // eColorFo
-                    /* 0A18 */  0x72, 0x6D, 0x61, 0x74, 0x3E, 0x33, 0x3C, 0x2F,  // rmat>3</
-                    /* 0A20 */  0x49, 0x6E, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63,  // Interfac
-                    /* 0A28 */  0x65, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x46, 0x6F,  // eColorFo
-                    /* 0A30 */  0x72, 0x6D, 0x61, 0x74, 0x3E, 0x0A, 0x3C, 0x2F,  // rmat>.</
-                    /* 0A38 */  0x47, 0x72, 0x6F, 0x75, 0x70, 0x3E, 0x0A, 0x3C,  // Group>.<
-                    /* 0A40 */  0x47, 0x72, 0x6F, 0x75, 0x70, 0x20, 0x69, 0x64,  // Group id
-                    /* 0A48 */  0x3D, 0x27, 0x44, 0x53, 0x49, 0x20, 0x49, 0x6E,  // ='DSI In
-                    /* 0A50 */  0x74, 0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x27,  // terface'
-                    /* 0A58 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x44,  // >.    <D
-                    /* 0A60 */  0x53, 0x49, 0x43, 0x68, 0x61, 0x6E, 0x6E, 0x65,  // SIChanne
-                    /* 0A68 */  0x6C, 0x49, 0x64, 0x3E, 0x31, 0x3C, 0x2F, 0x44,  // lId>1</D
-                    /* 0A70 */  0x53, 0x49, 0x43, 0x68, 0x61, 0x6E, 0x6E, 0x65,  // SIChanne
-                    /* 0A78 */  0x6C, 0x49, 0x64, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // lId>.   
-                    /* 0A80 */  0x20, 0x3C, 0x44, 0x53, 0x49, 0x56, 0x69, 0x72,  //  <DSIVir
-                    /* 0A88 */  0x74, 0x75, 0x61, 0x6C, 0x49, 0x64, 0x3E, 0x30,  // tualId>0
-                    /* 0A90 */  0x3C, 0x2F, 0x44, 0x53, 0x49, 0x56, 0x69, 0x72,  // </DSIVir
-                    /* 0A98 */  0x74, 0x75, 0x61, 0x6C, 0x49, 0x64, 0x3E, 0x0A,  // tualId>.
-                    /* 0AA0 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49,  //     <DSI
-                    /* 0AA8 */  0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x46, 0x6F, 0x72,  // ColorFor
-                    /* 0AB0 */  0x6D, 0x61, 0x74, 0x3E, 0x33, 0x36, 0x3C, 0x2F,  // mat>36</
-                    /* 0AB8 */  0x44, 0x53, 0x49, 0x43, 0x6F, 0x6C, 0x6F, 0x72,  // DSIColor
-                    /* 0AC0 */  0x46, 0x6F, 0x72, 0x6D, 0x61, 0x74, 0x3E, 0x0A,  // Format>.
-                    /* 0AC8 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49,  //     <DSI
-                    /* 0AD0 */  0x54, 0x72, 0x61, 0x66, 0x66, 0x69, 0x63, 0x4D,  // TrafficM
-                    /* 0AD8 */  0x6F, 0x64, 0x65, 0x3E, 0x32, 0x3C, 0x2F, 0x44,  // ode>2</D
-                    /* 0AE0 */  0x53, 0x49, 0x54, 0x72, 0x61, 0x66, 0x66, 0x69,  // SITraffi
-                    /* 0AE8 */  0x63, 0x4D, 0x6F, 0x64, 0x65, 0x3E, 0x0A, 0x20,  // cMode>. 
-                    /* 0AF0 */  0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x4C,  //    <DSIL
-                    /* 0AF8 */  0x61, 0x6E, 0x65, 0x73, 0x3E, 0x34, 0x3C, 0x2F,  // anes>4</
-                    /* 0B00 */  0x44, 0x53, 0x49, 0x4C, 0x61, 0x6E, 0x65, 0x73,  // DSILanes
-                    /* 0B08 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x44,  // >.    <D
-                    /* 0B10 */  0x53, 0x49, 0x4C, 0x6F, 0x77, 0x50, 0x6F, 0x77,  // SILowPow
-                    /* 0B18 */  0x65, 0x72, 0x4D, 0x6F, 0x64, 0x65, 0x49, 0x6E,  // erModeIn
-                    /* 0B20 */  0x42, 0x4C, 0x4C, 0x50, 0x45, 0x4F, 0x46, 0x3E,  // BLLPEOF>
-                    /* 0B28 */  0x54, 0x72, 0x75, 0x65, 0x3C, 0x2F, 0x44, 0x53,  // True</DS
-                    /* 0B30 */  0x49, 0x4C, 0x6F, 0x77, 0x50, 0x6F, 0x77, 0x65,  // ILowPowe
-                    /* 0B38 */  0x72, 0x4D, 0x6F, 0x64, 0x65, 0x49, 0x6E, 0x42,  // rModeInB
-                    /* 0B40 */  0x4C, 0x4C, 0x50, 0x45, 0x4F, 0x46, 0x3E, 0x0A,  // LLPEOF>.
-                    /* 0B48 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49,  //     <DSI
-                    /* 0B50 */  0x4C, 0x6F, 0x77, 0x50, 0x6F, 0x77, 0x65, 0x72,  // LowPower
-                    /* 0B58 */  0x4D, 0x6F, 0x64, 0x65, 0x49, 0x6E, 0x42, 0x4C,  // ModeInBL
-                    /* 0B60 */  0x4C, 0x50, 0x3E, 0x54, 0x72, 0x75, 0x65, 0x3C,  // LP>True<
-                    /* 0B68 */  0x2F, 0x44, 0x53, 0x49, 0x4C, 0x6F, 0x77, 0x50,  // /DSILowP
-                    /* 0B70 */  0x6F, 0x77, 0x65, 0x72, 0x4D, 0x6F, 0x64, 0x65,  // owerMode
-                    /* 0B78 */  0x49, 0x6E, 0x42, 0x4C, 0x4C, 0x50, 0x3E, 0x0A,  // InBLLP>.
-                    /* 0B80 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49,  //     <DSI
-                    /* 0B88 */  0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x52,  // RefreshR
-                    /* 0B90 */  0x61, 0x74, 0x65, 0x3E, 0x30, 0x78, 0x33, 0x43,  // ate>0x3C
-                    /* 0B98 */  0x30, 0x30, 0x30, 0x30, 0x3C, 0x2F, 0x44, 0x53,  // 0000</DS
-                    /* 0BA0 */  0x49, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68,  // IRefresh
-                    /* 0BA8 */  0x52, 0x61, 0x74, 0x65, 0x3E, 0x0A, 0x20, 0x20,  // Rate>.  
-                    /* 0BB0 */  0x20, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x49, 0x6E,  //   <DSIIn
-                    /* 0BB8 */  0x69, 0x74, 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72,  // itMaster
-                    /* 0BC0 */  0x54, 0x69, 0x6D, 0x65, 0x3E, 0x31, 0x32, 0x38,  // Time>128
-                    /* 0BC8 */  0x3C, 0x2F, 0x44, 0x53, 0x49, 0x49, 0x6E, 0x69,  // </DSIIni
-                    /* 0BD0 */  0x74, 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72, 0x54,  // tMasterT
-                    /* 0BD8 */  0x69, 0x6D, 0x65, 0x3E, 0x20, 0x20, 0x0A, 0x20,  // ime>  . 
-                    /* 0BE0 */  0x20, 0x20, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x43,  //    <DSIC
-                    /* 0BE8 */  0x6F, 0x6E, 0x74, 0x72, 0x6F, 0x6C, 0x6C, 0x65,  // ontrolle
-                    /* 0BF0 */  0x72, 0x4D, 0x61, 0x70, 0x70, 0x69, 0x6E, 0x67,  // rMapping
-                    /* 0BF8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,  // >.      
-                    /* 0C00 */  0x20, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20,  //   00.   
-                    /* 0C08 */  0x20, 0x3C, 0x2F, 0x44, 0x53, 0x49, 0x43, 0x6F,  //  </DSICo
-                    /* 0C10 */  0x6E, 0x74, 0x72, 0x6F, 0x6C, 0x6C, 0x65, 0x72,  // ntroller
-                    /* 0C18 */  0x4D, 0x61, 0x70, 0x70, 0x69, 0x6E, 0x67, 0x3E,  // Mapping>
-                    /* 0C20 */  0x20, 0x0A, 0x3C, 0x2F, 0x47, 0x72, 0x6F, 0x75,  //  .</Grou
-                    /* 0C28 */  0x70, 0x3E, 0x0A, 0x3C, 0x44, 0x53, 0x49, 0x49,  // p>.<DSII
-                    /* 0C30 */  0x6E, 0x69, 0x74, 0x53, 0x65, 0x71, 0x75, 0x65,  // nitSeque
-                    /* 0C38 */  0x6E, 0x63, 0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // nce>.   
-                    /* 0C40 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x46, 0x20, 0x31,  //  39 FF 1
-                    /* 0C48 */  0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 0.    39
-                    /* 0C50 */  0x20, 0x46, 0x42, 0x20, 0x30, 0x31, 0x0A, 0x20,  //  FB 01. 
-                    /* 0C58 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x30,  //    39 B0
-                    /* 0C60 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 0C68 */  0x33, 0x39, 0x20, 0x43, 0x30, 0x20, 0x30, 0x30,  // 39 C0 00
-                    /* 0C70 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0C78 */  0x43, 0x31, 0x20, 0x38, 0x39, 0x20, 0x32, 0x38,  // C1 89 28
-                    /* 0C80 */  0x20, 0x30, 0x30, 0x20, 0x30, 0x38, 0x20, 0x30,  //  00 08 0
-                    /* 0C88 */  0x30, 0x20, 0x41, 0x41, 0x20, 0x30, 0x32, 0x20,  // 0 AA 02 
-                    /* 0C90 */  0x30, 0x45, 0x20, 0x30, 0x30, 0x20, 0x32, 0x42,  // 0E 00 2B
-                    /* 0C98 */  0x20, 0x30, 0x30, 0x20, 0x30, 0x37, 0x20, 0x30,  //  00 07 0
-                    /* 0CA0 */  0x44, 0x20, 0x42, 0x37, 0x20, 0x30, 0x43, 0x20,  // D B7 0C 
-                    /* 0CA8 */  0x42, 0x37, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // B7.    3
-                    /* 0CB0 */  0x39, 0x20, 0x43, 0x32, 0x20, 0x31, 0x42, 0x20,  // 9 C2 1B 
-                    /* 0CB8 */  0x41, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // A0.    3
-                    /* 0CC0 */  0x39, 0x20, 0x46, 0x46, 0x20, 0x32, 0x30, 0x0A,  // 9 FF 20.
-                    /* 0CC8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 0CD0 */  0x42, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20,  // B 01.   
-                    /* 0CD8 */  0x20, 0x33, 0x39, 0x20, 0x30, 0x31, 0x20, 0x36,  //  39 01 6
-                    /* 0CE0 */  0x36, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 6.    39
-                    /* 0CE8 */  0x20, 0x30, 0x36, 0x20, 0x34, 0x30, 0x0A, 0x20,  //  06 40. 
-                    /* 0CF0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x30, 0x37,  //    39 07
-                    /* 0CF8 */  0x20, 0x33, 0x38, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  38.    
-                    /* 0D00 */  0x33, 0x39, 0x20, 0x32, 0x46, 0x20, 0x38, 0x33,  // 39 2F 83
-                    /* 0D08 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0D10 */  0x36, 0x39, 0x20, 0x39, 0x31, 0x0A, 0x20, 0x20,  // 69 91.  
-                    /* 0D18 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x39, 0x35, 0x20,  //   39 95 
-                    /* 0D20 */  0x44, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // D1.    3
-                    /* 0D28 */  0x39, 0x20, 0x39, 0x36, 0x20, 0x44, 0x31, 0x0A,  // 9 96 D1.
-                    /* 0D30 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 0D38 */  0x32, 0x20, 0x36, 0x34, 0x0A, 0x20, 0x20, 0x20,  // 2 64.   
-                    /* 0D40 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x33, 0x20, 0x35,  //  39 F3 5
-                    /* 0D48 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 0D50 */  0x20, 0x46, 0x34, 0x20, 0x36, 0x34, 0x0A, 0x20,  //  F4 64. 
-                    /* 0D58 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46, 0x35,  //    39 F5
-                    /* 0D60 */  0x20, 0x35, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  54.    
-                    /* 0D68 */  0x33, 0x39, 0x20, 0x46, 0x36, 0x20, 0x36, 0x34,  // 39 F6 64
-                    /* 0D70 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0D78 */  0x46, 0x37, 0x20, 0x35, 0x34, 0x0A, 0x20, 0x20,  // F7 54.  
-                    /* 0D80 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x46, 0x38, 0x20,  //   39 F8 
-                    /* 0D88 */  0x36, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 64.    3
-                    /* 0D90 */  0x39, 0x20, 0x46, 0x39, 0x20, 0x35, 0x34, 0x0A,  // 9 F9 54.
-                    /* 0D98 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 0DA0 */  0x46, 0x20, 0x32, 0x34, 0x0A, 0x20, 0x20, 0x20,  // F 24.   
-                    /* 0DA8 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30,  //  39 FB 0
-                    /* 0DB0 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 0DB8 */  0x20, 0x30, 0x31, 0x20, 0x30, 0x46, 0x0A, 0x20,  //  01 0F. 
-                    /* 0DC0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x30, 0x33,  //    39 03
-                    /* 0DC8 */  0x20, 0x30, 0x43, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  0C.    
-                    /* 0DD0 */  0x33, 0x39, 0x20, 0x30, 0x35, 0x20, 0x31, 0x44,  // 39 05 1D
-                    /* 0DD8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0DE0 */  0x30, 0x38, 0x20, 0x32, 0x46, 0x0A, 0x20, 0x20,  // 08 2F.  
-                    /* 0DE8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x30, 0x39, 0x20,  //   39 09 
-                    /* 0DF0 */  0x32, 0x45, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 2E.    3
-                    /* 0DF8 */  0x39, 0x20, 0x30, 0x41, 0x20, 0x32, 0x44, 0x0A,  // 9 0A 2D.
-                    /* 0E00 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x30,  //     39 0
-                    /* 0E08 */  0x42, 0x20, 0x32, 0x43, 0x0A, 0x20, 0x20, 0x20,  // B 2C.   
-                    /* 0E10 */  0x20, 0x33, 0x39, 0x20, 0x31, 0x31, 0x20, 0x31,  //  39 11 1
-                    /* 0E18 */  0x37, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 7.    39
-                    /* 0E20 */  0x20, 0x31, 0x32, 0x20, 0x31, 0x33, 0x0A, 0x20,  //  12 13. 
-                    /* 0E28 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x31, 0x33,  //    39 13
-                    /* 0E30 */  0x20, 0x31, 0x35, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  15.    
-                    /* 0E38 */  0x33, 0x39, 0x20, 0x31, 0x35, 0x20, 0x31, 0x34,  // 39 15 14
-                    /* 0E40 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0E48 */  0x31, 0x36, 0x20, 0x31, 0x36, 0x0A, 0x20, 0x20,  // 16 16.  
-                    /* 0E50 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x31, 0x37, 0x20,  //   39 17 
-                    /* 0E58 */  0x31, 0x38, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 18.    3
-                    /* 0E60 */  0x39, 0x20, 0x31, 0x42, 0x20, 0x30, 0x31, 0x0A,  // 9 1B 01.
-                    /* 0E68 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x31,  //     39 1
-                    /* 0E70 */  0x44, 0x20, 0x31, 0x44, 0x0A, 0x20, 0x20, 0x20,  // D 1D.   
-                    /* 0E78 */  0x20, 0x33, 0x39, 0x20, 0x32, 0x30, 0x20, 0x32,  //  39 20 2
-                    /* 0E80 */  0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // F.    39
-                    /* 0E88 */  0x20, 0x32, 0x31, 0x20, 0x32, 0x45, 0x0A, 0x20,  //  21 2E. 
-                    /* 0E90 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32, 0x32,  //    39 22
-                    /* 0E98 */  0x20, 0x32, 0x44, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  2D.    
-                    /* 0EA0 */  0x33, 0x39, 0x20, 0x32, 0x33, 0x20, 0x32, 0x43,  // 39 23 2C
-                    /* 0EA8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0EB0 */  0x32, 0x39, 0x20, 0x31, 0x37, 0x0A, 0x20, 0x20,  // 29 17.  
-                    /* 0EB8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x32, 0x41, 0x20,  //   39 2A 
-                    /* 0EC0 */  0x31, 0x33, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 13.    3
-                    /* 0EC8 */  0x39, 0x20, 0x32, 0x42, 0x20, 0x31, 0x35, 0x0A,  // 9 2B 15.
-                    /* 0ED0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32,  //     39 2
-                    /* 0ED8 */  0x46, 0x20, 0x31, 0x34, 0x0A, 0x20, 0x20, 0x20,  // F 14.   
-                    /* 0EE0 */  0x20, 0x33, 0x39, 0x20, 0x33, 0x30, 0x20, 0x31,  //  39 30 1
-                    /* 0EE8 */  0x36, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 6.    39
-                    /* 0EF0 */  0x20, 0x33, 0x31, 0x20, 0x31, 0x38, 0x0A, 0x20,  //  31 18. 
-                    /* 0EF8 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x33, 0x32,  //    39 32
-                    /* 0F00 */  0x20, 0x30, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  04.    
-                    /* 0F08 */  0x33, 0x39, 0x20, 0x33, 0x34, 0x20, 0x31, 0x30,  // 39 34 10
-                    /* 0F10 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0F18 */  0x33, 0x35, 0x20, 0x31, 0x46, 0x0A, 0x20, 0x20,  // 35 1F.  
-                    /* 0F20 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x33, 0x36, 0x20,  //   39 36 
-                    /* 0F28 */  0x31, 0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 1F.    3
-                    /* 0F30 */  0x39, 0x20, 0x34, 0x44, 0x20, 0x31, 0x34, 0x0A,  // 9 4D 14.
-                    /* 0F38 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x34,  //     39 4
-                    /* 0F40 */  0x45, 0x20, 0x33, 0x36, 0x0A, 0x20, 0x20, 0x20,  // E 36.   
-                    /* 0F48 */  0x20, 0x33, 0x39, 0x20, 0x34, 0x46, 0x20, 0x33,  //  39 4F 3
-                    /* 0F50 */  0x36, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 6.    39
-                    /* 0F58 */  0x20, 0x35, 0x33, 0x20, 0x33, 0x36, 0x0A, 0x20,  //  53 36. 
-                    /* 0F60 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x31,  //    39 71
-                    /* 0F68 */  0x20, 0x33, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  30.    
-                    /* 0F70 */  0x33, 0x39, 0x20, 0x37, 0x39, 0x20, 0x31, 0x31,  // 39 79 11
-                    /* 0F78 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0F80 */  0x37, 0x41, 0x20, 0x38, 0x32, 0x0A, 0x20, 0x20,  // 7A 82.  
-                    /* 0F88 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x42, 0x20,  //   39 7B 
-                    /* 0F90 */  0x38, 0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 8F.    3
-                    /* 0F98 */  0x39, 0x20, 0x37, 0x44, 0x20, 0x30, 0x34, 0x0A,  // 9 7D 04.
-                    /* 0FA0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38,  //     39 8
-                    /* 0FA8 */  0x30, 0x20, 0x30, 0x34, 0x0A, 0x20, 0x20, 0x20,  // 0 04.   
-                    /* 0FB0 */  0x20, 0x33, 0x39, 0x20, 0x38, 0x31, 0x20, 0x30,  //  39 81 0
-                    /* 0FB8 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 0FC0 */  0x20, 0x38, 0x32, 0x20, 0x31, 0x33, 0x0A, 0x20,  //  82 13. 
-                    /* 0FC8 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x34,  //    39 84
-                    /* 0FD0 */  0x20, 0x33, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  31.    
-                    /* 0FD8 */  0x33, 0x39, 0x20, 0x38, 0x35, 0x20, 0x30, 0x30,  // 39 85 00
-                    /* 0FE0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 0FE8 */  0x38, 0x36, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20,  // 86 00.  
-                    /* 0FF0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x37, 0x20,  //   39 87 
-                    /* 0FF8 */  0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 00.    3
-                    /* 1000 */  0x39, 0x20, 0x39, 0x30, 0x20, 0x31, 0x33, 0x0A,  // 9 90 13.
-                    /* 1008 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x39,  //     39 9
-                    /* 1010 */  0x32, 0x20, 0x33, 0x31, 0x0A, 0x20, 0x20, 0x20,  // 2 31.   
-                    /* 1018 */  0x20, 0x33, 0x39, 0x20, 0x39, 0x33, 0x20, 0x30,  //  39 93 0
-                    /* 1020 */  0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 0.    39
-                    /* 1028 */  0x20, 0x39, 0x34, 0x20, 0x30, 0x30, 0x0A, 0x20,  //  94 00. 
-                    /* 1030 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x39, 0x35,  //    39 95
-                    /* 1038 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 1040 */  0x33, 0x39, 0x20, 0x39, 0x43, 0x20, 0x46, 0x34,  // 39 9C F4
-                    /* 1048 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1050 */  0x39, 0x44, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20,  // 9D 01.  
-                    /* 1058 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x41, 0x30, 0x20,  //   39 A0 
-                    /* 1060 */  0x30, 0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 0F.    3
-                    /* 1068 */  0x39, 0x20, 0x41, 0x32, 0x20, 0x30, 0x46, 0x0A,  // 9 A2 0F.
-                    /* 1070 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x41,  //     39 A
-                    /* 1078 */  0x33, 0x20, 0x30, 0x32, 0x0A, 0x20, 0x20, 0x20,  // 3 02.   
-                    /* 1080 */  0x20, 0x33, 0x39, 0x20, 0x41, 0x34, 0x20, 0x30,  //  39 A4 0
-                    /* 1088 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 1090 */  0x20, 0x41, 0x35, 0x20, 0x30, 0x34, 0x0A, 0x20,  //  A5 04. 
-                    /* 1098 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x43, 0x36,  //    39 C6
-                    /* 10A0 */  0x20, 0x43, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  C0.    
-                    /* 10A8 */  0x33, 0x39, 0x20, 0x43, 0x39, 0x20, 0x30, 0x30,  // 39 C9 00
-                    /* 10B0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 10B8 */  0x44, 0x39, 0x20, 0x38, 0x30, 0x0A, 0x20, 0x20,  // D9 80.  
-                    /* 10C0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x45, 0x39, 0x20,  //   39 E9 
-                    /* 10C8 */  0x30, 0x32, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 02.    3
-                    /* 10D0 */  0x39, 0x20, 0x46, 0x46, 0x20, 0x32, 0x35, 0x0A,  // 9 FF 25.
-                    /* 10D8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 10E0 */  0x42, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20,  // B 01.   
-                    /* 10E8 */  0x20, 0x33, 0x39, 0x20, 0x31, 0x38, 0x20, 0x32,  //  39 18 2
-                    /* 10F0 */  0x32, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 2.    39
-                    /* 10F8 */  0x20, 0x31, 0x39, 0x20, 0x45, 0x34, 0x0A, 0x20,  //  19 E4. 
-                    /* 1100 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32, 0x31,  //    39 21
-                    /* 1108 */  0x20, 0x34, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  40.    
-                    /* 1110 */  0x33, 0x39, 0x20, 0x36, 0x36, 0x20, 0x44, 0x38,  // 39 66 D8
-                    /* 1118 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1120 */  0x36, 0x38, 0x20, 0x35, 0x30, 0x0A, 0x20, 0x20,  // 68 50.  
-                    /* 1128 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x36, 0x39, 0x20,  //   39 69 
-                    /* 1130 */  0x31, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 10.    3
-                    /* 1138 */  0x39, 0x20, 0x36, 0x42, 0x20, 0x30, 0x30, 0x0A,  // 9 6B 00.
-                    /* 1140 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x36,  //     39 6
-                    /* 1148 */  0x44, 0x20, 0x30, 0x44, 0x0A, 0x20, 0x20, 0x20,  // D 0D.   
-                    /* 1150 */  0x20, 0x33, 0x39, 0x20, 0x36, 0x45, 0x20, 0x34,  //  39 6E 4
-                    /* 1158 */  0x38, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 8.    39
-                    /* 1160 */  0x20, 0x37, 0x32, 0x20, 0x34, 0x31, 0x0A, 0x20,  //  72 41. 
-                    /* 1168 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x33,  //    39 73
-                    /* 1170 */  0x20, 0x34, 0x41, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  4A.    
-                    /* 1178 */  0x33, 0x39, 0x20, 0x37, 0x34, 0x20, 0x44, 0x30,  // 39 74 D0
-                    /* 1180 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1188 */  0x37, 0x37, 0x20, 0x36, 0x32, 0x0A, 0x20, 0x20,  // 77 62.  
-                    /* 1190 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x39, 0x20,  //   39 79 
-                    /* 1198 */  0x37, 0x45, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 7E.    3
-                    /* 11A0 */  0x39, 0x20, 0x37, 0x44, 0x20, 0x30, 0x33, 0x0A,  // 9 7D 03.
-                    /* 11A8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x37,  //     39 7
-                    /* 11B0 */  0x45, 0x20, 0x31, 0x35, 0x0A, 0x20, 0x20, 0x20,  // E 15.   
-                    /* 11B8 */  0x20, 0x33, 0x39, 0x20, 0x37, 0x46, 0x20, 0x30,  //  39 7F 0
-                    /* 11C0 */  0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 0.    39
-                    /* 11C8 */  0x20, 0x38, 0x34, 0x20, 0x34, 0x44, 0x0A, 0x20,  //  84 4D. 
-                    /* 11D0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x43, 0x46,  //    39 CF
-                    /* 11D8 */  0x20, 0x38, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  80.    
-                    /* 11E0 */  0x33, 0x39, 0x20, 0x44, 0x36, 0x20, 0x38, 0x30,  // 39 D6 80
-                    /* 11E8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 11F0 */  0x44, 0x37, 0x20, 0x38, 0x30, 0x0A, 0x20, 0x20,  // D7 80.  
-                    /* 11F8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x45, 0x46, 0x20,  //   39 EF 
-                    /* 1200 */  0x32, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 20.    3
-                    /* 1208 */  0x39, 0x20, 0x46, 0x30, 0x20, 0x38, 0x34, 0x0A,  // 9 F0 84.
-                    /* 1210 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 1218 */  0x46, 0x20, 0x32, 0x36, 0x0A, 0x20, 0x20, 0x20,  // F 26.   
-                    /* 1220 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30,  //  39 FB 0
-                    /* 1228 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1230 */  0x20, 0x38, 0x31, 0x20, 0x30, 0x46, 0x0A, 0x20,  //  81 0F. 
-                    /* 1238 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x33,  //    39 83
-                    /* 1240 */  0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  01.    
-                    /* 1248 */  0x33, 0x39, 0x20, 0x38, 0x34, 0x20, 0x30, 0x33,  // 39 84 03
-                    /* 1250 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1258 */  0x38, 0x35, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20,  // 85 01.  
-                    /* 1260 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x36, 0x20,  //   39 86 
-                    /* 1268 */  0x30, 0x33, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 03.    3
-                    /* 1270 */  0x39, 0x20, 0x38, 0x37, 0x20, 0x30, 0x31, 0x0A,  // 9 87 01.
-                    /* 1278 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38,  //     39 8
-                    /* 1280 */  0x38, 0x20, 0x30, 0x35, 0x0A, 0x20, 0x20, 0x20,  // 8 05.   
-                    /* 1288 */  0x20, 0x33, 0x39, 0x20, 0x38, 0x41, 0x20, 0x31,  //  39 8A 1
-                    /* 1290 */  0x41, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // A.    39
-                    /* 1298 */  0x20, 0x38, 0x42, 0x20, 0x31, 0x31, 0x0A, 0x20,  //  8B 11. 
-                    /* 12A0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x43,  //    39 8C
-                    /* 12A8 */  0x20, 0x32, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  24.    
-                    /* 12B0 */  0x33, 0x39, 0x20, 0x38, 0x45, 0x20, 0x34, 0x32,  // 39 8E 42
-                    /* 12B8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 12C0 */  0x38, 0x46, 0x20, 0x31, 0x31, 0x0A, 0x20, 0x20,  // 8F 11.  
-                    /* 12C8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x39, 0x30, 0x20,  //   39 90 
-                    /* 12D0 */  0x31, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 11.    3
-                    /* 12D8 */  0x39, 0x20, 0x39, 0x31, 0x20, 0x31, 0x31, 0x0A,  // 9 91 11.
-                    /* 12E0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x39,  //     39 9
-                    /* 12E8 */  0x41, 0x20, 0x38, 0x30, 0x0A, 0x20, 0x20, 0x20,  // A 80.   
-                    /* 12F0 */  0x20, 0x33, 0x39, 0x20, 0x39, 0x42, 0x20, 0x30,  //  39 9B 0
-                    /* 12F8 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 1300 */  0x20, 0x39, 0x43, 0x20, 0x30, 0x30, 0x0A, 0x20,  //  9C 00. 
-                    /* 1308 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x39, 0x44,  //    39 9D
-                    /* 1310 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 1318 */  0x33, 0x39, 0x20, 0x39, 0x45, 0x20, 0x30, 0x30,  // 39 9E 00
-                    /* 1320 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1328 */  0x46, 0x46, 0x20, 0x32, 0x37, 0x0A, 0x20, 0x20,  // FF 27.  
-                    /* 1330 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20,  //   39 FB 
-                    /* 1338 */  0x30, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 01.    3
-                    /* 1340 */  0x39, 0x20, 0x30, 0x31, 0x20, 0x36, 0x38, 0x0A,  // 9 01 68.
-                    /* 1348 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32,  //     39 2
-                    /* 1350 */  0x30, 0x20, 0x38, 0x31, 0x0A, 0x20, 0x20, 0x20,  // 0 81.   
-                    /* 1358 */  0x20, 0x33, 0x39, 0x20, 0x32, 0x31, 0x20, 0x36,  //  39 21 6
-                    /* 1360 */  0x41, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // A.    39
-                    /* 1368 */  0x20, 0x32, 0x35, 0x20, 0x38, 0x31, 0x0A, 0x20,  //  25 81. 
-                    /* 1370 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32, 0x36,  //    39 26
-                    /* 1378 */  0x20, 0x39, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  94.    
-                    /* 1380 */  0x33, 0x39, 0x20, 0x36, 0x45, 0x20, 0x30, 0x30,  // 39 6E 00
-                    /* 1388 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1390 */  0x36, 0x46, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20,  // 6F 00.  
-                    /* 1398 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x30, 0x20,  //   39 70 
-                    /* 13A0 */  0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 00.    3
-                    /* 13A8 */  0x39, 0x20, 0x37, 0x31, 0x20, 0x30, 0x30, 0x0A,  // 9 71 00.
-                    /* 13B0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x37,  //     39 7
-                    /* 13B8 */  0x32, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20,  // 2 00.   
-                    /* 13C0 */  0x20, 0x33, 0x39, 0x20, 0x37, 0x35, 0x20, 0x30,  //  39 75 0
-                    /* 13C8 */  0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 0.    39
-                    /* 13D0 */  0x20, 0x37, 0x36, 0x20, 0x30, 0x30, 0x0A, 0x20,  //  76 00. 
-                    /* 13D8 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x37,  //    39 77
-                    /* 13E0 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 13E8 */  0x33, 0x39, 0x20, 0x37, 0x44, 0x20, 0x30, 0x39,  // 39 7D 09
-                    /* 13F0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 13F8 */  0x37, 0x45, 0x20, 0x36, 0x37, 0x0A, 0x20, 0x20,  // 7E 67.  
-                    /* 1400 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x30, 0x20,  //   39 80 
-                    /* 1408 */  0x32, 0x33, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 23.    3
-                    /* 1410 */  0x39, 0x20, 0x38, 0x32, 0x20, 0x30, 0x39, 0x0A,  // 9 82 09.
-                    /* 1418 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38,  //     39 8
-                    /* 1420 */  0x33, 0x20, 0x36, 0x37, 0x0A, 0x20, 0x20, 0x20,  // 3 67.   
-                    /* 1428 */  0x20, 0x33, 0x39, 0x20, 0x38, 0x38, 0x20, 0x30,  //  39 88 0
-                    /* 1430 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1438 */  0x20, 0x38, 0x39, 0x20, 0x31, 0x30, 0x0A, 0x20,  //  89 10. 
-                    /* 1440 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x41, 0x35,  //    39 A5
-                    /* 1448 */  0x20, 0x31, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  10.    
-                    /* 1450 */  0x33, 0x39, 0x20, 0x41, 0x36, 0x20, 0x32, 0x33,  // 39 A6 23
-                    /* 1458 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1460 */  0x41, 0x37, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20,  // A7 01.  
-                    /* 1468 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x36, 0x20,  //   39 B6 
-                    /* 1470 */  0x34, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 40.    3
-                    /* 1478 */  0x39, 0x20, 0x45, 0x35, 0x20, 0x30, 0x32, 0x0A,  // 9 E5 02.
-                    /* 1480 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x45,  //     39 E
-                    /* 1488 */  0x36, 0x20, 0x44, 0x33, 0x0A, 0x20, 0x20, 0x20,  // 6 D3.   
-                    /* 1490 */  0x20, 0x33, 0x39, 0x20, 0x45, 0x42, 0x20, 0x30,  //  39 EB 0
-                    /* 1498 */  0x33, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 3.    39
-                    /* 14A0 */  0x20, 0x45, 0x43, 0x20, 0x32, 0x38, 0x0A, 0x20,  //  EC 28. 
-                    /* 14A8 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46, 0x46,  //    39 FF
-                    /* 14B0 */  0x20, 0x32, 0x41, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  2A.    
-                    /* 14B8 */  0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30, 0x31,  // 39 FB 01
-                    /* 14C0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 14C8 */  0x30, 0x30, 0x20, 0x39, 0x31, 0x0A, 0x20, 0x20,  // 00 91.  
-                    /* 14D0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x30, 0x33, 0x20,  //   39 03 
-                    /* 14D8 */  0x32, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 20.    3
-                    /* 14E0 */  0x39, 0x20, 0x30, 0x37, 0x20, 0x35, 0x30, 0x0A,  // 9 07 50.
-                    /* 14E8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x30,  //     39 0
-                    /* 14F0 */  0x41, 0x20, 0x37, 0x30, 0x0A, 0x20, 0x20, 0x20,  // A 70.   
-                    /* 14F8 */  0x20, 0x33, 0x39, 0x20, 0x30, 0x43, 0x20, 0x30,  //  39 0C 0
-                    /* 1500 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 1508 */  0x20, 0x30, 0x44, 0x20, 0x34, 0x30, 0x0A, 0x20,  //  0D 40. 
-                    /* 1510 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x30, 0x46,  //    39 0F
-                    /* 1518 */  0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  01.    
-                    /* 1520 */  0x33, 0x39, 0x20, 0x31, 0x31, 0x20, 0x45, 0x30,  // 39 11 E0
-                    /* 1528 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1530 */  0x31, 0x35, 0x20, 0x30, 0x46, 0x0A, 0x20, 0x20,  // 15 0F.  
-                    /* 1538 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x31, 0x36, 0x20,  //   39 16 
-                    /* 1540 */  0x41, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // A4.    3
-                    /* 1548 */  0x39, 0x20, 0x31, 0x39, 0x20, 0x30, 0x46, 0x0A,  // 9 19 0F.
-                    /* 1550 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x31,  //     39 1
-                    /* 1558 */  0x41, 0x20, 0x37, 0x38, 0x0A, 0x20, 0x20, 0x20,  // A 78.   
-                    /* 1560 */  0x20, 0x33, 0x39, 0x20, 0x31, 0x42, 0x20, 0x32,  //  39 1B 2
-                    /* 1568 */  0x33, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 3.    39
-                    /* 1570 */  0x20, 0x31, 0x44, 0x20, 0x33, 0x36, 0x0A, 0x20,  //  1D 36. 
-                    /* 1578 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x31, 0x45,  //    39 1E
-                    /* 1580 */  0x20, 0x33, 0x45, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  3E.    
-                    /* 1588 */  0x33, 0x39, 0x20, 0x31, 0x46, 0x20, 0x33, 0x45,  // 39 1F 3E
-                    /* 1590 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1598 */  0x32, 0x30, 0x20, 0x33, 0x45, 0x0A, 0x20, 0x20,  // 20 3E.  
-                    /* 15A0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x32, 0x38, 0x20,  //   39 28 
-                    /* 15A8 */  0x46, 0x44, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // FD.    3
-                    /* 15B0 */  0x39, 0x20, 0x32, 0x39, 0x20, 0x31, 0x32, 0x0A,  // 9 29 12.
-                    /* 15B8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x32,  //     39 2
-                    /* 15C0 */  0x41, 0x20, 0x45, 0x31, 0x0A, 0x20, 0x20, 0x20,  // A E1.   
-                    /* 15C8 */  0x20, 0x33, 0x39, 0x20, 0x32, 0x44, 0x20, 0x30,  //  39 2D 0
-                    /* 15D0 */  0x41, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // A.    39
-                    /* 15D8 */  0x20, 0x33, 0x30, 0x20, 0x34, 0x39, 0x0A, 0x20,  //  30 49. 
-                    /* 15E0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x33, 0x33,  //    39 33
-                    /* 15E8 */  0x20, 0x39, 0x36, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  96.    
-                    /* 15F0 */  0x33, 0x39, 0x20, 0x33, 0x34, 0x20, 0x46, 0x46,  // 39 34 FF
-                    /* 15F8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1600 */  0x33, 0x35, 0x20, 0x34, 0x30, 0x0A, 0x20, 0x20,  // 35 40.  
-                    /* 1608 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x33, 0x36, 0x20,  //   39 36 
-                    /* 1610 */  0x44, 0x45, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // DE.    3
-                    /* 1618 */  0x39, 0x20, 0x33, 0x37, 0x20, 0x46, 0x39, 0x0A,  // 9 37 F9.
-                    /* 1620 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x33,  //     39 3
-                    /* 1628 */  0x38, 0x20, 0x34, 0x35, 0x0A, 0x20, 0x20, 0x20,  // 8 45.   
-                    /* 1630 */  0x20, 0x33, 0x39, 0x20, 0x33, 0x39, 0x20, 0x44,  //  39 39 D
-                    /* 1638 */  0x39, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 9.    39
-                    /* 1640 */  0x20, 0x33, 0x41, 0x20, 0x34, 0x39, 0x0A, 0x20,  //  3A 49. 
-                    /* 1648 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x34, 0x41,  //    39 4A
-                    /* 1650 */  0x20, 0x46, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  F0.    
-                    /* 1658 */  0x33, 0x39, 0x20, 0x37, 0x41, 0x20, 0x30, 0x39,  // 39 7A 09
-                    /* 1660 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1668 */  0x37, 0x42, 0x20, 0x34, 0x30, 0x0A, 0x20, 0x20,  // 7B 40.  
-                    /* 1670 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x37, 0x46, 0x20,  //   39 7F 
-                    /* 1678 */  0x46, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // F0.    3
-                    /* 1680 */  0x39, 0x20, 0x38, 0x33, 0x20, 0x30, 0x46, 0x0A,  // 9 83 0F.
-                    /* 1688 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38,  //     39 8
-                    /* 1690 */  0x34, 0x20, 0x41, 0x34, 0x0A, 0x20, 0x20, 0x20,  // 4 A4.   
-                    /* 1698 */  0x20, 0x33, 0x39, 0x20, 0x38, 0x37, 0x20, 0x30,  //  39 87 0
-                    /* 16A0 */  0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // F.    39
-                    /* 16A8 */  0x20, 0x38, 0x38, 0x20, 0x37, 0x38, 0x0A, 0x20,  //  88 78. 
-                    /* 16B0 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x39,  //    39 89
-                    /* 16B8 */  0x20, 0x32, 0x33, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  23.    
-                    /* 16C0 */  0x33, 0x39, 0x20, 0x38, 0x42, 0x20, 0x33, 0x36,  // 39 8B 36
-                    /* 16C8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 16D0 */  0x38, 0x43, 0x20, 0x37, 0x44, 0x0A, 0x20, 0x20,  // 8C 7D.  
-                    /* 16D8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x38, 0x44, 0x20,  //   39 8D 
-                    /* 16E0 */  0x37, 0x44, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 7D.    3
-                    /* 16E8 */  0x39, 0x20, 0x38, 0x45, 0x20, 0x37, 0x44, 0x0A,  // 9 8E 7D.
-                    /* 16F0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 16F8 */  0x46, 0x20, 0x32, 0x30, 0x0A, 0x20, 0x20, 0x20,  // F 20.   
-                    /* 1700 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30,  //  39 FB 0
-                    /* 1708 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1710 */  0x20, 0x42, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30,  //  B0 00 0
-                    /* 1718 */  0x30, 0x20, 0x30, 0x30, 0x20, 0x31, 0x37, 0x20,  // 0 00 17 
-                    /* 1720 */  0x30, 0x30, 0x20, 0x34, 0x39, 0x20, 0x30, 0x30,  // 00 49 00
-                    /* 1728 */  0x20, 0x36, 0x41, 0x20, 0x30, 0x30, 0x20, 0x38,  //  6A 00 8
-                    /* 1730 */  0x39, 0x20, 0x30, 0x30, 0x20, 0x39, 0x46, 0x20,  // 9 00 9F 
-                    /* 1738 */  0x30, 0x30, 0x20, 0x42, 0x36, 0x20, 0x30, 0x30,  // 00 B6 00
-                    /* 1740 */  0x20, 0x43, 0x38, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  C8.    
-                    /* 1748 */  0x33, 0x39, 0x20, 0x42, 0x31, 0x20, 0x30, 0x30,  // 39 B1 00
-                    /* 1750 */  0x20, 0x44, 0x39, 0x20, 0x30, 0x31, 0x20, 0x31,  //  D9 01 1
-                    /* 1758 */  0x30, 0x20, 0x30, 0x31, 0x20, 0x33, 0x41, 0x20,  // 0 01 3A 
-                    /* 1760 */  0x30, 0x31, 0x20, 0x37, 0x41, 0x20, 0x30, 0x31,  // 01 7A 01
-                    /* 1768 */  0x20, 0x41, 0x39, 0x20, 0x30, 0x31, 0x20, 0x46,  //  A9 01 F
-                    /* 1770 */  0x32, 0x20, 0x30, 0x32, 0x20, 0x32, 0x44, 0x20,  // 2 02 2D 
-                    /* 1778 */  0x30, 0x32, 0x20, 0x32, 0x45, 0x0A, 0x20, 0x20,  // 02 2E.  
-                    /* 1780 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x32, 0x20,  //   39 B2 
-                    /* 1788 */  0x30, 0x32, 0x20, 0x36, 0x34, 0x20, 0x30, 0x32,  // 02 64 02
-                    /* 1790 */  0x20, 0x41, 0x33, 0x20, 0x30, 0x32, 0x20, 0x43,  //  A3 02 C
-                    /* 1798 */  0x41, 0x20, 0x30, 0x33, 0x20, 0x30, 0x30, 0x20,  // A 03 00 
-                    /* 17A0 */  0x30, 0x33, 0x20, 0x31, 0x45, 0x20, 0x30, 0x33,  // 03 1E 03
-                    /* 17A8 */  0x20, 0x34, 0x41, 0x20, 0x30, 0x33, 0x20, 0x35,  //  4A 03 5
-                    /* 17B0 */  0x39, 0x20, 0x30, 0x33, 0x20, 0x36, 0x41, 0x0A,  // 9 03 6A.
-                    /* 17B8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 17C0 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x37, 0x44, 0x20,  // 3 03 7D 
-                    /* 17C8 */  0x30, 0x33, 0x20, 0x39, 0x33, 0x20, 0x30, 0x33,  // 03 93 03
-                    /* 17D0 */  0x20, 0x41, 0x42, 0x20, 0x30, 0x33, 0x20, 0x43,  //  AB 03 C
-                    /* 17D8 */  0x38, 0x20, 0x30, 0x33, 0x20, 0x45, 0x43, 0x20,  // 8 03 EC 
-                    /* 17E0 */  0x30, 0x33, 0x20, 0x46, 0x45, 0x20, 0x30, 0x30,  // 03 FE 00
-                    /* 17E8 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 17F0 */  0x33, 0x39, 0x20, 0x42, 0x34, 0x20, 0x30, 0x30,  // 39 B4 00
-                    /* 17F8 */  0x20, 0x30, 0x30, 0x20, 0x30, 0x30, 0x20, 0x31,  //  00 00 1
-                    /* 1800 */  0x42, 0x20, 0x30, 0x30, 0x20, 0x35, 0x31, 0x20,  // B 00 51 
-                    /* 1808 */  0x30, 0x30, 0x20, 0x37, 0x31, 0x20, 0x30, 0x30,  // 00 71 00
-                    /* 1810 */  0x20, 0x39, 0x30, 0x20, 0x30, 0x30, 0x20, 0x41,  //  90 00 A
-                    /* 1818 */  0x37, 0x20, 0x30, 0x30, 0x20, 0x42, 0x46, 0x20,  // 7 00 BF 
-                    /* 1820 */  0x30, 0x30, 0x20, 0x44, 0x31, 0x0A, 0x20, 0x20,  // 00 D1.  
-                    /* 1828 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x35, 0x20,  //   39 B5 
-                    /* 1830 */  0x30, 0x30, 0x20, 0x45, 0x32, 0x20, 0x30, 0x31,  // 00 E2 01
-                    /* 1838 */  0x20, 0x31, 0x41, 0x20, 0x30, 0x31, 0x20, 0x34,  //  1A 01 4
-                    /* 1840 */  0x33, 0x20, 0x30, 0x31, 0x20, 0x38, 0x33, 0x20,  // 3 01 83 
-                    /* 1848 */  0x30, 0x31, 0x20, 0x42, 0x32, 0x20, 0x30, 0x31,  // 01 B2 01
-                    /* 1850 */  0x20, 0x46, 0x41, 0x20, 0x30, 0x32, 0x20, 0x33,  //  FA 02 3
-                    /* 1858 */  0x34, 0x20, 0x30, 0x32, 0x20, 0x33, 0x36, 0x0A,  // 4 02 36.
-                    /* 1860 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 1868 */  0x36, 0x20, 0x30, 0x32, 0x20, 0x36, 0x42, 0x20,  // 6 02 6B 
-                    /* 1870 */  0x30, 0x32, 0x20, 0x41, 0x38, 0x20, 0x30, 0x32,  // 02 A8 02
-                    /* 1878 */  0x20, 0x44, 0x30, 0x20, 0x30, 0x33, 0x20, 0x30,  //  D0 03 0
-                    /* 1880 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x32, 0x31, 0x20,  // 3 03 21 
-                    /* 1888 */  0x30, 0x33, 0x20, 0x34, 0x44, 0x20, 0x30, 0x33,  // 03 4D 03
-                    /* 1890 */  0x20, 0x35, 0x42, 0x20, 0x30, 0x33, 0x20, 0x36,  //  5B 03 6
-                    /* 1898 */  0x42, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // B.    39
-                    /* 18A0 */  0x20, 0x42, 0x37, 0x20, 0x30, 0x33, 0x20, 0x37,  //  B7 03 7
-                    /* 18A8 */  0x45, 0x20, 0x30, 0x33, 0x20, 0x39, 0x34, 0x20,  // E 03 94 
-                    /* 18B0 */  0x30, 0x33, 0x20, 0x41, 0x43, 0x20, 0x30, 0x33,  // 03 AC 03
-                    /* 18B8 */  0x20, 0x43, 0x38, 0x20, 0x30, 0x33, 0x20, 0x45,  //  C8 03 E
-                    /* 18C0 */  0x43, 0x20, 0x30, 0x33, 0x20, 0x46, 0x45, 0x20,  // C 03 FE 
-                    /* 18C8 */  0x30, 0x30, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20,  // 00 00.  
-                    /* 18D0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x38, 0x20,  //   39 B8 
-                    /* 18D8 */  0x30, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30, 0x30,  // 00 00 00
-                    /* 18E0 */  0x20, 0x31, 0x42, 0x20, 0x30, 0x30, 0x20, 0x35,  //  1B 00 5
-                    /* 18E8 */  0x31, 0x20, 0x30, 0x30, 0x20, 0x37, 0x32, 0x20,  // 1 00 72 
-                    /* 18F0 */  0x30, 0x30, 0x20, 0x39, 0x32, 0x20, 0x30, 0x30,  // 00 92 00
-                    /* 18F8 */  0x20, 0x41, 0x38, 0x20, 0x30, 0x30, 0x20, 0x42,  //  A8 00 B
-                    /* 1900 */  0x46, 0x20, 0x30, 0x30, 0x20, 0x44, 0x31, 0x0A,  // F 00 D1.
-                    /* 1908 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 1910 */  0x39, 0x20, 0x30, 0x30, 0x20, 0x45, 0x32, 0x20,  // 9 00 E2 
-                    /* 1918 */  0x30, 0x31, 0x20, 0x31, 0x38, 0x20, 0x30, 0x31,  // 01 18 01
-                    /* 1920 */  0x20, 0x34, 0x32, 0x20, 0x30, 0x31, 0x20, 0x38,  //  42 01 8
-                    /* 1928 */  0x31, 0x20, 0x30, 0x31, 0x20, 0x41, 0x46, 0x20,  // 1 01 AF 
-                    /* 1930 */  0x30, 0x31, 0x20, 0x46, 0x35, 0x20, 0x30, 0x32,  // 01 F5 02
-                    /* 1938 */  0x20, 0x32, 0x46, 0x20, 0x30, 0x32, 0x20, 0x33,  //  2F 02 3
-                    /* 1940 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1948 */  0x20, 0x42, 0x41, 0x20, 0x30, 0x32, 0x20, 0x36,  //  BA 02 6
-                    /* 1950 */  0x38, 0x20, 0x30, 0x32, 0x20, 0x41, 0x36, 0x20,  // 8 02 A6 
-                    /* 1958 */  0x30, 0x32, 0x20, 0x43, 0x44, 0x20, 0x30, 0x33,  // 02 CD 03
-                    /* 1960 */  0x20, 0x30, 0x31, 0x20, 0x30, 0x33, 0x20, 0x31,  //  01 03 1
-                    /* 1968 */  0x46, 0x20, 0x30, 0x33, 0x20, 0x34, 0x41, 0x20,  // F 03 4A 
-                    /* 1970 */  0x30, 0x33, 0x20, 0x35, 0x39, 0x20, 0x30, 0x33,  // 03 59 03
-                    /* 1978 */  0x20, 0x36, 0x41, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  6A.    
-                    /* 1980 */  0x33, 0x39, 0x20, 0x42, 0x42, 0x20, 0x30, 0x33,  // 39 BB 03
-                    /* 1988 */  0x20, 0x37, 0x44, 0x20, 0x30, 0x33, 0x20, 0x39,  //  7D 03 9
-                    /* 1990 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x41, 0x42, 0x20,  // 3 03 AB 
-                    /* 1998 */  0x30, 0x33, 0x20, 0x43, 0x38, 0x20, 0x30, 0x33,  // 03 C8 03
-                    /* 19A0 */  0x20, 0x45, 0x43, 0x20, 0x30, 0x33, 0x20, 0x46,  //  EC 03 F
-                    /* 19A8 */  0x45, 0x20, 0x30, 0x30, 0x20, 0x30, 0x30, 0x0A,  // E 00 00.
-                    /* 19B0 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 19B8 */  0x46, 0x20, 0x32, 0x31, 0x0A, 0x20, 0x20, 0x20,  // F 21.   
-                    /* 19C0 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30,  //  39 FB 0
-                    /* 19C8 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 19D0 */  0x20, 0x42, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30,  //  B0 00 0
-                    /* 19D8 */  0x30, 0x20, 0x30, 0x30, 0x20, 0x31, 0x37, 0x20,  // 0 00 17 
-                    /* 19E0 */  0x30, 0x30, 0x20, 0x34, 0x39, 0x20, 0x30, 0x30,  // 00 49 00
-                    /* 19E8 */  0x20, 0x36, 0x41, 0x20, 0x30, 0x30, 0x20, 0x38,  //  6A 00 8
-                    /* 19F0 */  0x39, 0x20, 0x30, 0x30, 0x20, 0x39, 0x46, 0x20,  // 9 00 9F 
-                    /* 19F8 */  0x30, 0x30, 0x20, 0x42, 0x36, 0x20, 0x30, 0x30,  // 00 B6 00
-                    /* 1A00 */  0x20, 0x43, 0x38, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  C8.    
-                    /* 1A08 */  0x33, 0x39, 0x20, 0x42, 0x31, 0x20, 0x30, 0x30,  // 39 B1 00
-                    /* 1A10 */  0x20, 0x44, 0x39, 0x20, 0x30, 0x31, 0x20, 0x31,  //  D9 01 1
-                    /* 1A18 */  0x30, 0x20, 0x30, 0x31, 0x20, 0x33, 0x41, 0x20,  // 0 01 3A 
-                    /* 1A20 */  0x30, 0x31, 0x20, 0x37, 0x41, 0x20, 0x30, 0x31,  // 01 7A 01
-                    /* 1A28 */  0x20, 0x41, 0x39, 0x20, 0x30, 0x31, 0x20, 0x46,  //  A9 01 F
-                    /* 1A30 */  0x32, 0x20, 0x30, 0x32, 0x20, 0x32, 0x44, 0x20,  // 2 02 2D 
-                    /* 1A38 */  0x30, 0x32, 0x20, 0x32, 0x45, 0x0A, 0x20, 0x20,  // 02 2E.  
-                    /* 1A40 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x32, 0x20,  //   39 B2 
-                    /* 1A48 */  0x30, 0x32, 0x20, 0x36, 0x34, 0x20, 0x30, 0x32,  // 02 64 02
-                    /* 1A50 */  0x20, 0x41, 0x33, 0x20, 0x30, 0x32, 0x20, 0x43,  //  A3 02 C
-                    /* 1A58 */  0x41, 0x20, 0x30, 0x33, 0x20, 0x30, 0x30, 0x20,  // A 03 00 
-                    /* 1A60 */  0x30, 0x33, 0x20, 0x31, 0x45, 0x20, 0x30, 0x33,  // 03 1E 03
-                    /* 1A68 */  0x20, 0x34, 0x41, 0x20, 0x30, 0x33, 0x20, 0x35,  //  4A 03 5
-                    /* 1A70 */  0x39, 0x20, 0x30, 0x33, 0x20, 0x36, 0x41, 0x0A,  // 9 03 6A.
-                    /* 1A78 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 1A80 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x37, 0x44, 0x20,  // 3 03 7D 
-                    /* 1A88 */  0x30, 0x33, 0x20, 0x39, 0x33, 0x20, 0x30, 0x33,  // 03 93 03
-                    /* 1A90 */  0x20, 0x41, 0x42, 0x20, 0x30, 0x33, 0x20, 0x43,  //  AB 03 C
-                    /* 1A98 */  0x38, 0x20, 0x30, 0x33, 0x20, 0x45, 0x43, 0x20,  // 8 03 EC 
-                    /* 1AA0 */  0x30, 0x33, 0x20, 0x46, 0x45, 0x20, 0x30, 0x30,  // 03 FE 00
-                    /* 1AA8 */  0x20, 0x30, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  00.    
-                    /* 1AB0 */  0x33, 0x39, 0x20, 0x42, 0x34, 0x20, 0x30, 0x30,  // 39 B4 00
-                    /* 1AB8 */  0x20, 0x30, 0x30, 0x20, 0x30, 0x30, 0x20, 0x31,  //  00 00 1
-                    /* 1AC0 */  0x42, 0x20, 0x30, 0x30, 0x20, 0x35, 0x31, 0x20,  // B 00 51 
-                    /* 1AC8 */  0x30, 0x30, 0x20, 0x37, 0x31, 0x20, 0x30, 0x30,  // 00 71 00
-                    /* 1AD0 */  0x20, 0x39, 0x30, 0x20, 0x30, 0x30, 0x20, 0x41,  //  90 00 A
-                    /* 1AD8 */  0x37, 0x20, 0x30, 0x30, 0x20, 0x42, 0x46, 0x20,  // 7 00 BF 
-                    /* 1AE0 */  0x30, 0x30, 0x20, 0x44, 0x31, 0x0A, 0x20, 0x20,  // 00 D1.  
-                    /* 1AE8 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x35, 0x20,  //   39 B5 
-                    /* 1AF0 */  0x30, 0x30, 0x20, 0x45, 0x32, 0x20, 0x30, 0x31,  // 00 E2 01
-                    /* 1AF8 */  0x20, 0x31, 0x41, 0x20, 0x30, 0x31, 0x20, 0x34,  //  1A 01 4
-                    /* 1B00 */  0x33, 0x20, 0x30, 0x31, 0x20, 0x38, 0x33, 0x20,  // 3 01 83 
-                    /* 1B08 */  0x30, 0x31, 0x20, 0x42, 0x32, 0x20, 0x30, 0x31,  // 01 B2 01
-                    /* 1B10 */  0x20, 0x46, 0x41, 0x20, 0x30, 0x32, 0x20, 0x33,  //  FA 02 3
-                    /* 1B18 */  0x34, 0x20, 0x30, 0x32, 0x20, 0x33, 0x36, 0x0A,  // 4 02 36.
-                    /* 1B20 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 1B28 */  0x36, 0x20, 0x30, 0x32, 0x20, 0x36, 0x42, 0x20,  // 6 02 6B 
-                    /* 1B30 */  0x30, 0x32, 0x20, 0x41, 0x38, 0x20, 0x30, 0x32,  // 02 A8 02
-                    /* 1B38 */  0x20, 0x44, 0x30, 0x20, 0x30, 0x33, 0x20, 0x30,  //  D0 03 0
-                    /* 1B40 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x32, 0x31, 0x20,  // 3 03 21 
-                    /* 1B48 */  0x30, 0x33, 0x20, 0x34, 0x44, 0x20, 0x30, 0x33,  // 03 4D 03
-                    /* 1B50 */  0x20, 0x35, 0x42, 0x20, 0x30, 0x33, 0x20, 0x36,  //  5B 03 6
-                    /* 1B58 */  0x42, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // B.    39
-                    /* 1B60 */  0x20, 0x42, 0x37, 0x20, 0x30, 0x33, 0x20, 0x37,  //  B7 03 7
-                    /* 1B68 */  0x45, 0x20, 0x30, 0x33, 0x20, 0x39, 0x34, 0x20,  // E 03 94 
-                    /* 1B70 */  0x30, 0x33, 0x20, 0x41, 0x43, 0x20, 0x30, 0x33,  // 03 AC 03
-                    /* 1B78 */  0x20, 0x43, 0x38, 0x20, 0x30, 0x33, 0x20, 0x45,  //  C8 03 E
-                    /* 1B80 */  0x43, 0x20, 0x30, 0x33, 0x20, 0x46, 0x45, 0x20,  // C 03 FE 
-                    /* 1B88 */  0x30, 0x30, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x20,  // 00 00.  
-                    /* 1B90 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x42, 0x38, 0x20,  //   39 B8 
-                    /* 1B98 */  0x30, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30, 0x30,  // 00 00 00
-                    /* 1BA0 */  0x20, 0x31, 0x42, 0x20, 0x30, 0x30, 0x20, 0x35,  //  1B 00 5
-                    /* 1BA8 */  0x31, 0x20, 0x30, 0x30, 0x20, 0x37, 0x32, 0x20,  // 1 00 72 
-                    /* 1BB0 */  0x30, 0x30, 0x20, 0x39, 0x32, 0x20, 0x30, 0x30,  // 00 92 00
-                    /* 1BB8 */  0x20, 0x41, 0x38, 0x20, 0x30, 0x30, 0x20, 0x42,  //  A8 00 B
-                    /* 1BC0 */  0x46, 0x20, 0x30, 0x30, 0x20, 0x44, 0x31, 0x0A,  // F 00 D1.
-                    /* 1BC8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x42,  //     39 B
-                    /* 1BD0 */  0x39, 0x20, 0x30, 0x30, 0x20, 0x45, 0x32, 0x20,  // 9 00 E2 
-                    /* 1BD8 */  0x30, 0x31, 0x20, 0x31, 0x38, 0x20, 0x30, 0x31,  // 01 18 01
-                    /* 1BE0 */  0x20, 0x34, 0x32, 0x20, 0x30, 0x31, 0x20, 0x38,  //  42 01 8
-                    /* 1BE8 */  0x31, 0x20, 0x30, 0x31, 0x20, 0x41, 0x46, 0x20,  // 1 01 AF 
-                    /* 1BF0 */  0x30, 0x31, 0x20, 0x46, 0x35, 0x20, 0x30, 0x32,  // 01 F5 02
-                    /* 1BF8 */  0x20, 0x32, 0x46, 0x20, 0x30, 0x32, 0x20, 0x33,  //  2F 02 3
-                    /* 1C00 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1C08 */  0x20, 0x42, 0x41, 0x20, 0x30, 0x32, 0x20, 0x36,  //  BA 02 6
-                    /* 1C10 */  0x38, 0x20, 0x30, 0x32, 0x20, 0x41, 0x36, 0x20,  // 8 02 A6 
-                    /* 1C18 */  0x30, 0x32, 0x20, 0x43, 0x44, 0x20, 0x30, 0x33,  // 02 CD 03
-                    /* 1C20 */  0x20, 0x30, 0x31, 0x20, 0x30, 0x33, 0x20, 0x31,  //  01 03 1
-                    /* 1C28 */  0x46, 0x20, 0x30, 0x33, 0x20, 0x34, 0x41, 0x20,  // F 03 4A 
-                    /* 1C30 */  0x30, 0x33, 0x20, 0x35, 0x39, 0x20, 0x30, 0x33,  // 03 59 03
-                    /* 1C38 */  0x20, 0x36, 0x41, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  6A.    
-                    /* 1C40 */  0x33, 0x39, 0x20, 0x42, 0x42, 0x20, 0x30, 0x33,  // 39 BB 03
-                    /* 1C48 */  0x20, 0x37, 0x44, 0x20, 0x30, 0x33, 0x20, 0x39,  //  7D 03 9
-                    /* 1C50 */  0x33, 0x20, 0x30, 0x33, 0x20, 0x41, 0x42, 0x20,  // 3 03 AB 
-                    /* 1C58 */  0x30, 0x33, 0x20, 0x43, 0x38, 0x20, 0x30, 0x33,  // 03 C8 03
-                    /* 1C60 */  0x20, 0x45, 0x43, 0x20, 0x30, 0x33, 0x20, 0x46,  //  EC 03 F
-                    /* 1C68 */  0x45, 0x20, 0x30, 0x30, 0x20, 0x30, 0x30, 0x0A,  // E 00 00.
-                    /* 1C70 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 1C78 */  0x46, 0x20, 0x32, 0x43, 0x0A, 0x20, 0x20, 0x20,  // F 2C.   
-                    /* 1C80 */  0x20, 0x33, 0x39, 0x20, 0x46, 0x42, 0x20, 0x30,  //  39 FB 0
-                    /* 1C88 */  0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 1.    39
-                    /* 1C90 */  0x20, 0x36, 0x31, 0x20, 0x31, 0x46, 0x0A, 0x20,  //  61 1F. 
-                    /* 1C98 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x36, 0x32,  //    39 62
-                    /* 1CA0 */  0x20, 0x31, 0x46, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  1F.    
-                    /* 1CA8 */  0x33, 0x39, 0x20, 0x37, 0x45, 0x20, 0x30, 0x33,  // 39 7E 03
-                    /* 1CB0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1CB8 */  0x36, 0x41, 0x20, 0x31, 0x34, 0x0A, 0x20, 0x20,  // 6A 14.  
-                    /* 1CC0 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x36, 0x42, 0x20,  //   39 6B 
-                    /* 1CC8 */  0x33, 0x36, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 36.    3
-                    /* 1CD0 */  0x39, 0x20, 0x36, 0x43, 0x20, 0x33, 0x36, 0x0A,  // 9 6C 36.
-                    /* 1CD8 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x36,  //     39 6
-                    /* 1CE0 */  0x44, 0x20, 0x33, 0x36, 0x0A, 0x20, 0x20, 0x20,  // D 36.   
-                    /* 1CE8 */  0x20, 0x33, 0x39, 0x20, 0x35, 0x33, 0x20, 0x30,  //  39 53 0
-                    /* 1CF0 */  0x34, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39,  // 4.    39
-                    /* 1CF8 */  0x20, 0x35, 0x34, 0x20, 0x30, 0x34, 0x0A, 0x20,  //  54 04. 
-                    /* 1D00 */  0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x35, 0x35,  //    39 55
-                    /* 1D08 */  0x20, 0x30, 0x34, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  04.    
-                    /* 1D10 */  0x33, 0x39, 0x20, 0x35, 0x36, 0x20, 0x30, 0x46,  // 39 56 0F
-                    /* 1D18 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20,  // .    39 
-                    /* 1D20 */  0x35, 0x38, 0x20, 0x30, 0x46, 0x0A, 0x20, 0x20,  // 58 0F.  
-                    /* 1D28 */  0x20, 0x20, 0x33, 0x39, 0x20, 0x35, 0x39, 0x20,  //   39 59 
-                    /* 1D30 */  0x30, 0x46, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x33,  // 0F.    3
-                    /* 1D38 */  0x39, 0x20, 0x46, 0x46, 0x20, 0x46, 0x30, 0x0A,  // 9 FF F0.
-                    /* 1D40 */  0x20, 0x20, 0x20, 0x20, 0x33, 0x39, 0x20, 0x46,  //     39 F
-                    /* 1D48 */  0x42, 0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20,  // B 01.   
-                    /* 1D50 */  0x20, 0x33, 0x39, 0x20, 0x35, 0x41, 0x20, 0x30,  //  39 5A 0
-                    /* 1D58 */  0x30, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x31, 0x35,  // 0.    15
-                    /* 1D60 */  0x20, 0x46, 0x46, 0x20, 0x31, 0x30, 0x0A, 0x20,  //  FF 10. 
-                    /* 1D68 */  0x20, 0x20, 0x20, 0x31, 0x35, 0x20, 0x46, 0x42,  //    15 FB
-                    /* 1D70 */  0x20, 0x30, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  01.    
-                    /* 1D78 */  0x31, 0x35, 0x20, 0x35, 0x31, 0x20, 0x46, 0x46,  // 15 51 FF
-                    /* 1D80 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x31, 0x35, 0x20,  // .    15 
-                    /* 1D88 */  0x35, 0x33, 0x20, 0x32, 0x34, 0x0A, 0x20, 0x20,  // 53 24.  
-                    /* 1D90 */  0x20, 0x20, 0x31, 0x35, 0x20, 0x35, 0x35, 0x20,  //   15 55 
-                    /* 1D98 */  0x30, 0x31, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x30,  // 01.    0
-                    /* 1DA0 */  0x35, 0x20, 0x31, 0x31, 0x0A, 0x20, 0x20, 0x20,  // 5 11.   
-                    /* 1DA8 */  0x20, 0x46, 0x46, 0x20, 0x43, 0x38, 0x0A, 0x20,  //  FF C8. 
-                    /* 1DB0 */  0x20, 0x20, 0x20, 0x30, 0x35, 0x20, 0x32, 0x39,  //    05 29
-                    /* 1DB8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x46, 0x46, 0x20,  // .    FF 
-                    /* 1DC0 */  0x39, 0x36, 0x0A, 0x3C, 0x2F, 0x44, 0x53, 0x49,  // 96.</DSI
-                    /* 1DC8 */  0x49, 0x6E, 0x69, 0x74, 0x53, 0x65, 0x71, 0x75,  // InitSequ
-                    /* 1DD0 */  0x65, 0x6E, 0x63, 0x65, 0x3E, 0x0A, 0x3C, 0x44,  // ence>.<D
-                    /* 1DD8 */  0x53, 0x49, 0x54, 0x65, 0x72, 0x6D, 0x53, 0x65,  // SITermSe
-                    /* 1DE0 */  0x71, 0x75, 0x65, 0x6E, 0x63, 0x65, 0x3E, 0x0A,  // quence>.
-                    /* 1DE8 */  0x20, 0x20, 0x20, 0x20, 0x30, 0x35, 0x20, 0x32,  //     05 2
-                    /* 1DF0 */  0x38, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x46, 0x46,  // 8.    FF
-                    /* 1DF8 */  0x20, 0x31, 0x30, 0x0A, 0x20, 0x20, 0x20, 0x20,  //  10.    
-                    /* 1E00 */  0x30, 0x35, 0x20, 0x31, 0x30, 0x0A, 0x20, 0x20,  // 05 10.  
-                    /* 1E08 */  0x20, 0x20, 0x46, 0x46, 0x20, 0x33, 0x32, 0x0A,  //   FF 32.
-                    /* 1E10 */  0x3C, 0x2F, 0x44, 0x53, 0x49, 0x54, 0x65, 0x72,  // </DSITer
-                    /* 1E18 */  0x6D, 0x53, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63,  // mSequenc
-                    /* 1E20 */  0x65, 0x3E, 0x0A, 0x3C, 0x47, 0x72, 0x6F, 0x75,  // e>.<Grou
-                    /* 1E28 */  0x70, 0x20, 0x69, 0x64, 0x3D, 0x27, 0x43, 0x6F,  // p id='Co
-                    /* 1E30 */  0x6E, 0x6E, 0x65, 0x63, 0x74, 0x69, 0x6F, 0x6E,  // nnection
-                    /* 1E38 */  0x20, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, 0x75,  //  Configu
-                    /* 1E40 */  0x72, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x27, 0x3E,  // ration'>
-                    /* 1E48 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x69,  // .    <Di
-                    /* 1E50 */  0x73, 0x70, 0x6C, 0x61, 0x79, 0x31, 0x52, 0x65,  // splay1Re
-                    /* 1E58 */  0x73, 0x65, 0x74, 0x31, 0x49, 0x6E, 0x66, 0x6F,  // set1Info
-                    /* 1E60 */  0x3E, 0x44, 0x53, 0x49, 0x5F, 0x50, 0x41, 0x4E,  // >DSI_PAN
-                    /* 1E68 */  0x45, 0x4C, 0x5F, 0x52, 0x45, 0x53, 0x45, 0x54,  // EL_RESET
-                    /* 1E70 */  0x2C, 0x20, 0x30, 0x2C, 0x20, 0x33, 0x30, 0x3C,  // , 0, 30<
-                    /* 1E78 */  0x2F, 0x44, 0x69, 0x73, 0x70, 0x6C, 0x61, 0x79,  // /Display
-                    /* 1E80 */  0x31, 0x52, 0x65, 0x73, 0x65, 0x74, 0x31, 0x49,  // 1Reset1I
-                    /* 1E88 */  0x6E, 0x66, 0x6F, 0x3E, 0x0A, 0x3C, 0x2F, 0x47,  // nfo>.</G
-                    /* 1E90 */  0x72, 0x6F, 0x75, 0x70, 0x3E, 0x0A, 0x3C, 0x47,  // roup>.<G
-                    /* 1E98 */  0x72, 0x6F, 0x75, 0x70, 0x20, 0x69, 0x64, 0x3D,  // roup id=
-                    /* 1EA0 */  0x27, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // 'Backlig
-                    /* 1EA8 */  0x68, 0x74, 0x20, 0x43, 0x6F, 0x6E, 0x66, 0x69,  // ht Confi
-                    /* 1EB0 */  0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6F, 0x6E,  // guration
-                    /* 1EB8 */  0x27, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // '>.    <
-                    /* 1EC0 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
-                    /* 1EC8 */  0x74, 0x54, 0x79, 0x70, 0x65, 0x3E, 0x31, 0x3C,  // tType>1<
-                    /* 1ED0 */  0x2F, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // /Backlig
-                    /* 1ED8 */  0x68, 0x74, 0x54, 0x79, 0x70, 0x65, 0x3E, 0x0A,  // htType>.
-                    /* 1EE0 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x42, 0x61, 0x63,  //     <Bac
-                    /* 1EE8 */  0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74, 0x50, 0x6D,  // klightPm
-                    /* 1EF0 */  0x69, 0x63, 0x43, 0x6F, 0x6E, 0x74, 0x72, 0x6F,  // icContro
-                    /* 1EF8 */  0x6C, 0x54, 0x79, 0x70, 0x65, 0x3E, 0x33, 0x3C,  // lType>3<
-                    /* 1F00 */  0x2F, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // /Backlig
-                    /* 1F08 */  0x68, 0x74, 0x50, 0x6D, 0x69, 0x63, 0x43, 0x6F,  // htPmicCo
-                    /* 1F10 */  0x6E, 0x74, 0x72, 0x6F, 0x6C, 0x54, 0x79, 0x70,  // ntrolTyp
-                    /* 1F18 */  0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // e>.    <
-                    /* 1F20 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
-                    /* 1F28 */  0x74, 0x50, 0x6D, 0x69, 0x63, 0x50, 0x57, 0x4D,  // tPmicPWM
-                    /* 1F30 */  0x53, 0x69, 0x7A, 0x65, 0x69, 0x6E, 0x42, 0x69,  // SizeinBi
-                    /* 1F38 */  0x74, 0x73, 0x3E, 0x39, 0x3C, 0x2F, 0x42, 0x61,  // ts>9</Ba
-                    /* 1F40 */  0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74, 0x50,  // cklightP
-                    /* 1F48 */  0x6D, 0x69, 0x63, 0x50, 0x57, 0x4D, 0x53, 0x69,  // micPWMSi
-                    /* 1F50 */  0x7A, 0x65, 0x69, 0x6E, 0x42, 0x69, 0x74, 0x73,  // zeinBits
-                    /* 1F58 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x42,  // >.    <B
-                    /* 1F60 */  0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74,  // acklight
-                    /* 1F68 */  0x50, 0x4D, 0x49, 0x43, 0x42, 0x61, 0x6E, 0x6B,  // PMICBank
-                    /* 1F70 */  0x53, 0x65, 0x6C, 0x65, 0x63, 0x74, 0x3E, 0x33,  // Select>3
-                    /* 1F78 */  0x3C, 0x2F, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69,  // </Backli
-                    /* 1F80 */  0x67, 0x68, 0x74, 0x50, 0x4D, 0x49, 0x43, 0x42,  // ghtPMICB
-                    /* 1F88 */  0x61, 0x6E, 0x6B, 0x53, 0x65, 0x6C, 0x65, 0x63,  // ankSelec
-                    /* 1F90 */  0x74, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // t>.    <
-                    /* 1F98 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
-                    /* 1FA0 */  0x74, 0x50, 0x4D, 0x49, 0x43, 0x50, 0x57, 0x4D,  // tPMICPWM
-                    /* 1FA8 */  0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63,  // Frequenc
-                    /* 1FB0 */  0x79, 0x3E, 0x31, 0x30, 0x30, 0x30, 0x3C, 0x2F,  // y>1000</
-                    /* 1FB8 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
-                    /* 1FC0 */  0x74, 0x50, 0x4D, 0x49, 0x43, 0x50, 0x57, 0x4D,  // tPMICPWM
-                    /* 1FC8 */  0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63,  // Frequenc
-                    /* 1FD0 */  0x79, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // y>.    <
-                    /* 1FD8 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
-                    /* 1FE0 */  0x74, 0x53, 0x74, 0x65, 0x70, 0x73, 0x3E, 0x31,  // tSteps>1
-                    /* 1FE8 */  0x30, 0x30, 0x3C, 0x2F, 0x42, 0x61, 0x63, 0x6B,  // 00</Back
-                    /* 1FF0 */  0x6C, 0x69, 0x67, 0x68, 0x74, 0x53, 0x74, 0x65,  // lightSte
-                    /* 1FF8 */  0x70, 0x73, 0x3E, 0x0A, 0x09, 0x3C, 0x42, 0x61,  // ps>..<Ba
-                    /* 2000 */  0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74, 0x50,  // cklightP
-                    /* 2008 */  0x6D, 0x69, 0x63, 0x4E, 0x75, 0x6D, 0x3E, 0x32,  // micNum>2
-                    /* 2010 */  0x3C, 0x2F, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69,  // </Backli
-                    /* 2018 */  0x67, 0x68, 0x74, 0x50, 0x6D, 0x69, 0x63, 0x4E,  // ghtPmicN
-                    /* 2020 */  0x75, 0x6D, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // um>.    
-                    /* 2028 */  0x3C, 0x50, 0x4D, 0x49, 0x50, 0x6F, 0x77, 0x65,  // <PMIPowe
-                    /* 2030 */  0x72, 0x50, 0x6D, 0x69, 0x63, 0x4E, 0x75, 0x6D,  // rPmicNum
-                    /* 2038 */  0x3E, 0x32, 0x3C, 0x2F, 0x50, 0x4D, 0x49, 0x50,  // >2</PMIP
-                    /* 2040 */  0x6F, 0x77, 0x65, 0x72, 0x50, 0x6D, 0x69, 0x63,  // owerPmic
-                    /* 2048 */  0x4E, 0x75, 0x6D, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // Num>.   
-                    /* 2050 */  0x20, 0x3C, 0x50, 0x4D, 0x49, 0x50, 0x6F, 0x77,  //  <PMIPow
-                    /* 2058 */  0x65, 0x72, 0x50, 0x6D, 0x69, 0x63, 0x4D, 0x6F,  // erPmicMo
-                    /* 2060 */  0x64, 0x65, 0x6C, 0x3E, 0x30, 0x78, 0x32, 0x46,  // del>0x2F
-                    /* 2068 */  0x3C, 0x2F, 0x50, 0x4D, 0x49, 0x50, 0x6F, 0x77,  // </PMIPow
-                    /* 2070 */  0x65, 0x72, 0x50, 0x6D, 0x69, 0x63, 0x4D, 0x6F,  // erPmicMo
-                    /* 2078 */  0x64, 0x65, 0x6C, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // del>.   
-                    /* 2080 */  0x20, 0x3C, 0x50, 0x4D, 0x49, 0x50, 0x6F, 0x77,  //  <PMIPow
-                    /* 2088 */  0x65, 0x72, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67,  // erConfig
-                    /* 2090 */  0x3E, 0x31, 0x3C, 0x2F, 0x50, 0x4D, 0x49, 0x50,  // >1</PMIP
-                    /* 2098 */  0x6F, 0x77, 0x65, 0x72, 0x43, 0x6F, 0x6E, 0x66,  // owerConf
-                    /* 20A0 */  0x69, 0x67, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // ig>.    
-                    /* 20A8 */  0x3C, 0x41, 0x64, 0x61, 0x70, 0x74, 0x69, 0x76,  // <Adaptiv
-                    /* 20B0 */  0x65, 0x42, 0x72, 0x69, 0x67, 0x68, 0x74, 0x6E,  // eBrightn
-                    /* 20B8 */  0x65, 0x73, 0x73, 0x46, 0x65, 0x61, 0x74, 0x75,  // essFeatu
-                    /* 20C0 */  0x72, 0x65, 0x3E, 0x31, 0x3C, 0x2F, 0x41, 0x64,  // re>1</Ad
-                    /* 20C8 */  0x61, 0x70, 0x74, 0x69, 0x76, 0x65, 0x42, 0x72,  // aptiveBr
-                    /* 20D0 */  0x69, 0x67, 0x68, 0x74, 0x6E, 0x65, 0x73, 0x73,  // ightness
-                    /* 20D8 */  0x46, 0x65, 0x61, 0x74, 0x75, 0x72, 0x65, 0x3E,  // Feature>
-                    /* 20E0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x43, 0x41,  // .    <CA
-                    /* 20E8 */  0x42, 0x4C, 0x45, 0x6E, 0x61, 0x62, 0x6C, 0x65,  // BLEnable
-                    /* 20F0 */  0x3E, 0x54, 0x72, 0x75, 0x65, 0x3C, 0x2F, 0x43,  // >True</C
-                    /* 20F8 */  0x41, 0x42, 0x4C, 0x45, 0x6E, 0x61, 0x62, 0x6C,  // ABLEnabl
-                    /* 2100 */  0x65, 0x3E, 0x0A, 0x09, 0x3C, 0x42, 0x72, 0x69,  // e>..<Bri
-                    /* 2108 */  0x67, 0x68, 0x74, 0x6E, 0x65, 0x73, 0x73, 0x52,  // ghtnessR
-                    /* 2110 */  0x61, 0x6E, 0x67, 0x65, 0x4C, 0x65, 0x76, 0x65,  // angeLeve
-                    /* 2118 */  0x6C, 0x30, 0x3E, 0x33, 0x38, 0x30, 0x30, 0x30,  // l0>38000
-                    /* 2120 */  0x30, 0x20, 0x34, 0x35, 0x30, 0x30, 0x30, 0x30,  // 0 450000
-                    /* 2128 */  0x20, 0x37, 0x30, 0x30, 0x20, 0x32, 0x3C, 0x2F,  //  700 2</
-                    /* 2130 */  0x42, 0x72, 0x69, 0x67, 0x68, 0x74, 0x6E, 0x65,  // Brightne
-                    /* 2138 */  0x73, 0x73, 0x52, 0x61, 0x6E, 0x67, 0x65, 0x4C,  // ssRangeL
-                    /* 2140 */  0x65, 0x76, 0x65, 0x6C, 0x30, 0x3E, 0x0A, 0x3C,  // evel0>.<
-                    /* 2148 */  0x2F, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x3E, 0x00   // /Group>.
+                    /* 0028 */  0x50, 0x61, 0x6E, 0x65, 0x6C, 0x44, 0x65, 0x73,  // PanelDes
+                    /* 0030 */  0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6F, 0x6E,  // cription
+                    /* 0038 */  0x3E, 0x6B, 0x39, 0x20, 0x34, 0x32, 0x20, 0x30,  // >k9 42 0
+                    /* 0040 */  0x32, 0x20, 0x30, 0x62, 0x20, 0x6D, 0x70, 0x20,  // 2 0b mp 
+                    /* 0048 */  0x53, 0x69, 0x6E, 0x67, 0x6C, 0x65, 0x20, 0x44,  // Single D
+                    /* 0050 */  0x53, 0x49, 0x20, 0x43, 0x6D, 0x64, 0x20, 0x4D,  // SI Cmd M
+                    /* 0058 */  0x6F, 0x64, 0x65, 0x20, 0x41, 0x4D, 0x4F, 0x4C,  // ode AMOL
+                    /* 0060 */  0x45, 0x44, 0x20, 0x50, 0x61, 0x6E, 0x65, 0x6C,  // ED Panel
+                    /* 0068 */  0x20, 0x77, 0x69, 0x74, 0x68, 0x20, 0x44, 0x53,  //  with DS
+                    /* 0070 */  0x43, 0x20, 0x28, 0x31, 0x30, 0x38, 0x30, 0x78,  // C (1080x
+                    /* 0078 */  0x32, 0x34, 0x30, 0x30, 0x20, 0x32, 0x34, 0x62,  // 2400 24b
+                    /* 0080 */  0x70, 0x70, 0x29, 0x3C, 0x2F, 0x50, 0x61, 0x6E,  // pp)</Pan
+                    /* 0088 */  0x65, 0x6C, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69,  // elDescri
+                    /* 0090 */  0x70, 0x74, 0x69, 0x6F, 0x6E, 0x3E, 0x0A, 0x3C,  // ption>.<
+                    /* 0098 */  0x47, 0x72, 0x6F, 0x75, 0x70, 0x20, 0x69, 0x64,  // Group id
+                    /* 00A0 */  0x3D, 0x27, 0x45, 0x44, 0x49, 0x44, 0x20, 0x43,  // ='EDID C
+                    /* 00A8 */  0x6F, 0x6E, 0x66, 0x69, 0x67, 0x75, 0x72, 0x61,  // onfigura
+                    /* 00B0 */  0x74, 0x69, 0x6F, 0x6E, 0x27, 0x3E, 0x0A, 0x20,  // tion'>. 
+                    /* 00B8 */  0x20, 0x20, 0x20, 0x3C, 0x4D, 0x61, 0x6E, 0x75,  //    <Manu
+                    /* 00C0 */  0x66, 0x61, 0x63, 0x74, 0x75, 0x72, 0x65, 0x49,  // factureI
+                    /* 00C8 */  0x44, 0x3E, 0x30, 0x78, 0x31, 0x30, 0x34, 0x44,  // D>0x104D
+                    /* 00D0 */  0x3C, 0x2F, 0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61,  // </Manufa
+                    /* 00D8 */  0x63, 0x74, 0x75, 0x72, 0x65, 0x49, 0x44, 0x3E,  // ctureID>
+                    /* 00E0 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x50, 0x72,  // .    <Pr
+                    /* 00E8 */  0x6F, 0x64, 0x75, 0x63, 0x74, 0x43, 0x6F, 0x64,  // oductCod
+                    /* 00F0 */  0x65, 0x3E, 0x37, 0x33, 0x35, 0x30, 0x3C, 0x2F,  // e>7350</
+                    /* 00F8 */  0x50, 0x72, 0x6F, 0x64, 0x75, 0x63, 0x74, 0x43,  // ProductC
+                    /* 0100 */  0x6F, 0x64, 0x65, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // ode>.   
+                    /* 0108 */  0x20, 0x3C, 0x53, 0x65, 0x72, 0x69, 0x61, 0x6C,  //  <Serial
+                    /* 0110 */  0x4E, 0x75, 0x6D, 0x62, 0x65, 0x72, 0x3E, 0x30,  // Number>0
+                    /* 0118 */  0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x3C,  // x000001<
+                    /* 0120 */  0x2F, 0x53, 0x65, 0x72, 0x69, 0x61, 0x6C, 0x4E,  // /SerialN
+                    /* 0128 */  0x75, 0x6D, 0x62, 0x65, 0x72, 0x3E, 0x0A, 0x20,  // umber>. 
+                    /* 0130 */  0x20, 0x20, 0x20, 0x3C, 0x57, 0x65, 0x65, 0x6B,  //    <Week
+                    /* 0138 */  0x6F, 0x66, 0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61,  // ofManufa
+                    /* 0140 */  0x63, 0x74, 0x75, 0x72, 0x65, 0x3E, 0x30, 0x78,  // cture>0x
+                    /* 0148 */  0x30, 0x31, 0x3C, 0x2F, 0x57, 0x65, 0x65, 0x6B,  // 01</Week
+                    /* 0150 */  0x6F, 0x66, 0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61,  // ofManufa
+                    /* 0158 */  0x63, 0x74, 0x75, 0x72, 0x65, 0x3E, 0x0A, 0x20,  // cture>. 
+                    /* 0160 */  0x20, 0x20, 0x20, 0x3C, 0x59, 0x65, 0x61, 0x72,  //    <Year
+                    /* 0168 */  0x6F, 0x66, 0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61,  // ofManufa
+                    /* 0170 */  0x63, 0x74, 0x75, 0x72, 0x65, 0x3E, 0x30, 0x78,  // cture>0x
+                    /* 0178 */  0x31, 0x42, 0x3C, 0x2F, 0x59, 0x65, 0x61, 0x72,  // 1B</Year
+                    /* 0180 */  0x6F, 0x66, 0x4D, 0x61, 0x6E, 0x75, 0x66, 0x61,  // ofManufa
+                    /* 0188 */  0x63, 0x74, 0x75, 0x72, 0x65, 0x3E, 0x0A, 0x20,  // cture>. 
+                    /* 0190 */  0x20, 0x20, 0x20, 0x3C, 0x45, 0x44, 0x49, 0x44,  //    <EDID
+                    /* 0198 */  0x56, 0x65, 0x72, 0x73, 0x69, 0x6F, 0x6E, 0x3E,  // Version>
+                    /* 01A0 */  0x31, 0x3C, 0x2F, 0x45, 0x44, 0x49, 0x44, 0x56,  // 1</EDIDV
+                    /* 01A8 */  0x65, 0x72, 0x73, 0x69, 0x6F, 0x6E, 0x3E, 0x0A,  // ersion>.
+                    /* 01B0 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x45, 0x44, 0x49,  //     <EDI
+                    /* 01B8 */  0x44, 0x52, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6F,  // DRevisio
+                    /* 01C0 */  0x6E, 0x3E, 0x33, 0x3C, 0x2F, 0x45, 0x44, 0x49,  // n>3</EDI
+                    /* 01C8 */  0x44, 0x52, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6F,  // DRevisio
+                    /* 01D0 */  0x6E, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // n>.    <
+                    /* 01D8 */  0x56, 0x69, 0x64, 0x65, 0x6F, 0x49, 0x6E, 0x70,  // VideoInp
+                    /* 01E0 */  0x75, 0x74, 0x44, 0x65, 0x66, 0x69, 0x6E, 0x69,  // utDefini
+                    /* 01E8 */  0x74, 0x69, 0x6F, 0x6E, 0x3E, 0x30, 0x78, 0x38,  // tion>0x8
+                    /* 01F0 */  0x30, 0x3C, 0x2F, 0x56, 0x69, 0x64, 0x65, 0x6F,  // 0</Video
+                    /* 01F8 */  0x49, 0x6E, 0x70, 0x75, 0x74, 0x44, 0x65, 0x66,  // InputDef
+                    /* 0200 */  0x69, 0x6E, 0x69, 0x74, 0x69, 0x6F, 0x6E, 0x3E,  // inition>
+                    /* 0208 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x48, 0x6F,  // .    <Ho
+                    /* 0210 */  0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C,  // rizontal
+                    /* 0218 */  0x53, 0x63, 0x72, 0x65, 0x65, 0x6E, 0x53, 0x69,  // ScreenSi
+                    /* 0220 */  0x7A, 0x65, 0x3E, 0x30, 0x78, 0x30, 0x37, 0x3C,  // ze>0x07<
+                    /* 0228 */  0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // /Horizon
+                    /* 0230 */  0x74, 0x61, 0x6C, 0x53, 0x63, 0x72, 0x65, 0x65,  // talScree
+                    /* 0238 */  0x6E, 0x53, 0x69, 0x7A, 0x65, 0x3E, 0x0A, 0x20,  // nSize>. 
+                    /* 0240 */  0x20, 0x20, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74,  //    <Vert
+                    /* 0248 */  0x69, 0x63, 0x61, 0x6C, 0x53, 0x63, 0x72, 0x65,  // icalScre
+                    /* 0250 */  0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65, 0x3E, 0x30,  // enSize>0
+                    /* 0258 */  0x78, 0x46, 0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74,  // xF</Vert
+                    /* 0260 */  0x69, 0x63, 0x61, 0x6C, 0x53, 0x63, 0x72, 0x65,  // icalScre
+                    /* 0268 */  0x65, 0x6E, 0x53, 0x69, 0x7A, 0x65, 0x3E, 0x0A,  // enSize>.
+                    /* 0270 */  0x20, 0x20, 0x20, 0x20, 0x3C, 0x44, 0x69, 0x73,  //     <Dis
+                    /* 0278 */  0x70, 0x6C, 0x61, 0x79, 0x54, 0x72, 0x61, 0x6E,  // playTran
+                    /* 0280 */  0x73, 0x66, 0x65, 0x72, 0x43, 0x68, 0x61, 0x72,  // sferChar
+                    /* 0288 */  0x61, 0x63, 0x74, 0x65, 0x72, 0x69, 0x73, 0x74,  // acterist
+                    /* 0290 */  0x69, 0x63, 0x73, 0x3E, 0x30, 0x78, 0x37, 0x38,  // ics>0x78
+                    /* 0298 */  0x3C, 0x2F, 0x44, 0x69, 0x73, 0x70, 0x6C, 0x61,  // </Displa
+                    /* 02A0 */  0x79, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x66, 0x65,  // yTransfe
+                    /* 02A8 */  0x72, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74,  // rCharact
+                    /* 02B0 */  0x65, 0x72, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73,  // eristics
+                    /* 02B8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x46,  // >.    <F
+                    /* 02C0 */  0x65, 0x61, 0x74, 0x75, 0x72, 0x65, 0x53, 0x75,  // eatureSu
+                    /* 02C8 */  0x70, 0x70, 0x6F, 0x72, 0x74, 0x3E, 0x30, 0x78,  // pport>0x
+                    /* 02D0 */  0x32, 0x3C, 0x2F, 0x46, 0x65, 0x61, 0x74, 0x75,  // 2</Featu
+                    /* 02D8 */  0x72, 0x65, 0x53, 0x75, 0x70, 0x70, 0x6F, 0x72,  // reSuppor
+                    /* 02E0 */  0x74, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // t>.    <
+                    /* 02E8 */  0x52, 0x65, 0x64, 0x2E, 0x47, 0x72, 0x65, 0x65,  // Red.Gree
+                    /* 02F0 */  0x6E, 0x42, 0x69, 0x74, 0x73, 0x3E, 0x30, 0x78,  // nBits>0x
+                    /* 02F8 */  0x41, 0x35, 0x3C, 0x2F, 0x52, 0x65, 0x64, 0x2E,  // A5</Red.
+                    /* 0300 */  0x47, 0x72, 0x65, 0x65, 0x6E, 0x42, 0x69, 0x74,  // GreenBit
+                    /* 0308 */  0x73, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // s>.    <
+                    /* 0310 */  0x42, 0x6C, 0x75, 0x65, 0x2E, 0x57, 0x68, 0x69,  // Blue.Whi
+                    /* 0318 */  0x74, 0x65, 0x42, 0x69, 0x74, 0x73, 0x3E, 0x30,  // teBits>0
+                    /* 0320 */  0x78, 0x35, 0x38, 0x3C, 0x2F, 0x42, 0x6C, 0x75,  // x58</Blu
+                    /* 0328 */  0x65, 0x2E, 0x57, 0x68, 0x69, 0x74, 0x65, 0x42,  // e.WhiteB
+                    /* 0330 */  0x69, 0x74, 0x73, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // its>.   
+                    /* 0338 */  0x20, 0x3C, 0x52, 0x65, 0x64, 0x58, 0x3E, 0x30,  //  <RedX>0
+                    /* 0340 */  0x78, 0x41, 0x36, 0x3C, 0x2F, 0x52, 0x65, 0x64,  // xA6</Red
+                    /* 0348 */  0x58, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // X>.    <
+                    /* 0350 */  0x52, 0x65, 0x64, 0x59, 0x3E, 0x30, 0x78, 0x35,  // RedY>0x5
+                    /* 0358 */  0x34, 0x3C, 0x2F, 0x52, 0x65, 0x64, 0x59, 0x3E,  // 4</RedY>
+                    /* 0360 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x47, 0x72,  // .    <Gr
+                    /* 0368 */  0x65, 0x65, 0x6E, 0x58, 0x3E, 0x30, 0x78, 0x33,  // eenX>0x3
+                    /* 0370 */  0x33, 0x3C, 0x2F, 0x47, 0x72, 0x65, 0x65, 0x6E,  // 3</Green
+                    /* 0378 */  0x58, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C,  // X>.    <
+                    /* 0380 */  0x47, 0x72, 0x65, 0x65, 0x6E, 0x59, 0x3E, 0x30,  // GreenY>0
+                    /* 0388 */  0x78, 0x42, 0x33, 0x3C, 0x2F, 0x47, 0x72, 0x65,  // xB3</Gre
+                    /* 0390 */  0x65, 0x6E, 0x59, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // enY>.   
+                    /* 0398 */  0x20, 0x3C, 0x42, 0x6C, 0x75, 0x65, 0x58, 0x3E,  //  <BlueX>
+                    /* 03A0 */  0x30, 0x78, 0x32, 0x36, 0x3C, 0x2F, 0x42, 0x6C,  // 0x26</Bl
+                    /* 03A8 */  0x75, 0x65, 0x58, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // ueX>.   
+                    /* 03B0 */  0x20, 0x3C, 0x42, 0x6C, 0x75, 0x65, 0x59, 0x3E,  //  <BlueY>
+                    /* 03B8 */  0x30, 0x78, 0x31, 0x32, 0x3C, 0x2F, 0x42, 0x6C,  // 0x12</Bl
+                    /* 03C0 */  0x75, 0x65, 0x59, 0x3E, 0x0A, 0x20, 0x20, 0x20,  // ueY>.   
+                    /* 03C8 */  0x20, 0x3C, 0x57, 0x68, 0x69, 0x74, 0x65, 0x58,  //  <WhiteX
+                    /* 03D0 */  0x3E, 0x30, 0x78, 0x34, 0x46, 0x3C, 0x2F, 0x57,  // >0x4F</W
+                    /* 03D8 */  0x68, 0x69, 0x74, 0x65, 0x58, 0x3E, 0x0A, 0x20,  // hiteX>. 
+                    /* 03E0 */  0x20, 0x20, 0x20, 0x3C, 0x57, 0x68, 0x69, 0x74,  //    <Whit
+                    /* 03E8 */  0x65, 0x59, 0x3E, 0x30, 0x78, 0x35, 0x34, 0x3C,  // eY>0x54<
+                    /* 03F0 */  0x2F, 0x57, 0x68, 0x69, 0x74, 0x65, 0x59, 0x3E,  // /WhiteY>
+                    /* 03F8 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x45, 0x73,  // .    <Es
+                    /* 0400 */  0x74, 0x61, 0x62, 0x6C, 0x69, 0x73, 0x68, 0x65,  // tablishe
+                    /* 0408 */  0x64, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73,  // dTimings
+                    /* 0410 */  0x49, 0x3E, 0x30, 0x78, 0x30, 0x3C, 0x2F, 0x45,  // I>0x0</E
+                    /* 0418 */  0x73, 0x74, 0x61, 0x62, 0x6C, 0x69, 0x73, 0x68,  // stablish
+                    /* 0420 */  0x65, 0x64, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67,  // edTiming
+                    /* 0428 */  0x73, 0x49, 0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20,  // sI>.    
+                    /* 0430 */  0x3C, 0x45, 0x73, 0x74, 0x61, 0x62, 0x6C, 0x69,  // <Establi
+                    /* 0438 */  0x73, 0x68, 0x65, 0x64, 0x54, 0x69, 0x6D, 0x69,  // shedTimi
+                    /* 0440 */  0x6E, 0x67, 0x73, 0x49, 0x49, 0x3E, 0x30, 0x78,  // ngsII>0x
+                    /* 0448 */  0x30, 0x3C, 0x2F, 0x45, 0x73, 0x74, 0x61, 0x62,  // 0</Estab
+                    /* 0450 */  0x6C, 0x69, 0x73, 0x68, 0x65, 0x64, 0x54, 0x69,  // lishedTi
+                    /* 0458 */  0x6D, 0x69, 0x6E, 0x67, 0x73, 0x49, 0x49, 0x3E,  // mingsII>
+                    /* 0460 */  0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x4D, 0x61,  // .    <Ma
+                    /* 0468 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
+                    /* 0470 */  0x65, 0x73, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67,  // esTiming
+                    /* 0478 */  0x3E, 0x30, 0x78, 0x30, 0x3C, 0x2F, 0x4D, 0x61,  // >0x0</Ma
+                    /* 0480 */  0x6E, 0x75, 0x66, 0x61, 0x63, 0x74, 0x75, 0x72,  // nufactur
+                    /* 0488 */  0x65, 0x73, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67,  // esTiming
+                    /* 0490 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 0498 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 04A0 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x31, 0x2F,  // imings1/
+                    /* 04A8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 04B0 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 04B8 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x32, 0x2F,  // imings2/
+                    /* 04C0 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 04C8 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 04D0 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x33, 0x2F,  // imings3/
+                    /* 04D8 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 04E0 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 04E8 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x34, 0x2F,  // imings4/
+                    /* 04F0 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 04F8 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 0500 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x35, 0x2F,  // imings5/
+                    /* 0508 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 0510 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 0518 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x36, 0x2F,  // imings6/
+                    /* 0520 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 0528 */  0x74, 0x61, 0x6E, 0x64, 0x61, 0x72, 0x64, 0x54,  // tandardT
+                    /* 0530 */  0x69, 0x6D, 0x69, 0x6E, 0x67, 0x73, 0x37, 0x2F,  // imings7/
+                    /* 0538 */  0x3E, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x3C, 0x53,  // >.    <S
+                    /* 0540 */  0x69, 0x67, 0x6E, 0x61, 0x6C, 0x54, 0x69, 0x6D,  // ignalTim
+                    /* 0548 */  0x69, 0x6E, 0x67, 0x49, 0x6E, 0x74, 0x65, 0x72,  // ingInter
+                    /* 0550 */  0x66, 0x61, 0x63, 0x65, 0x2F, 0x3E, 0x0A, 0x3C,  // face/>.<
+                    /* 0558 */  0x2F, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x3E, 0x0A,  // /Group>.
+                    /* 0560 */  0x3C, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x20, 0x69,  // <Group i
+                    /* 0568 */  0x64, 0x3D, 0x27, 0x41, 0x63, 0x74, 0x69, 0x76,  // d='Activ
+                    /* 0570 */  0x65, 0x20, 0x54, 0x69, 0x6D, 0x69, 0x6E, 0x67,  // e Timing
+                    /* 0578 */  0x27, 0x3E, 0x0A, 0x20, 0x3C, 0x48, 0x6F, 0x72,  // '>. <Hor
+                    /* 0580 */  0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x41,  // izontalA
+                    /* 0588 */  0x63, 0x74, 0x69, 0x76, 0x65, 0x3E, 0x31, 0x30,  // ctive>10
+                    /* 0590 */  0x38, 0x30, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69,  // 80</Hori
+                    /* 0598 */  0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x41, 0x63,  // zontalAc
+                    /* 05A0 */  0x74, 0x69, 0x76, 0x65, 0x3E, 0x0A, 0x20, 0x3C,  // tive>. <
+                    /* 05A8 */  0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74,  // Horizont
+                    /* 05B0 */  0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E, 0x74, 0x50,  // alFrontP
+                    /* 05B8 */  0x6F, 0x72, 0x63, 0x68, 0x3E, 0x31, 0x36, 0x3C,  // orch>16<
+                    /* 05C0 */  0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // /Horizon
+                    /* 05C8 */  0x74, 0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E, 0x74,  // talFront
+                    /* 05D0 */  0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E, 0x0A, 0x20,  // Porch>. 
+                    /* 05D8 */  0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // <Horizon
+                    /* 05E0 */  0x74, 0x61, 0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50,  // talBackP
+                    /* 05E8 */  0x6F, 0x72, 0x63, 0x68, 0x3E, 0x38, 0x3C, 0x2F,  // orch>8</
+                    /* 05F0 */  0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74,  // Horizont
+                    /* 05F8 */  0x61, 0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50, 0x6F,  // alBackPo
+                    /* 0600 */  0x72, 0x63, 0x68, 0x3E, 0x0A, 0x20, 0x3C, 0x48,  // rch>. <H
+                    /* 0608 */  0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61,  // orizonta
+                    /* 0610 */  0x6C, 0x53, 0x79, 0x6E, 0x63, 0x50, 0x75, 0x6C,  // lSyncPul
+                    /* 0618 */  0x73, 0x65, 0x3E, 0x38, 0x3C, 0x2F, 0x48, 0x6F,  // se>8</Ho
+                    /* 0620 */  0x72, 0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C,  // rizontal
+                    /* 0628 */  0x53, 0x79, 0x6E, 0x63, 0x50, 0x75, 0x6C, 0x73,  // SyncPuls
+                    /* 0630 */  0x65, 0x3E, 0x0A, 0x20, 0x3C, 0x48, 0x6F, 0x72,  // e>. <Hor
+                    /* 0638 */  0x69, 0x7A, 0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x53,  // izontalS
+                    /* 0640 */  0x79, 0x6E, 0x63, 0x53, 0x6B, 0x65, 0x77, 0x3E,  // yncSkew>
+                    /* 0648 */  0x30, 0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A,  // 0</Horiz
+                    /* 0650 */  0x6F, 0x6E, 0x74, 0x61, 0x6C, 0x53, 0x79, 0x6E,  // ontalSyn
+                    /* 0658 */  0x63, 0x53, 0x6B, 0x65, 0x77, 0x3E, 0x0A, 0x20,  // cSkew>. 
+                    /* 0660 */  0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // <Horizon
+                    /* 0668 */  0x74, 0x61, 0x6C, 0x4C, 0x65, 0x66, 0x74, 0x42,  // talLeftB
+                    /* 0670 */  0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x30, 0x3C,  // order>0<
+                    /* 0678 */  0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // /Horizon
+                    /* 0680 */  0x74, 0x61, 0x6C, 0x4C, 0x65, 0x66, 0x74, 0x42,  // talLeftB
+                    /* 0688 */  0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x0A, 0x20,  // order>. 
+                    /* 0690 */  0x3C, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F, 0x6E,  // <Horizon
+                    /* 0698 */  0x74, 0x61, 0x6C, 0x52, 0x69, 0x67, 0x68, 0x74,  // talRight
+                    /* 06A0 */  0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x30,  // Border>0
+                    /* 06A8 */  0x3C, 0x2F, 0x48, 0x6F, 0x72, 0x69, 0x7A, 0x6F,  // </Horizo
+                    /* 06B0 */  0x6E, 0x74, 0x61, 0x6C, 0x52, 0x69, 0x67, 0x68,  // ntalRigh
+                    /* 06B8 */  0x74, 0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E,  // tBorder>
+                    /* 06C0 */  0x0A, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69,  // . <Verti
+                    /* 06C8 */  0x63, 0x61, 0x6C, 0x41, 0x63, 0x74, 0x69, 0x76,  // calActiv
+                    /* 06D0 */  0x65, 0x3E, 0x32, 0x34, 0x30, 0x30, 0x3C, 0x2F,  // e>2400</
+                    /* 06D8 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
+                    /* 06E0 */  0x41, 0x63, 0x74, 0x69, 0x76, 0x65, 0x3E, 0x0A,  // Active>.
+                    /* 06E8 */  0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63,  //  <Vertic
+                    /* 06F0 */  0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E, 0x74, 0x50,  // alFrontP
+                    /* 06F8 */  0x6F, 0x72, 0x63, 0x68, 0x3E, 0x31, 0x32, 0x31,  // orch>121
+                    /* 0700 */  0x32, 0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74, 0x69,  // 2</Verti
+                    /* 0708 */  0x63, 0x61, 0x6C, 0x46, 0x72, 0x6F, 0x6E, 0x74,  // calFront
+                    /* 0710 */  0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E, 0x0A, 0x20,  // Porch>. 
+                    /* 0718 */  0x3C, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61,  // <Vertica
+                    /* 0720 */  0x6C, 0x42, 0x61, 0x63, 0x6B, 0x50, 0x6F, 0x72,  // lBackPor
+                    /* 0728 */  0x63, 0x68, 0x3E, 0x38, 0x3C, 0x2F, 0x56, 0x65,  // ch>8</Ve
+                    /* 0730 */  0x72, 0x74, 0x69, 0x63, 0x61, 0x6C, 0x42, 0x61,  // rticalBa
+                    /* 0738 */  0x63, 0x6B, 0x50, 0x6F, 0x72, 0x63, 0x68, 0x3E,  // ckPorch>
+                    /* 0740 */  0x0A, 0x20, 0x3C, 0x56, 0x65, 0x72, 0x74, 0x69,  // . <Verti
+                    /* 0748 */  0x63, 0x61, 0x6C, 0x53, 0x79, 0x6E, 0x63, 0x50,  // calSyncP
+                    /* 0750 */  0x75, 0x6C, 0x73, 0x65, 0x3E, 0x34, 0x3C, 0x2F,  // ulse>4</
+                    /* 0758 */  0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C,  // Vertical
+                    /* 0760 */  0x53, 0x79, 0x6E, 0x63, 0x50, 0x75, 0x6C, 0x73,  // SyncPuls
+                    /* 0768 */  0x65, 0x3E, 0x0A, 0x20, 0x3C, 0x56, 0x65, 0x72,  // e>. <Ver
+                    /* 0770 */  0x74, 0x69, 0x63, 0x61, 0x6C, 0x53, 0x79, 0x6E,  // ticalSyn
+                    /* 0778 */  0x63, 0x53, 0x6B, 0x65, 0x77, 0x3E, 0x30, 0x3C,  // cSkew>0<
+                    /* 0780 */  0x2F, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63, 0x61,  // /Vertica
+                    /* 0788 */  0x6C, 0x53, 0x79, 0x6E, 0x63, 0x53, 0x6B, 0x65,  // lSyncSke
+                    /* 0790 */  0x77, 0x3E, 0x0A, 0x20, 0x3C, 0x56, 0x65, 0x72,  // w>. <Ver
+                    /* 0798 */  0x74, 0x69, 0x63, 0x61, 0x6C, 0x54, 0x6F, 0x70,  // ticalTop
+                    /* 07A0 */  0x42, 0x6F, 0x72, 0x64, 0x65, 0x72, 0x3E, 0x30,  // Border>0
+                    /* 07A8 */  0x3C, 0x2F, 0x56, 0x65, 0x72, 0x74, 0x69, 0x63,  // </Vertic
+                    /* 07B0 */  0x61, 0x6C, 0x54, 0x6F, 0x70, 0x42, 0x6F, 0x72,  // alTopBor
+                    /* 07B8 */  0x64, 0x65, 0x72, 0x3E, 0x0A, 0x20, 0x3C, 0x56,  // der>. <V
+                    /* 07C0 */  0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C, 0x42,  // erticalB
+                    /* 07C8 */  0x6F, 0x74, 0x74, 0x6F, 0x6D, 0x42, 0x6F, 0x72,  // ottomBor
+                    /* 07D0 */  0x64, 0x65, 0x72, 0x3E, 0x30, 0x3C, 0x2F, 0x56,  // der>0</V
+                    /* 07D8 */  0x65, 0x72, 0x74, 0x69, 0x63, 0x61, 0x6C, 0x42,  // erticalB
+                    /* 07E0 */  0x6F, 0x74, 0x74, 0x6F, 0x6D, 0x42, 0x6F, 0x72,  // ottomBor
+                    /* 07E8 */  0x64, 0x65, 0x72, 0x3E, 0x0A, 0x20, 0x3C, 0x49,  // der>. <I
+                    /* 07F0 */  0x6E, 0x76, 0x65, 0x72, 0x74, 0x44, 0x61, 0x74,  // nvertDat
+                    /* 07F8 */  0x61, 0x50, 0x6F, 0x6C, 0x61, 0x72, 0x69, 0x74,  // aPolarit
+                    /* 0800 */  0x79, 0x3E, 0x46, 0x61, 0x6C, 0x73, 0x65, 0x3C,  // y>False<
+                    /* 0808 */  0x2F, 0x49, 0x6E, 0x76, 0x65, 0x72, 0x74, 0x44,  // /InvertD
+                    /* 0810 */  0x61, 0x74, 0x61, 0x50, 0x6F, 0x6C, 0x61, 0x72,  // ataPolar
+                    /* 0818 */  0x69, 0x74, 0x79, 0x3E, 0x0A, 0x20, 0x3C, 0x49,  // ity>. <I
+                    /* 0820 */  0x6E, 0x76, 0x65, 0x72, 0x74, 0x56, 0x73, 0x79,  // nvertVsy
+                    /* 0828 */  0x6E, 0x63, 0x50, 0x6F, 0x6C, 0x61, 0x69, 0x72,  // ncPolair
+                    /* 0830 */  0x74, 0x79, 0x3E, 0x46, 0x61, 0x6C, 0x73, 0x65,  // ty>False
+                    /* 0838 */  0x3C, 0x2F, 0x49, 0x6E, 0x76, 0x65, 0x72, 0x74,  // </Invert
+                    /* 0840 */  0x56, 0x73, 0x79, 0x6E, 0x63, 0x50, 0x6F, 0x6C,  // VsyncPol
+                    /* 0848 */  0x61, 0x69, 0x72, 0x74, 0x79, 0x3E, 0x0A, 0x20,  // airty>. 
+                    /* 0850 */  0x3C, 0x49, 0x6E, 0x76, 0x65, 0x72, 0x74, 0x48,  // <InvertH
+                    /* 0858 */  0x73, 0x79, 0x6E, 0x63, 0x50, 0x6F, 0x6C, 0x61,  // syncPola
+                    /* 0860 */  0x72, 0x69, 0x74, 0x79, 0x3E, 0x46, 0x61, 0x6C,  // rity>Fal
+                    /* 0868 */  0x73, 0x65, 0x3C, 0x2F, 0x49, 0x6E, 0x76, 0x65,  // se</Inve
+                    /* 0870 */  0x72, 0x74, 0x48, 0x73, 0x79, 0x6E, 0x63, 0x50,  // rtHsyncP
+                    /* 0878 */  0x6F, 0x6C, 0x61, 0x72, 0x69, 0x74, 0x79, 0x3E,  // olarity>
+                    /* 0880 */  0x0A, 0x20, 0x3C, 0x42, 0x6F, 0x72, 0x64, 0x65,  // . <Borde
+                    /* 0888 */  0x72, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x3E, 0x30,  // rColor>0
+                    /* 0890 */  0x78, 0x30, 0x3C, 0x2F, 0x42, 0x6F, 0x72, 0x64,  // x0</Bord
+                    /* 0898 */  0x65, 0x72, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x3E,  // erColor>
+                    /* 08A0 */  0x0A, 0x3C, 0x2F, 0x47, 0x72, 0x6F, 0x75, 0x70,  // .</Group
+                    /* 08A8 */  0x3E, 0x0A, 0x3C, 0x47, 0x72, 0x6F, 0x75, 0x70,  // >.<Group
+                    /* 08B0 */  0x20, 0x69, 0x64, 0x3D, 0x27, 0x44, 0x69, 0x73,  //  id='Dis
+                    /* 08B8 */  0x70, 0x6C, 0x61, 0x79, 0x20, 0x49, 0x6E, 0x74,  // play Int
+                    /* 08C0 */  0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x27, 0x3E,  // erface'>
+                    /* 08C8 */  0x0A, 0x20, 0x3C, 0x49, 0x6E, 0x74, 0x65, 0x72,  // . <Inter
+                    /* 08D0 */  0x66, 0x61, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65,  // faceType
+                    /* 08D8 */  0x3E, 0x39, 0x3C, 0x2F, 0x49, 0x6E, 0x74, 0x65,  // >9</Inte
+                    /* 08E0 */  0x72, 0x66, 0x61, 0x63, 0x65, 0x54, 0x79, 0x70,  // rfaceTyp
+                    /* 08E8 */  0x65, 0x3E, 0x0A, 0x20, 0x3C, 0x49, 0x6E, 0x74,  // e>. <Int
+                    /* 08F0 */  0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x43, 0x6F,  // erfaceCo
+                    /* 08F8 */  0x6C, 0x6F, 0x72, 0x46, 0x6F, 0x72, 0x6D, 0x61,  // lorForma
+                    /* 0900 */  0x74, 0x3E, 0x33, 0x3C, 0x2F, 0x49, 0x6E, 0x74,  // t>3</Int
+                    /* 0908 */  0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x43, 0x6F,  // erfaceCo
+                    /* 0910 */  0x6C, 0x6F, 0x72, 0x46, 0x6F, 0x72, 0x6D, 0x61,  // lorForma
+                    /* 0918 */  0x74, 0x3E, 0x0A, 0x3C, 0x2F, 0x47, 0x72, 0x6F,  // t>.</Gro
+                    /* 0920 */  0x75, 0x70, 0x3E, 0x0A, 0x3C, 0x47, 0x72, 0x6F,  // up>.<Gro
+                    /* 0928 */  0x75, 0x70, 0x20, 0x69, 0x64, 0x3D, 0x27, 0x44,  // up id='D
+                    /* 0930 */  0x53, 0x49, 0x20, 0x49, 0x6E, 0x74, 0x65, 0x72,  // SI Inter
+                    /* 0938 */  0x66, 0x61, 0x63, 0x65, 0x27, 0x3E, 0x0A, 0x20,  // face'>. 
+                    /* 0940 */  0x3C, 0x44, 0x53, 0x49, 0x43, 0x68, 0x61, 0x6E,  // <DSIChan
+                    /* 0948 */  0x6E, 0x65, 0x6C, 0x49, 0x64, 0x3E, 0x32, 0x3C,  // nelId>2<
+                    /* 0950 */  0x2F, 0x44, 0x53, 0x49, 0x43, 0x68, 0x61, 0x6E,  // /DSIChan
+                    /* 0958 */  0x6E, 0x65, 0x6C, 0x49, 0x64, 0x3E, 0x0A, 0x20,  // nelId>. 
+                    /* 0960 */  0x3C, 0x44, 0x53, 0x49, 0x56, 0x69, 0x72, 0x74,  // <DSIVirt
+                    /* 0968 */  0x75, 0x61, 0x6C, 0x49, 0x64, 0x3E, 0x30, 0x3C,  // ualId>0<
+                    /* 0970 */  0x2F, 0x44, 0x53, 0x49, 0x56, 0x69, 0x72, 0x74,  // /DSIVirt
+                    /* 0978 */  0x75, 0x61, 0x6C, 0x49, 0x64, 0x3E, 0x0A, 0x20,  // ualId>. 
+                    /* 0980 */  0x3C, 0x44, 0x53, 0x49, 0x46, 0x6C, 0x61, 0x67,  // <DSIFlag
+                    /* 0988 */  0x73, 0x3E, 0x30, 0x78, 0x38, 0x3C, 0x2F, 0x44,  // s>0x8</D
+                    /* 0990 */  0x53, 0x49, 0x46, 0x6C, 0x61, 0x67, 0x73, 0x3E,  // SIFlags>
+                    /* 0998 */  0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x43, 0x6F,  // . <DSICo
+                    /* 09A0 */  0x6C, 0x6F, 0x72, 0x46, 0x6F, 0x72, 0x6D, 0x61,  // lorForma
+                    /* 09A8 */  0x74, 0x3E, 0x33, 0x36, 0x3C, 0x2F, 0x44, 0x53,  // t>36</DS
+                    /* 09B0 */  0x49, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x46, 0x6F,  // IColorFo
+                    /* 09B8 */  0x72, 0x6D, 0x61, 0x74, 0x3E, 0x0A, 0x20, 0x3C,  // rmat>. <
+                    /* 09C0 */  0x44, 0x53, 0x49, 0x54, 0x72, 0x61, 0x66, 0x66,  // DSITraff
+                    /* 09C8 */  0x69, 0x63, 0x4D, 0x6F, 0x64, 0x65, 0x3E, 0x31,  // icMode>1
+                    /* 09D0 */  0x3C, 0x2F, 0x44, 0x53, 0x49, 0x54, 0x72, 0x61,  // </DSITra
+                    /* 09D8 */  0x66, 0x66, 0x69, 0x63, 0x4D, 0x6F, 0x64, 0x65,  // fficMode
+                    /* 09E0 */  0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x4C,  // >. <DSIL
+                    /* 09E8 */  0x61, 0x6E, 0x65, 0x73, 0x3E, 0x34, 0x3C, 0x2F,  // anes>4</
+                    /* 09F0 */  0x44, 0x53, 0x49, 0x4C, 0x61, 0x6E, 0x65, 0x73,  // DSILanes
+                    /* 09F8 */  0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x52,  // >. <DSIR
+                    /* 0A00 */  0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x52, 0x61,  // efreshRa
+                    /* 0A08 */  0x74, 0x65, 0x3E, 0x30, 0x78, 0x33, 0x43, 0x30,  // te>0x3C0
+                    /* 0A10 */  0x30, 0x30, 0x30, 0x3C, 0x2F, 0x44, 0x53, 0x49,  // 000</DSI
+                    /* 0A18 */  0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x52,  // RefreshR
+                    /* 0A20 */  0x61, 0x74, 0x65, 0x3E, 0x0A, 0x20, 0x3C, 0x44,  // ate>. <D
+                    /* 0A28 */  0x53, 0x49, 0x44, 0x53, 0x43, 0x45, 0x6E, 0x61,  // SIDSCEna
+                    /* 0A30 */  0x62, 0x6C, 0x65, 0x3E, 0x54, 0x72, 0x75, 0x65,  // ble>True
+                    /* 0A38 */  0x3C, 0x2F, 0x44, 0x53, 0x49, 0x44, 0x53, 0x43,  // </DSIDSC
+                    /* 0A40 */  0x45, 0x6E, 0x61, 0x62, 0x6C, 0x65, 0x3E, 0x0A,  // Enable>.
+                    /* 0A48 */  0x20, 0x3C, 0x44, 0x53, 0x49, 0x44, 0x53, 0x43,  //  <DSIDSC
+                    /* 0A50 */  0x4D, 0x61, 0x6A, 0x6F, 0x72, 0x3E, 0x31, 0x3C,  // Major>1<
+                    /* 0A58 */  0x2F, 0x44, 0x53, 0x49, 0x44, 0x53, 0x43, 0x4D,  // /DSIDSCM
+                    /* 0A60 */  0x61, 0x6A, 0x6F, 0x72, 0x3E, 0x0A, 0x20, 0x3C,  // ajor>. <
+                    /* 0A68 */  0x44, 0x53, 0x49, 0x44, 0x53, 0x43, 0x4D, 0x69,  // DSIDSCMi
+                    /* 0A70 */  0x6E, 0x6F, 0x72, 0x3E, 0x31, 0x3C, 0x2F, 0x44,  // nor>1</D
+                    /* 0A78 */  0x53, 0x49, 0x44, 0x53, 0x43, 0x4D, 0x69, 0x6E,  // SIDSCMin
+                    /* 0A80 */  0x6F, 0x72, 0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53,  // or>. <DS
+                    /* 0A88 */  0x49, 0x44, 0x53, 0x43, 0x53, 0x63, 0x72, 0x3E,  // IDSCScr>
+                    /* 0A90 */  0x30, 0x3C, 0x2F, 0x44, 0x53, 0x49, 0x44, 0x53,  // 0</DSIDS
+                    /* 0A98 */  0x43, 0x53, 0x63, 0x72, 0x3E, 0x0A, 0x20, 0x3C,  // CScr>. <
+                    /* 0AA0 */  0x44, 0x53, 0x49, 0x44, 0x53, 0x43, 0x50, 0x72,  // DSIDSCPr
+                    /* 0AA8 */  0x6F, 0x66, 0x69, 0x6C, 0x65, 0x49, 0x44, 0x3E,  // ofileID>
+                    /* 0AB0 */  0x38, 0x3C, 0x2F, 0x44, 0x53, 0x49, 0x44, 0x53,  // 8</DSIDS
+                    /* 0AB8 */  0x43, 0x50, 0x72, 0x6F, 0x66, 0x69, 0x6C, 0x65,  // CProfile
+                    /* 0AC0 */  0x49, 0x44, 0x3E, 0x0A, 0x20, 0x20, 0x3C, 0x44,  // ID>.  <D
+                    /* 0AC8 */  0x53, 0x49, 0x44, 0x53, 0x43, 0x53, 0x6C, 0x69,  // SIDSCSli
+                    /* 0AD0 */  0x63, 0x65, 0x57, 0x69, 0x64, 0x74, 0x68, 0x3E,  // ceWidth>
+                    /* 0AD8 */  0x31, 0x30, 0x38, 0x30, 0x3C, 0x2F, 0x44, 0x53,  // 1080</DS
+                    /* 0AE0 */  0x49, 0x44, 0x53, 0x43, 0x53, 0x6C, 0x69, 0x63,  // IDSCSlic
+                    /* 0AE8 */  0x65, 0x57, 0x69, 0x64, 0x74, 0x68, 0x3E, 0x0A,  // eWidth>.
+                    /* 0AF0 */  0x20, 0x3C, 0x44, 0x53, 0x49, 0x44, 0x53, 0x43,  //  <DSIDSC
+                    /* 0AF8 */  0x53, 0x6C, 0x69, 0x63, 0x65, 0x48, 0x65, 0x69,  // SliceHei
+                    /* 0B00 */  0x67, 0x68, 0x74, 0x3E, 0x31, 0x32, 0x3C, 0x2F,  // ght>12</
+                    /* 0B08 */  0x44, 0x53, 0x49, 0x44, 0x53, 0x43, 0x53, 0x6C,  // DSIDSCSl
+                    /* 0B10 */  0x69, 0x63, 0x65, 0x48, 0x65, 0x69, 0x67, 0x68,  // iceHeigh
+                    /* 0B18 */  0x74, 0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49,  // t>. <DSI
+                    /* 0B20 */  0x42, 0x69, 0x74, 0x43, 0x6C, 0x6F, 0x63, 0x6B,  // BitClock
+                    /* 0B28 */  0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63,  // Frequenc
+                    /* 0B30 */  0x79, 0x3E, 0x36, 0x35, 0x32, 0x30, 0x30, 0x30,  // y>652000
+                    /* 0B38 */  0x30, 0x30, 0x30, 0x3C, 0x2F, 0x44, 0x53, 0x49,  // 000</DSI
+                    /* 0B40 */  0x42, 0x69, 0x74, 0x43, 0x6C, 0x6F, 0x63, 0x6B,  // BitClock
+                    /* 0B48 */  0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63,  // Frequenc
+                    /* 0B50 */  0x79, 0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49,  // y>. <DSI
+                    /* 0B58 */  0x4C, 0x50, 0x31, 0x31, 0x41, 0x74, 0x49, 0x6E,  // LP11AtIn
+                    /* 0B60 */  0x69, 0x74, 0x3E, 0x54, 0x72, 0x75, 0x65, 0x3C,  // it>True<
+                    /* 0B68 */  0x2F, 0x44, 0x53, 0x49, 0x4C, 0x50, 0x31, 0x31,  // /DSILP11
+                    /* 0B70 */  0x41, 0x74, 0x49, 0x6E, 0x69, 0x74, 0x3E, 0x0A,  // AtInit>.
+                    /* 0B78 */  0x20, 0x3C, 0x44, 0x53, 0x49, 0x43, 0x6D, 0x64,  //  <DSICmd
+                    /* 0B80 */  0x53, 0x77, 0x61, 0x70, 0x49, 0x6E, 0x74, 0x65,  // SwapInte
+                    /* 0B88 */  0x72, 0x66, 0x61, 0x63, 0x65, 0x3E, 0x46, 0x61,  // rface>Fa
+                    /* 0B90 */  0x6C, 0x73, 0x65, 0x3C, 0x2F, 0x44, 0x53, 0x49,  // lse</DSI
+                    /* 0B98 */  0x43, 0x6D, 0x64, 0x53, 0x77, 0x61, 0x70, 0x49,  // CmdSwapI
+                    /* 0BA0 */  0x6E, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63, 0x65,  // nterface
+                    /* 0BA8 */  0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x43,  // >. <DSIC
+                    /* 0BB0 */  0x6D, 0x64, 0x55, 0x73, 0x69, 0x6E, 0x67, 0x54,  // mdUsingT
+                    /* 0BB8 */  0x72, 0x69, 0x67, 0x67, 0x65, 0x72, 0x3E, 0x46,  // rigger>F
+                    /* 0BC0 */  0x61, 0x6C, 0x73, 0x65, 0x3C, 0x2F, 0x44, 0x53,  // alse</DS
+                    /* 0BC8 */  0x49, 0x43, 0x6D, 0x64, 0x55, 0x73, 0x69, 0x6E,  // ICmdUsin
+                    /* 0BD0 */  0x67, 0x54, 0x72, 0x69, 0x67, 0x67, 0x65, 0x72,  // gTrigger
+                    /* 0BD8 */  0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x45,  // >. <DSIE
+                    /* 0BE0 */  0x6E, 0x61, 0x62, 0x6C, 0x65, 0x41, 0x75, 0x74,  // nableAut
+                    /* 0BE8 */  0x6F, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68,  // oRefresh
+                    /* 0BF0 */  0x3E, 0x54, 0x72, 0x75, 0x65, 0x3C, 0x2F, 0x44,  // >True</D
+                    /* 0BF8 */  0x53, 0x49, 0x45, 0x6E, 0x61, 0x62, 0x6C, 0x65,  // SIEnable
+                    /* 0C00 */  0x41, 0x75, 0x74, 0x6F, 0x52, 0x65, 0x66, 0x72,  // AutoRefr
+                    /* 0C08 */  0x65, 0x73, 0x68, 0x3E, 0x0A, 0x20, 0x3C, 0x44,  // esh>. <D
+                    /* 0C10 */  0x53, 0x49, 0x41, 0x75, 0x74, 0x6F, 0x52, 0x65,  // SIAutoRe
+                    /* 0C18 */  0x66, 0x72, 0x65, 0x73, 0x68, 0x46, 0x72, 0x61,  // freshFra
+                    /* 0C20 */  0x6D, 0x65, 0x4E, 0x75, 0x6D, 0x44, 0x69, 0x76,  // meNumDiv
+                    /* 0C28 */  0x3E, 0x31, 0x3C, 0x2F, 0x44, 0x53, 0x49, 0x41,  // >1</DSIA
+                    /* 0C30 */  0x75, 0x74, 0x6F, 0x52, 0x65, 0x66, 0x72, 0x65,  // utoRefre
+                    /* 0C38 */  0x73, 0x68, 0x46, 0x72, 0x61, 0x6D, 0x65, 0x4E,  // shFrameN
+                    /* 0C40 */  0x75, 0x6D, 0x44, 0x69, 0x76, 0x3E, 0x0A, 0x20,  // umDiv>. 
+                    /* 0C48 */  0x3C, 0x44, 0x53, 0x49, 0x54, 0x45, 0x43, 0x68,  // <DSITECh
+                    /* 0C50 */  0x65, 0x63, 0x6B, 0x45, 0x6E, 0x61, 0x62, 0x6C,  // eckEnabl
+                    /* 0C58 */  0x65, 0x3E, 0x54, 0x72, 0x75, 0x65, 0x3C, 0x2F,  // e>True</
+                    /* 0C60 */  0x44, 0x53, 0x49, 0x54, 0x45, 0x43, 0x68, 0x65,  // DSITEChe
+                    /* 0C68 */  0x63, 0x6B, 0x45, 0x6E, 0x61, 0x62, 0x6C, 0x65,  // ckEnable
+                    /* 0C70 */  0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x54,  // >. <DSIT
+                    /* 0C78 */  0x45, 0x55, 0x73, 0x69, 0x6E, 0x67, 0x44, 0x65,  // EUsingDe
+                    /* 0C80 */  0x64, 0x69, 0x63, 0x61, 0x74, 0x65, 0x64, 0x54,  // dicatedT
+                    /* 0C88 */  0x45, 0x50, 0x69, 0x6E, 0x3E, 0x54, 0x72, 0x75,  // EPin>Tru
+                    /* 0C90 */  0x65, 0x3C, 0x2F, 0x44, 0x53, 0x49, 0x54, 0x45,  // e</DSITE
+                    /* 0C98 */  0x55, 0x73, 0x69, 0x6E, 0x67, 0x44, 0x65, 0x64,  // UsingDed
+                    /* 0CA0 */  0x69, 0x63, 0x61, 0x74, 0x65, 0x64, 0x54, 0x45,  // icatedTE
+                    /* 0CA8 */  0x50, 0x69, 0x6E, 0x3E, 0x0A, 0x20, 0x3C, 0x44,  // Pin>. <D
+                    /* 0CB0 */  0x53, 0x49, 0x54, 0x45, 0x76, 0x53, 0x79, 0x6E,  // SITEvSyn
+                    /* 0CB8 */  0x63, 0x53, 0x74, 0x61, 0x72, 0x74, 0x50, 0x6F,  // cStartPo
+                    /* 0CC0 */  0x73, 0x3E, 0x32, 0x34, 0x30, 0x30, 0x3C, 0x2F,  // s>2400</
+                    /* 0CC8 */  0x44, 0x53, 0x49, 0x54, 0x45, 0x76, 0x53, 0x79,  // DSITEvSy
+                    /* 0CD0 */  0x6E, 0x63, 0x53, 0x74, 0x61, 0x72, 0x74, 0x50,  // ncStartP
+                    /* 0CD8 */  0x6F, 0x73, 0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x53,  // os>. <DS
+                    /* 0CE0 */  0x49, 0x54, 0x45, 0x76, 0x53, 0x79, 0x6E, 0x63,  // ITEvSync
+                    /* 0CE8 */  0x49, 0x6E, 0x69, 0x74, 0x56, 0x61, 0x6C, 0x3E,  // InitVal>
+                    /* 0CF0 */  0x32, 0x34, 0x30, 0x30, 0x3C, 0x2F, 0x44, 0x53,  // 2400</DS
+                    /* 0CF8 */  0x49, 0x54, 0x45, 0x76, 0x53, 0x79, 0x6E, 0x63,  // ITEvSync
+                    /* 0D00 */  0x49, 0x6E, 0x69, 0x74, 0x56, 0x61, 0x6C, 0x3E,  // InitVal>
+                    /* 0D08 */  0x0A, 0x20, 0x3C, 0x44, 0x53, 0x49, 0x43, 0x6F,  // . <DSICo
+                    /* 0D10 */  0x6E, 0x74, 0x72, 0x6F, 0x6C, 0x6C, 0x65, 0x72,  // ntroller
+                    /* 0D18 */  0x4D, 0x61, 0x70, 0x70, 0x69, 0x6E, 0x67, 0x3E,  // Mapping>
+                    /* 0D20 */  0x0A, 0x20, 0x20, 0x30, 0x30, 0x0A, 0x20, 0x3C,  // .  00. <
+                    /* 0D28 */  0x2F, 0x44, 0x53, 0x49, 0x43, 0x6F, 0x6E, 0x74,  // /DSICont
+                    /* 0D30 */  0x72, 0x6F, 0x6C, 0x6C, 0x65, 0x72, 0x4D, 0x61,  // rollerMa
+                    /* 0D38 */  0x70, 0x70, 0x69, 0x6E, 0x67, 0x3E, 0x0A, 0x3C,  // pping>.<
+                    /* 0D40 */  0x2F, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x3E, 0x0A,  // /Group>.
+                    /* 0D48 */  0x3C, 0x44, 0x53, 0x49, 0x49, 0x6E, 0x69, 0x74,  // <DSIInit
+                    /* 0D50 */  0x53, 0x65, 0x71, 0x75, 0x65, 0x6E, 0x63, 0x65,  // Sequence
+                    /* 0D58 */  0x3E, 0x0A, 0x09, 0x33, 0x39, 0x20, 0x46, 0x30,  // >..39 F0
+                    /* 0D60 */  0x20, 0x35, 0x35, 0x20, 0x41, 0x41, 0x20, 0x35,  //  55 AA 5
+                    /* 0D68 */  0x32, 0x20, 0x30, 0x38, 0x20, 0x30, 0x31, 0x0A,  // 2 08 01.
+                    /* 0D70 */  0x09, 0x33, 0x39, 0x20, 0x43, 0x33, 0x20, 0x30,  // .39 C3 0
+                    /* 0D78 */  0x30, 0x20, 0x30, 0x31, 0x20, 0x39, 0x34, 0x20,  // 0 01 94 
+                    /* 0D80 */  0x44, 0x30, 0x20, 0x32, 0x30, 0x20, 0x38, 0x31,  // D0 20 81
+                    /* 0D88 */  0x20, 0x30, 0x30, 0x0A, 0x09, 0x33, 0x39, 0x20,  //  00..39 
+                    /* 0D90 */  0x43, 0x34, 0x20, 0x39, 0x30, 0x20, 0x30, 0x31,  // C4 90 01
+                    /* 0D98 */  0x0A, 0x09, 0x33, 0x39, 0x20, 0x46, 0x30, 0x20,  // ..39 F0 
+                    /* 0DA0 */  0x35, 0x35, 0x20, 0x41, 0x41, 0x20, 0x35, 0x32,  // 55 AA 52
+                    /* 0DA8 */  0x20, 0x30, 0x38, 0x20, 0x30, 0x30, 0x0A, 0x09,  //  08 00..
+                    /* 0DB0 */  0x31, 0x35, 0x20, 0x36, 0x46, 0x20, 0x30, 0x42,  // 15 6F 0B
+                    /* 0DB8 */  0x0A, 0x09, 0x33, 0x39, 0x20, 0x42, 0x35, 0x20,  // ..39 B5 
+                    /* 0DC0 */  0x32, 0x42, 0x20, 0x32, 0x33, 0x20, 0x33, 0x33,  // 2B 23 33
+                    /* 0DC8 */  0x0A, 0x09, 0x31, 0x35, 0x20, 0x42, 0x32, 0x20,  // ..15 B2 
+                    /* 0DD0 */  0x39, 0x38, 0x0A, 0x09, 0x31, 0x35, 0x20, 0x36,  // 98..15 6
+                    /* 0DD8 */  0x46, 0x20, 0x30, 0x32, 0x0A, 0x09, 0x33, 0x39,  // F 02..39
+                    /* 0DE0 */  0x20, 0x42, 0x32, 0x20, 0x30, 0x43, 0x20, 0x30,  //  B2 0C 0
+                    /* 0DE8 */  0x43, 0x0A, 0x09, 0x33, 0x39, 0x20, 0x42, 0x45,  // C..39 BE
+                    /* 0DF0 */  0x20, 0x30, 0x45, 0x20, 0x30, 0x42, 0x20, 0x31,  //  0E 0B 1
+                    /* 0DF8 */  0x34, 0x20, 0x31, 0x33, 0x0A, 0x09, 0x31, 0x35,  // 4 13..15
+                    /* 0E00 */  0x20, 0x36, 0x46, 0x20, 0x30, 0x35, 0x0A, 0x09,  //  6F 05..
+                    /* 0E08 */  0x31, 0x35, 0x20, 0x42, 0x45, 0x20, 0x38, 0x41,  // 15 BE 8A
+                    /* 0E10 */  0x0A, 0x09, 0x31, 0x35, 0x20, 0x43, 0x30, 0x20,  // ..15 C0 
+                    /* 0E18 */  0x36, 0x36, 0x0A, 0x09, 0x31, 0x35, 0x20, 0x36,  // 66..15 6
+                    /* 0E20 */  0x46, 0x20, 0x30, 0x38, 0x0A, 0x09, 0x31, 0x35,  // F 08..15
+                    /* 0E28 */  0x20, 0x42, 0x35, 0x20, 0x33, 0x32, 0x0A, 0x09,  //  B5 32..
+                    /* 0E30 */  0x33, 0x39, 0x20, 0x46, 0x30, 0x20, 0x35, 0x35,  // 39 F0 55
+                    /* 0E38 */  0x20, 0x41, 0x41, 0x20, 0x35, 0x32, 0x20, 0x30,  //  AA 52 0
+                    /* 0E40 */  0x38, 0x20, 0x30, 0x37, 0x0A, 0x09, 0x33, 0x39,  // 8 07..39
+                    /* 0E48 */  0x20, 0x43, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30,  //  C0 00 0
+                    /* 0E50 */  0x32, 0x0A, 0x09, 0x33, 0x39, 0x20, 0x46, 0x30,  // 2..39 F0
+                    /* 0E58 */  0x20, 0x35, 0x35, 0x20, 0x41, 0x41, 0x20, 0x35,  //  55 AA 5
+                    /* 0E60 */  0x32, 0x20, 0x30, 0x38, 0x20, 0x30, 0x31, 0x0A,  // 2 08 01.
+                    /* 0E68 */  0x09, 0x31, 0x35, 0x20, 0x44, 0x31, 0x20, 0x30,  // .15 D1 0
+                    /* 0E70 */  0x37, 0x0A, 0x09, 0x31, 0x35, 0x20, 0x36, 0x46,  // 7..15 6F
+                    /* 0E78 */  0x20, 0x30, 0x32, 0x0A, 0x09, 0x31, 0x35, 0x20,  //  02..15 
+                    /* 0E80 */  0x44, 0x31, 0x20, 0x30, 0x36, 0x0A, 0x09, 0x31,  // D1 06..1
+                    /* 0E88 */  0x35, 0x20, 0x36, 0x46, 0x20, 0x30, 0x35, 0x0A,  // 5 6F 05.
+                    /* 0E90 */  0x09, 0x31, 0x35, 0x20, 0x44, 0x31, 0x20, 0x30,  // .15 D1 0
+                    /* 0E98 */  0x36, 0x0A, 0x09, 0x33, 0x39, 0x20, 0x33, 0x42,  // 6..39 3B
+                    /* 0EA0 */  0x20, 0x30, 0x30, 0x20, 0x31, 0x30, 0x20, 0x30,  //  00 10 0
+                    /* 0EA8 */  0x30, 0x20, 0x33, 0x30, 0x0A, 0x09, 0x31, 0x35,  // 0 30..15
+                    /* 0EB0 */  0x20, 0x39, 0x30, 0x20, 0x30, 0x31, 0x0A, 0x09,  //  90 01..
+                    /* 0EB8 */  0x33, 0x39, 0x20, 0x39, 0x31, 0x20, 0x41, 0x42,  // 39 91 AB
+                    /* 0EC0 */  0x20, 0x32, 0x38, 0x20, 0x30, 0x30, 0x20, 0x30,  //  28 00 0
+                    /* 0EC8 */  0x43, 0x20, 0x43, 0x32, 0x20, 0x30, 0x30, 0x20,  // C C2 00 
+                    /* 0ED0 */  0x30, 0x33, 0x20, 0x31, 0x43, 0x20, 0x30, 0x31,  // 03 1C 01
+                    /* 0ED8 */  0x20, 0x37, 0x45, 0x20, 0x30, 0x30, 0x20, 0x30,  //  7E 00 0
+                    /* 0EE0 */  0x46, 0x20, 0x30, 0x38, 0x20, 0x42, 0x42, 0x20,  // F 08 BB 
+                    /* 0EE8 */  0x30, 0x34, 0x20, 0x33, 0x44, 0x20, 0x31, 0x30,  // 04 3D 10
+                    /* 0EF0 */  0x20, 0x46, 0x30, 0x0A, 0x09, 0x31, 0x35, 0x20,  //  F0..15 
+                    /* 0EF8 */  0x30, 0x33, 0x20, 0x30, 0x31, 0x0A, 0x09, 0x33,  // 03 01..3
+                    /* 0F00 */  0x39, 0x20, 0x35, 0x31, 0x20, 0x30, 0x30, 0x20,  // 9 51 00 
+                    /* 0F08 */  0x30, 0x30, 0x20, 0x30, 0x30, 0x20, 0x30, 0x30,  // 00 00 00
+                    /* 0F10 */  0x0A, 0x09, 0x31, 0x35, 0x20, 0x35, 0x33, 0x20,  // ..15 53 
+                    /* 0F18 */  0x32, 0x30, 0x0A, 0x09, 0x31, 0x35, 0x20, 0x33,  // 20..15 3
+                    /* 0F20 */  0x35, 0x20, 0x30, 0x30, 0x0A, 0x09, 0x33, 0x39,  // 5 00..39
+                    /* 0F28 */  0x20, 0x32, 0x41, 0x20, 0x30, 0x30, 0x20, 0x30,  //  2A 00 0
+                    /* 0F30 */  0x30, 0x20, 0x30, 0x34, 0x20, 0x33, 0x37, 0x0A,  // 0 04 37.
+                    /* 0F38 */  0x09, 0x33, 0x39, 0x20, 0x32, 0x42, 0x20, 0x30,  // .39 2B 0
+                    /* 0F40 */  0x30, 0x20, 0x30, 0x30, 0x20, 0x30, 0x39, 0x20,  // 0 00 09 
+                    /* 0F48 */  0x35, 0x46, 0x0A, 0x09, 0x31, 0x35, 0x20, 0x32,  // 5F..15 2
+                    /* 0F50 */  0x46, 0x20, 0x30, 0x31, 0x0A, 0x09, 0x33, 0x39,  // F 01..39
+                    /* 0F58 */  0x20, 0x46, 0x30, 0x20, 0x35, 0x35, 0x20, 0x41,  //  F0 55 A
+                    /* 0F60 */  0x41, 0x20, 0x35, 0x32, 0x20, 0x30, 0x38, 0x20,  // A 52 08 
+                    /* 0F68 */  0x30, 0x31, 0x0A, 0x09, 0x33, 0x39, 0x20, 0x43,  // 01..39 C
+                    /* 0F70 */  0x44, 0x20, 0x30, 0x35, 0x20, 0x36, 0x31, 0x0A,  // D 05 61.
+                    /* 0F78 */  0x09, 0x33, 0x39, 0x20, 0x46, 0x30, 0x20, 0x35,  // .39 F0 5
+                    /* 0F80 */  0x35, 0x20, 0x41, 0x41, 0x20, 0x35, 0x32, 0x20,  // 5 AA 52 
+                    /* 0F88 */  0x30, 0x38, 0x20, 0x30, 0x31, 0x0A, 0x09, 0x31,  // 08 01..1
+                    /* 0F90 */  0x35, 0x20, 0x36, 0x46, 0x20, 0x30, 0x31, 0x0A,  // 5 6F 01.
+                    /* 0F98 */  0x09, 0x33, 0x39, 0x20, 0x44, 0x32, 0x20, 0x30,  // .39 D2 0
+                    /* 0FA0 */  0x31, 0x20, 0x32, 0x38, 0x20, 0x33, 0x33, 0x0A,  // 1 28 33.
+                    /* 0FA8 */  0x09, 0x30, 0x35, 0x20, 0x31, 0x31, 0x0A, 0x09,  // .05 11..
+                    /* 0FB0 */  0x46, 0x46, 0x20, 0x33, 0x32, 0x0A, 0x09, 0x30,  // FF 32..0
+                    /* 0FB8 */  0x35, 0x20, 0x32, 0x39, 0x0A, 0x09, 0x46, 0x46,  // 5 29..FF
+                    /* 0FC0 */  0x20, 0x31, 0x30, 0x0A, 0x3C, 0x2F, 0x44, 0x53,  //  10.</DS
+                    /* 0FC8 */  0x49, 0x49, 0x6E, 0x69, 0x74, 0x53, 0x65, 0x71,  // IInitSeq
+                    /* 0FD0 */  0x75, 0x65, 0x6E, 0x63, 0x65, 0x3E, 0x0A, 0x3C,  // uence>.<
+                    /* 0FD8 */  0x44, 0x53, 0x49, 0x54, 0x65, 0x72, 0x6D, 0x53,  // DSITermS
+                    /* 0FE0 */  0x65, 0x71, 0x75, 0x65, 0x6E, 0x63, 0x65, 0x3E,  // equence>
+                    /* 0FE8 */  0x0A, 0x09, 0x30, 0x35, 0x20, 0x32, 0x38, 0x0A,  // ..05 28.
+                    /* 0FF0 */  0x09, 0x46, 0x46, 0x20, 0x31, 0x34, 0x0A, 0x09,  // .FF 14..
+                    /* 0FF8 */  0x30, 0x35, 0x20, 0x31, 0x30, 0x0A, 0x09, 0x46,  // 05 10..F
+                    /* 1000 */  0x46, 0x20, 0x35, 0x30, 0x0A, 0x3C, 0x2F, 0x44,  // F 50.</D
+                    /* 1008 */  0x53, 0x49, 0x54, 0x65, 0x72, 0x6D, 0x53, 0x65,  // SITermSe
+                    /* 1010 */  0x71, 0x75, 0x65, 0x6E, 0x63, 0x65, 0x3E, 0x0A,  // quence>.
+                    /* 1018 */  0x3C, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x20, 0x69,  // <Group i
+                    /* 1020 */  0x64, 0x3D, 0x27, 0x42, 0x61, 0x63, 0x6B, 0x6C,  // d='Backl
+                    /* 1028 */  0x69, 0x67, 0x68, 0x74, 0x20, 0x43, 0x6F, 0x6E,  // ight Con
+                    /* 1030 */  0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69,  // figurati
+                    /* 1038 */  0x6F, 0x6E, 0x27, 0x3E, 0x0A, 0x20, 0x3C, 0x42,  // on'>. <B
+                    /* 1040 */  0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74,  // acklight
+                    /* 1048 */  0x54, 0x79, 0x70, 0x65, 0x3E, 0x33, 0x3C, 0x2F,  // Type>3</
+                    /* 1050 */  0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68,  // Backligh
+                    /* 1058 */  0x74, 0x54, 0x79, 0x70, 0x65, 0x3E, 0x0A, 0x20,  // tType>. 
+                    /* 1060 */  0x3C, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // <Backlig
+                    /* 1068 */  0x68, 0x74, 0x50, 0x6D, 0x69, 0x63, 0x43, 0x6F,  // htPmicCo
+                    /* 1070 */  0x6E, 0x74, 0x72, 0x6F, 0x6C, 0x54, 0x79, 0x70,  // ntrolTyp
+                    /* 1078 */  0x65, 0x3E, 0x32, 0x3C, 0x2F, 0x42, 0x61, 0x63,  // e>2</Bac
+                    /* 1080 */  0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74, 0x50, 0x6D,  // klightPm
+                    /* 1088 */  0x69, 0x63, 0x43, 0x6F, 0x6E, 0x74, 0x72, 0x6F,  // icContro
+                    /* 1090 */  0x6C, 0x54, 0x79, 0x70, 0x65, 0x3E, 0x0A, 0x20,  // lType>. 
+                    /* 1098 */  0x3C, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // <Backlig
+                    /* 10A0 */  0x68, 0x74, 0x42, 0x69, 0x74, 0x57, 0x69, 0x64,  // htBitWid
+                    /* 10A8 */  0x74, 0x68, 0x3E, 0x31, 0x31, 0x3C, 0x2F, 0x42,  // th>11</B
+                    /* 10B0 */  0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67, 0x68, 0x74,  // acklight
+                    /* 10B8 */  0x42, 0x69, 0x74, 0x57, 0x69, 0x64, 0x74, 0x68,  // BitWidth
+                    /* 10C0 */  0x3E, 0x0A, 0x20, 0x3C, 0x42, 0x61, 0x63, 0x6B,  // >. <Back
+                    /* 10C8 */  0x6C, 0x69, 0x67, 0x68, 0x74, 0x44, 0x65, 0x66,  // lightDef
+                    /* 10D0 */  0x61, 0x75, 0x6C, 0x74, 0x3E, 0x31, 0x35, 0x3C,  // ault>15<
+                    /* 10D8 */  0x2F, 0x42, 0x61, 0x63, 0x6B, 0x6C, 0x69, 0x67,  // /Backlig
+                    /* 10E0 */  0x68, 0x74, 0x44, 0x65, 0x66, 0x61, 0x75, 0x6C,  // htDefaul
+                    /* 10E8 */  0x74, 0x3E, 0x0A, 0x20, 0x3C, 0x44, 0x69, 0x73,  // t>. <Dis
+                    /* 10F0 */  0x70, 0x6C, 0x61, 0x79, 0x52, 0x65, 0x73, 0x65,  // playRese
+                    /* 10F8 */  0x74, 0x49, 0x6E, 0x66, 0x6F, 0x3E, 0x30, 0x20,  // tInfo>0 
+                    /* 1100 */  0x32, 0x30, 0x30, 0x30, 0x20, 0x32, 0x30, 0x30,  // 2000 200
+                    /* 1108 */  0x30, 0x20, 0x31, 0x30, 0x30, 0x30, 0x30, 0x20,  // 0 10000 
+                    /* 1110 */  0x30, 0x3C, 0x2F, 0x44, 0x69, 0x73, 0x70, 0x6C,  // 0</Displ
+                    /* 1118 */  0x61, 0x79, 0x52, 0x65, 0x73, 0x65, 0x74, 0x49,  // ayResetI
+                    /* 1120 */  0x6E, 0x66, 0x6F, 0x3E, 0x0A, 0x3C, 0x2F, 0x47,  // nfo>.</G
+                    /* 1128 */  0x72, 0x6F, 0x75, 0x70, 0x3E, 0x00               // roup>.
                 })
                 While (One)
                 {
@@ -11359,9 +12805,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                 Name (_DEP, Package (0x03)  // _DEP: Dependencies
                 {
-                    \_SB.MMU0, , 
-                    \_SB.IMM0, , 
-                    \_SB.VFE0, 
+                    \_SB.MMU0, 
+                    \_SB.IMM0, 
+                    \_SB.VFE0
                 })
             }
 
@@ -11401,7 +12847,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_HID, "QCOM04DD")  // _HID: Hardware ID
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Alias (\_SB.PSUB, _SUB)
             Name (_UID, Zero)  // _UID: Unique ID
@@ -11421,18 +12867,21 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x31)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x03,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x68,  // ...#...h
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0020 */  0x4F, 0x30, 0x00, 0x86, 0x09, 0x00, 0x01, 0xEF,  // O0......
-                    /* 0028 */  0xBE, 0xAD, 0xDE, 0xAD, 0xDE, 0xEF, 0xBE, 0x79,  // .......y
-                    /* 0030 */  0x00                                             // .
+                    GpioInt (Edge, ActiveLow, Exclusive, PullUp, 0x0000,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0068
+                        }
+                    Memory32Fixed (ReadWrite,
+                        0xDEADBEEF,         // Address Base
+                        0xBEEFDEAD,         // Address Length
+                        _Y00)
                 })
-                CreateDWordField (RBUF, 0x27, TGCA)
-                CreateDWordField (RBUF, 0x2B, TGCL)
+                CreateDWordField (RBUF, \_SB.TREE._CRS._Y00._BAS, TGCA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.TREE._CRS._Y00._LEN, TGCL)  // _LEN: Length
                 TGCA = \_SB.TCMA
                 TGCL = \_SB.TCML
                 Return (RBUF) /* \_SB_.TREE._CRS.RBUF */
@@ -11448,10 +12897,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0E)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x40, 0x0C,  // ......@.
-                    /* 0008 */  0x00, 0x00, 0x80, 0x02, 0x79, 0x00               // ....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0C400000,         // Address Base
+                        0x02800000,         // Address Length
+                        )
                 })
                 Return (RBUF) /* \_SB_.SPMI._CRS.RBUF */
             }
@@ -11476,15 +12927,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x32)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x10, 0x0F,  // ........
-                    /* 0008 */  0x00, 0x00, 0x30, 0x00, 0x89, 0x06, 0x00, 0x09,  // ..0.....
-                    /* 0010 */  0x01, 0xF0, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x09, 0x01, 0xF0, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x09, 0x01, 0xF0, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x09, 0x01, 0xF0, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x79, 0x00                                       // y.
+                    Memory32Fixed (ReadWrite,
+                        0x0F100000,         // Address Base
+                        0x00300000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
                 })
                 Return (RBUF) /* \_SB_.GIO0._CRS.RBUF */
             }
@@ -11554,12 +13018,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x1D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x05, 0x01, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x06, 0x01,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x07,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000105,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000106,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000107,
+                    }
                 })
                 Return (RBUF) /* \_SB_.IPCC._CRS.RBUF */
             }
@@ -11578,32 +13050,47 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x26)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x21, 0x00, 0x01, 0x01, 0x01, 0x00, 0x08,  // .!......
-                    /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x01, 0x00, 0x5E,  // ...#...^
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0020 */  0x4F, 0x30, 0x00, 0x01, 0x79, 0x00               // O0..y.
+                    GpioIo (Shared, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x01
+                        })
+                        {   // Pin list
+                            0x005E
+                        }
+                    GpioIo (Shared, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x01
+                        })
+                        {   // Pin list
+                            0x0061
+                        }
                 })
                 Return (RBUF) /* \_SB_.QPPX._CRS.RBUF */
             }
 
             Method (_QPG, 0, Serialized)
             {
-                Return (Package (0x01)
+                Return (Package (0x02)
                 {
+                    One, 
                     One
                 })
             }
 
-            Name (GWLE, Buffer (0x25)
+            Name (GWLE, ResourceTemplate ()
             {
-                /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x40,  // ...#...@
-                /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                /* 0020 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                GpioIo (Exclusive, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                    "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                    )
+                    {   // Pin list
+                        0x0040
+                    }
             })
             Scope (\_SB.GIO0)
             {
@@ -11645,8 +13132,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.QPPX, 
+                \_SB.PEP0, 
+                \_SB.QPPX
             })
             Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
             Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
@@ -11711,14 +13198,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x2C)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x87, 0x17, 0x00, 0x00, 0x0C, 0x01, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x70, 0x61, 0xFF, 0xFF,  // ....pa..
-                    /* 0010 */  0xFF, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // .c......
-                    /* 0018 */  0x90, 0x02, 0x88, 0x0D, 0x00, 0x02, 0x0C, 0x00,  // ........
-                    /* 0020 */  0x00, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,  // ........
-                    /* 0028 */  0x10, 0x00, 0x79, 0x00                           // ..y.
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
+                        0x00000000,         // Granularity
+                        0x61700000,         // Range Minimum
+                        0x63FFFFFF,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x02900000,         // Length
+                        ,, , AddressRangeMemory, TypeStatic)
+                    WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
+                        0x0000,             // Granularity
+                        0x0000,             // Range Minimum
+                        0x000F,             // Range Maximum
+                        0x0000,             // Translation Offset
+                        0x0010,             // Length
+                        ,, )
                 })
                 Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
             }
@@ -11903,11 +13398,11 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
             Name (_PR0, Package (0x01)  // _PR0: Power Resources for D0
             {
-                \_SB.P0RR, 
+                \_SB.P0RR
             })
             Name (_PR3, Package (0x01)  // _PR3: Power Resources for D3hot
             {
-                \_SB.P0RR, 
+                \_SB.P0RR
             })
             Device (RP1)
             {
@@ -11918,15 +13413,15 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                 Name (_PR0, Package (0x01)  // _PR0: Power Resources for D0
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_PR3, Package (0x01)  // _PR3: Power Resources for D3hot
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_PRR, Package (0x01)  // _PRR: Power Resource for Reset
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
                 Name (_DSD, Package (0x02)  // _DSD: Device-Specific Data
@@ -11943,13 +13438,14 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 })
                 Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
-                    Name (RBUF, Buffer (0x25)
+                    Name (RBUF, ResourceTemplate ()
                     {
-                        /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x13,  // . ......
-                        /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                        /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x60,  // ...#...`
-                        /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                        /* 0020 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                        GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                            "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                            )
+                            {   // Pin list
+                                0x0060
+                            }
                     })
                     Return (RBUF) /* \_SB_.PCI0.RP1_._CRS.RBUF */
                 }
@@ -12038,7 +13534,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Name (_HID, "QCOM090D")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12048,8 +13544,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.IPCC, , 
-                \_SB.RPEN, 
+                \_SB.IPCC, 
+                \_SB.RPEN
             })
             Name (_HID, "QCOM0984")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12060,10 +13556,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.GLNK, , 
-                \_SB.SCM0, , 
-                \_SB.IMM0, 
+                \_SB.MMU0, 
+                \_SB.GLNK, 
+                \_SB.SCM0, 
+                \_SB.IMM0
             })
             Name (_HID, "QCOM095C")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12073,8 +13569,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM0982")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12084,8 +13580,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM09E5")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12095,26 +13591,33 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0915")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x26)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x88, 0x88, 0x88, 0x88,  // ........
-                    /* 0008 */  0x99, 0x99, 0x99, 0x99, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x11, 0x11, 0x11, 0x11, 0x22, 0x22, 0x22, 0x22,  // ....""""
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x33, 0x33, 0x33, 0x33,  // ....3333
-                    /* 0020 */  0x44, 0x44, 0x44, 0x44, 0x79, 0x00               // DDDDy.
+                    Memory32Fixed (ReadWrite,
+                        0x88888888,         // Address Base
+                        0x99999999,         // Address Length
+                        _Y01)
+                    Memory32Fixed (ReadWrite,
+                        0x11111111,         // Address Base
+                        0x22222222,         // Address Length
+                        _Y02)
+                    Memory32Fixed (ReadWrite,
+                        0x33333333,         // Address Base
+                        0x44444444,         // Address Length
+                        _Y03)
                 })
-                CreateDWordField (RBUF, 0x04, RMTA)
-                CreateDWordField (RBUF, 0x08, RMTL)
-                CreateDWordField (RBUF, 0x10, RFMA)
-                CreateDWordField (RBUF, 0x14, RFML)
-                CreateDWordField (RBUF, 0x1C, RFAA)
-                CreateDWordField (RBUF, 0x20, RFAL)
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y01._BAS, RMTA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y01._LEN, RMTL)  // _LEN: Length
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y02._BAS, RFMA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y02._LEN, RFML)  // _LEN: Length
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y03._BAS, RFAA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y03._LEN, RFAL)  // _LEN: Length
                 RMTA = \_SB.RMTB
                 RMTL = \_SB.RMTX
                 RFMA = \_SB.RFMB
@@ -12137,13 +13640,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x07)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.RPEN, , 
-                \_SB.TREE, , 
-                \_SB.MMU0, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.IMM0, 
+                \_SB.PEP0, 
+                \_SB.RPEN, 
+                \_SB.TREE, 
+                \_SB.MMU0, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.IMM0
             })
             Name (HHID, "QCOM096A")
             Name (PHID, "QCOM09E6")
@@ -12163,14 +13666,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x2C)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xE4, 0x01,  // ........
-                    /* 0008 */  0x00, 0x00, 0x06, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0xAE, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0xE0, 0x01, 0x00, 0x00, 0x03,  // ........
-                    /* 0020 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD0, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Memory32Fixed (ReadWrite,
+                        0x01E40000,         // Address Base
+                        0x00060000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002AE,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x01E00000,         // Address Base
+                        0x00030000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001D0,
+                    }
                 })
             }
 
@@ -12192,8 +13705,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0913")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12203,8 +13716,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.TREE, 
+                \_SB.GLNK, 
+                \_SB.TREE
             })
             Name (_HID, "QCOM0914")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12232,18 +13745,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     Zero, 
                     Zero, 
                     0xB300, 
-                    Buffer (0x11)
+                    ResourceTemplate ()
                     {
-                        /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                        /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                        /* 0010 */  0x00                                             // .
+                        Register (SystemMemory, 
+                            0x00,               // Bit Width
+                            0x00,               // Bit Offset
+                            0x0000000000000000, // Address
+                            ,)
                     }, 
 
-                    Buffer (0x11)
+                    ResourceTemplate ()
                     {
-                        /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                        /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                        /* 0010 */  0x00                                             // .
+                        Register (SystemMemory, 
+                            0x00,               // Bit Width
+                            0x00,               // Bit Offset
+                            0x0000000000000000, // Address
+                            ,)
                     }, 
 
                     "platform.DRIPS"
@@ -12267,18 +13784,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                         Zero, 
                         Zero, 
                         0x20, 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
                         "L3Cluster.D2"
@@ -12293,18 +13814,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                         Zero, 
                         One, 
                         0x40, 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
                         "L3Cluster.D4"
@@ -12332,25 +13857,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C1"
@@ -12364,25 +13896,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C2"
@@ -12396,25 +13935,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C3"
@@ -12428,25 +13974,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C4"
@@ -12476,25 +14029,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C1"
@@ -12508,25 +14068,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C2"
@@ -12540,25 +14107,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C3"
@@ -12572,25 +14146,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C4"
@@ -12620,25 +14201,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C1"
@@ -12652,25 +14240,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C2"
@@ -12684,25 +14279,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C3"
@@ -12716,25 +14318,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C4"
@@ -12764,25 +14373,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C1"
@@ -12796,25 +14412,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C2"
@@ -12828,25 +14451,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C3"
@@ -12860,25 +14490,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C4"
@@ -12908,25 +14545,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C1"
@@ -12940,25 +14584,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C2"
@@ -12972,25 +14623,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C3"
@@ -13004,25 +14662,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C4"
@@ -13052,25 +14717,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C1"
@@ -13084,25 +14756,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C2"
@@ -13116,25 +14795,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C3"
@@ -13148,25 +14834,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C4"
@@ -13203,25 +14896,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C1"
@@ -13235,25 +14935,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C2"
@@ -13267,25 +14974,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C3"
@@ -13299,25 +15013,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C4"
@@ -13354,25 +15075,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C1"
@@ -13386,25 +15114,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C2"
@@ -13418,25 +15153,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C3"
@@ -13450,25 +15192,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C4"
@@ -13482,8 +15231,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0912")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13493,7 +15242,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Name (_HID, "QCOM096C")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13516,12 +15265,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x20)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x90, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x14, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x01, 0x01, 0x15, 0x01, 0x00, 0x00, 0x79, 0x00   // ......y.
+                    Memory32Fixed (ReadWrite,
+                        0x00904000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000114,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000115,
+                    }
                 })
                 Return (RBUF) /* \_SB_.QGP0._CRS.RBUF */
             }
@@ -13535,12 +15292,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x20)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA0, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x37, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .7......
-                    /* 0018 */  0x01, 0x01, 0x38, 0x01, 0x00, 0x00, 0x79, 0x00   // ..8...y.
+                    Memory32Fixed (ReadWrite,
+                        0x00A04000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000137,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000138,
+                    }
                 })
                 Return (RBUF) /* \_SB_.QGP1._CRS.RBUF */
             }
@@ -13557,8 +15322,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.MMU0
             })
             Name (_HID, "QCOM0956")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13570,15 +15335,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x38)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x2E, 0x01, 0x00,  // ........
-                    /* 0008 */  0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0010 */  0x06, 0x00, 0xA0, 0x04, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00,  // ........
-                    /* 0020 */  0x01, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0028 */  0x07, 0x00, 0x00, 0xA0, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0030 */  0x03, 0x01, 0x43, 0x00, 0x00, 0x00, 0x79, 0x00   // ..C...y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012E,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x06000000,         // Address Base
+                        0x0004A000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x16000000,         // Address Base
+                        0x01000000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x07000000,         // Address Base
+                        0x00A00000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000043,
+                    }
                 })
             }
         }
@@ -13685,8 +15463,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.IPC0, , 
-                \_SB.QDIG, 
+                \_SB.IPC0, 
+                \_SB.QDIG
             })
             Name (_HID, "QCOM06DB")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13745,10 +15523,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.ARPC, , 
-                \_SB.NSP0, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.ARPC, 
+                \_SB.NSP0
             })
             Name (_HID, "QCOM0932")  // _HID: Hardware ID
             Name (_UID, 0x1B)  // _UID: Unique ID
@@ -13760,18 +15538,36 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x4D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xC4, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x00, 0x20, 0xC4, 0x0A, 0x00, 0x80, 0x00, 0x00,  // . ......
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xF0, 0xC4, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x10, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0xC5, 0x0A, 0x00, 0x10, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xEC, 0x01, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x2F, 0x01,  // ....../.
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xEB,  // ........
-                    /* 0048 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC40000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC42000,         // Address Base
+                        0x00008000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC4F000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC50000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EB,
+                    }
                 })
                 Return (RBUF) /* \_SB_.CAMP._CRS.RBUF */
             }
@@ -13781,7 +15577,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0926")  // _HID: Hardware ID
             Name (_UID, 0x15)  // _UID: Unique ID
@@ -13796,7 +15592,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0906")  // _HID: Hardware ID
             Name (_UID, 0x1A)  // _UID: Unique ID
@@ -13811,7 +15607,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0999")  // _HID: Hardware ID
             Name (_UID, 0x1C)  // _UID: Unique ID
@@ -13826,7 +15622,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM09CE")  // _HID: Hardware ID
             Name (_UID, 0x1D)  // _UID: Unique ID
@@ -13841,7 +15637,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM09CF")  // _HID: Hardware ID
             Name (_UID, 0x1E)  // _UID: Unique ID
@@ -13856,7 +15652,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.CAMP, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0927")  // _HID: Hardware ID
             Name (_UID, 0x19)  // _UID: Unique ID
@@ -13880,7 +15676,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.CAMP, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0998")  // _HID: Hardware ID
             Name (_UID, 0x18)  // _UID: Unique ID
@@ -13892,24 +15688,56 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x80)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xA0, 0xC6, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0010 */  0x00, 0xC0, 0xC6, 0x0A, 0x00, 0x20, 0x00, 0x00,  // ..... ..
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xE0, 0xC6, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0028 */  0x00, 0x00, 0xC7, 0x0A, 0x00, 0x20, 0x00, 0x00,  // ..... ..
-                    /* 0030 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x20, 0xC7, 0x0A,  // ..... ..
-                    /* 0038 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0040 */  0x00, 0x20, 0xC7, 0x0A, 0x00, 0x20, 0x00, 0x00,  // . ... ..
-                    /* 0048 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xFD, 0x01, 0x00,  // ........
-                    /* 0050 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFE, 0x01,  // ........
-                    /* 0058 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFF,  // ........
-                    /* 0060 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0068 */  0xE0, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0070 */  0x01, 0x9A, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0078 */  0x03, 0x01, 0x79, 0x00, 0x00, 0x00, 0x79, 0x00   // ..y...y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6A000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6C000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6E000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC70000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC72000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC72000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001E0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000009A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000079,
+                    }
                 })
                 Return (RBUF) /* \_SB_.MPCS._CRS.RBUF */
             }
@@ -13919,8 +15747,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.CAMP, , 
-                \_SB.MMU0, 
+                \_SB.CAMP, 
+                \_SB.MMU0
             })
             Name (_HID, "QCOM0933")  // _HID: Hardware ID
             Name (_UID, 0x17)  // _UID: Unique ID
@@ -13932,14 +15760,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x2C)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x30, 0xC5, 0x0A,  // .....0..
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x00, 0x70, 0xC5, 0x0A, 0x00, 0x40, 0x00, 0x00,  // .p...@..
-                    /* 0018 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xFA, 0x01, 0x00,  // ........
-                    /* 0020 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFB, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC53000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC57000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FB,
+                    }
                 })
                 Return (RBUF) /* \_SB_.JPGE._CRS.RBUF */
             }
@@ -13949,9 +15787,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.PEP0, , 
-                \_SB.CAMP, 
+                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0925")  // _HID: Hardware ID
             Name (_UID, 0x16)  // _UID: Unique ID
@@ -13963,43 +15801,116 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0116)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xC0, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x00, 0x02, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x00, 0xD0, 0xC4, 0x0A, 0x00, 0x02, 0x00, 0x00,  // ........
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x82, 0xC4, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0028 */  0x00, 0x84, 0xC4, 0x0A, 0x00, 0x02, 0x00, 0x00,  // ........
-                    /* 0030 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x86, 0xC4, 0x0A,  // ........
-                    /* 0038 */  0x00, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0040 */  0x00, 0xB0, 0xC6, 0x0A, 0x00, 0x10, 0x00, 0x00,  // ........
-                    /* 0048 */  0x86, 0x09, 0x00, 0x00, 0x00, 0xA0, 0xC7, 0x0A,  // ........
-                    /* 0050 */  0x00, 0x80, 0x00, 0x00, 0x86, 0x09, 0x00, 0x00,  // ........
-                    /* 0058 */  0x00, 0xA0, 0xC9, 0x0A, 0x00, 0x20, 0x01, 0x00,  // ..... ..
-                    /* 0060 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x90, 0xCD, 0x0A,  // ........
-                    /* 0068 */  0x00, 0x22, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ."......
-                    /* 0070 */  0x00, 0xB2, 0xCD, 0x0A, 0x00, 0x22, 0x00, 0x00,  // ....."..
-                    /* 0078 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x80, 0x85,  // ........
-                    /* 0080 */  0x00, 0x00, 0x50, 0x00, 0x89, 0x06, 0x00, 0x03,  // ..P.....
-                    /* 0088 */  0x01, 0xED, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0090 */  0x03, 0x01, 0xEE, 0x01, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0098 */  0x00, 0x03, 0x01, 0xE3, 0x01, 0x00, 0x00, 0x89,  // ........
-                    /* 00A0 */  0x06, 0x00, 0x03, 0x01, 0x99, 0x01, 0x00, 0x00,  // ........
-                    /* 00A8 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xEF, 0x01, 0x00,  // ........
-                    /* 00B0 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF1, 0x01,  // ........
-                    /* 00B8 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF3,  // ........
-                    /* 00C0 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 00C8 */  0xA1, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00D0 */  0x01, 0xF5, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00D8 */  0x03, 0x01, 0x88, 0x01, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00E0 */  0x00, 0x03, 0x01, 0xFC, 0x01, 0x00, 0x00, 0x89,  // ........
-                    /* 00E8 */  0x06, 0x00, 0x03, 0x01, 0xF0, 0x01, 0x00, 0x00,  // ........
-                    /* 00F0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xF2, 0x01, 0x00,  // ........
-                    /* 00F8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xA0, 0x02,  // ........
-                    /* 0100 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF4,  // ........
-                    /* 0108 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0110 */  0x87, 0x01, 0x00, 0x00, 0x79, 0x00               // ....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC00000,         // Address Base
+                        0x00020000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC4D000,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48200,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48400,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48600,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6B000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadOnly,
+                        0x0AC7A000,         // Address Base
+                        0x00008000,         // Address Length
+                        )
+                    Memory32Fixed (ReadOnly,
+                        0x0AC9A000,         // Address Base
+                        0x00012000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0ACD9000,         // Address Base
+                        0x00002200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0ACDB200,         // Address Base
+                        0x00002200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x85800000,         // Address Base
+                        0x00500000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001ED,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001E3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000199,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F1,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002A1,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F5,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000188,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F2,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002A0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F4,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000187,
+                    }
                 })
                 Return (RBUF) /* \_SB_.VFE0._CRS.RBUF */
             }
@@ -14009,9 +15920,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.IPC0, , 
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.IPC0, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM0693")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -14089,26 +16000,42 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.UCS0, 
+                \_SB.PEP0, 
+                \_SB.UCS0
             })
-            Name (_CRS, Buffer (0x0E)  // _CRS: Current Resource Settings
+            Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
-                /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x60, 0x0A,  // ......`.
-                /* 0008 */  0xFF, 0xFF, 0x0F, 0x00, 0x79, 0x00               // ....y.
+                Memory32Fixed (ReadWrite,
+                    0x0A600000,         // Address Base
+                    0x000FFFFF,         // Address Length
+                    )
             })
             Device (USB0)
             {
                 Name (_ADR, Zero)  // _ADR: Address
                 Name (_S0W, 0x03)  // _S0W: S0 Device Wake State
-                Name (_CRS, Buffer (0x2F)  // _CRS: Current Resource Settings
+                Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0xA5, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0xA2, 0x00,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0x11,  // ........
-                    /* 0018 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x1B, 0x01,  // ........
-                    /* 0020 */  0x0F, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x1B,  // ........
-                    /* 0028 */  0x01, 0x0E, 0x02, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000A5,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x000000A2,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x00000211,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x0000020F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x0000020E,
+                    }
                 })
                 Device (RHUB)
                 {
@@ -14314,11 +16241,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     }
                 }
 
-                Name (_CRS, Buffer (0x14)  // _CRS: Current Resource Settings
+                Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0xA5, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0xA2, 0x00,  // ........
-                    /* 0010 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000A5,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x000000A2,
+                    }
                 })
                 Method (CCVL, 0, NotSerialized)
                 {
@@ -14473,8 +16405,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_DDN, "USB Type-C")  // _DDN: DOS Device Name
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PMGK, , 
-                \_SB.UCS0, 
+                \_SB.PMGK, 
+                \_SB.UCS0
             })
             Device (UCN0)
             {
@@ -14520,10 +16452,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 })
             }
 
-            Name (_CRS, Buffer (0x0E)  // _CRS: Current Resource Settings
+            Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
-                /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0xA0,  // ........
-                /* 0008 */  0x30, 0x00, 0x00, 0x00, 0x79, 0x00               // 0...y.
+                Memory32Fixed (ReadWrite,
+                    0xA0000000,         // Address Base
+                    0x00000030,         // Address Length
+                    )
             })
             OperationRegion (USBC, SystemMemory, 0xA0000000, 0x30)
             Field (USBC, ByteAcc, NoLock, Preserve)
@@ -14604,14 +16538,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_HID, "QCOM09A4")  // _HID: Hardware ID
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0E)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x40, 0x00, 0x00, 0xA0,  // ....@...
-                    /* 0008 */  0x20, 0x00, 0x00, 0x00, 0x79, 0x00               //  ...y.
+                    Memory32Fixed (ReadWrite,
+                        0xA0000040,         // Address Base
+                        0x00000020,         // Address Length
+                        )
                 })
                 Return (RBUF) /* \_SB_.UCS0._CRS.RBUF */
             }
@@ -14681,7 +16617,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14698,7 +16634,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14730,7 +16666,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14743,7 +16679,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14760,7 +16696,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14792,7 +16728,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14805,7 +16741,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14822,7 +16758,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14854,7 +16790,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14865,7 +16801,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.GPU0, 
+                \_SB.GPU0
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -14898,7 +16834,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14911,7 +16847,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14930,7 +16866,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14947,7 +16883,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MJCT, 
+                \_SB.MJCT
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -14985,7 +16921,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14996,7 +16932,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.CSW0, 
+                \_SB.CSW0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15032,7 +16968,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -15045,7 +16981,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -15062,17 +16998,17 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x04)  // _TZD: Thermal Zone Devices
             {
-                \_SB.WLTM, , 
-                \_SB.CSW0, , 
-                \_SB.GPU0, , 
-                _SB.MBCL, 
+                \_SB.WLTM, 
+                \_SB.CSW0, 
+                \_SB.GPU0, 
+                _SB.MBCL
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.BCL1, 
+                    \_SB.PEP0, 
+                    \_SB.BCL1
                 })
             }
         }
@@ -15083,20 +17019,21 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0xC0,  // ...#....
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Exclusive, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C0
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ15._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15194,8 +17131,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15206,21 +17143,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x00,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0100
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ16._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x02)  // _TZD: Thermal Zone Devices
             {
-                \_SB.WLTM, , 
-                \_SB.MJCT, 
+                \_SB.WLTM, 
+                \_SB.MJCT
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15317,8 +17255,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15329,22 +17267,23 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x80,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0180
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ18._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x03)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS0, , 
-                \_SB.MBS1, , 
-                \_SB.MBS2, 
+                \_SB.MBS0, 
+                \_SB.MBS1, 
+                \_SB.MBS2
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15446,8 +17385,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15458,19 +17397,19 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x0D)  // _TZD: Thermal Zone Devices
             {
-                \_SB.SYSM.CLUS.CPU0, , 
-                \_SB.SYSM.CLUS.CPU1, , 
-                \_SB.SYSM.CLUS.CPU2, , 
-                \_SB.SYSM.CLUS.CPU3, , 
-                \_SB.SYSM.CLUS.CPU4, , 
-                \_SB.SYSM.CLUS.CPU5, , 
-                \_SB.SYSM.CLUS.CPU6, , 
-                \_SB.SYSM.CLUS.CPU7, , 
-                \_SB.PEP0, , 
-                \_SB.WLTM, , 
-                \_SB.CSW0, , 
-                \_SB.GPU0, , 
-                \_SB.MJCT, 
+                \_SB.SYSM.CLUS.CPU0, 
+                \_SB.SYSM.CLUS.CPU1, 
+                \_SB.SYSM.CLUS.CPU2, 
+                \_SB.SYSM.CLUS.CPU3, 
+                \_SB.SYSM.CLUS.CPU4, 
+                \_SB.SYSM.CLUS.CPU5, 
+                \_SB.SYSM.CLUS.CPU6, 
+                \_SB.SYSM.CLUS.CPU7, 
+                \_SB.PEP0, 
+                \_SB.WLTM, 
+                \_SB.CSW0, 
+                \_SB.GPU0, 
+                \_SB.MJCT
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15508,7 +17447,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -15519,7 +17458,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15533,7 +17472,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15547,7 +17486,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15561,7 +17500,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15575,7 +17514,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15589,7 +17528,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15603,7 +17542,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15617,7 +17556,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15631,7 +17570,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15645,7 +17584,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15659,7 +17598,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15673,7 +17612,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15687,7 +17626,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MPA, 
+                \_SB.MPA
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15723,7 +17662,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MPA, 
+                    \_SB.MPA
                 })
             }
         }
@@ -15734,7 +17673,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MPA1, 
+                \_SB.MPA1
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15770,7 +17709,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MPA1, 
+                    \_SB.MPA1
                 })
             }
         }
@@ -15781,13 +17720,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ0, 
+                \_SB.MBJ0
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ0, 
+                    \_SB.MBJ0
                 })
             }
         }
@@ -15798,13 +17737,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ1, 
+                \_SB.MBJ1
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ1, 
+                    \_SB.MBJ1
                 })
             }
         }
@@ -15815,13 +17754,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ2, 
+                \_SB.MBJ2
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ2, 
+                    \_SB.MBJ2
                 })
             }
         }
@@ -15832,13 +17771,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ3, 
+                \_SB.MBJ3
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ3, 
+                    \_SB.MBJ3
                 })
             }
         }
@@ -15849,7 +17788,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS0, 
+                \_SB.MBS0
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15885,7 +17824,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS0, 
+                    \_SB.MBS0
                 })
             }
         }
@@ -15896,7 +17835,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS1, 
+                \_SB.MBS1
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15932,7 +17871,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS1, 
+                    \_SB.MBS1
                 })
             }
         }
@@ -15943,7 +17882,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS2, 
+                \_SB.MBS2
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15979,7 +17918,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS2, 
+                    \_SB.MBS2
                 })
             }
         }
@@ -16011,8 +17950,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
         }
@@ -16025,18 +17964,18 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
 
             Name (_TZD, Package (0x05)  // _TZD: Thermal Zone Devices
             {
-                \_SB.SYSM.CLUS.CPU4, , 
-                \_SB.SYSM.CLUS.CPU5, , 
-                \_SB.SYSM.CLUS.CPU6, , 
-                \_SB.SYSM.CLUS.CPU7, , 
-                \_SB.GPU0, 
+                \_SB.SYSM.CLUS.CPU4, 
+                \_SB.SYSM.CLUS.CPU5, 
+                \_SB.SYSM.CLUS.CPU6, 
+                \_SB.SYSM.CLUS.CPU7, 
+                \_SB.GPU0
             })
             Name (TPSV, 0x0E2E)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -16079,8 +18018,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
 
@@ -16125,17 +18064,18 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,  // . ......
-                    /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x00,  // ...#....
-                    /* 0018 */  0x0E, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x32, 0x00, 0x79, 0x00                     // 02.y.
+                    GpioInt (Level, ActiveHigh, Exclusive, PullNone, 0x0000,
+                        "\\_SB.PM02", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0E00
+                        }
                 })
                 Return (RBUF) /* \_SB_.HWN1._CRS.RBUF */
             }
@@ -16188,23 +18128,25 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GIO0, , 
-                \_SB.SPI3, 
+                \_SB.PEP0, 
+                \_SB.GIO0, 
+                \_SB.SPI3
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x44)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8E, 0x1C, 0x00, 0x01, 0x00, 0x02, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x01, 0x09, 0x00, 0x80, 0x8D, 0x5B, 0x00,  // ......[.
-                    /* 0010 */  0x08, 0x00, 0x00, 0x00, 0x00, 0x5C, 0x5F, 0x53,  // .....\_S
-                    /* 0018 */  0x42, 0x2E, 0x53, 0x50, 0x49, 0x33, 0x00, 0x8C,  // B.SPI3..
-                    /* 0020 */  0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x13, 0x00,  //  .......
-                    /* 0028 */  0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00,  // ........
-                    /* 0030 */  0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x1F, 0x00,  // ..#.....
-                    /* 0038 */  0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F,  // \_SB.GIO
-                    /* 0040 */  0x30, 0x00, 0x79, 0x00                           // 0.y.
+                    SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, 0x08,
+                        ControllerInitiated, 0x005B8D80, ClockPolarityLow,
+                        ClockPhaseFirst, "\\_SB.SPI3",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x001F
+                        }
                 })
                 Return (RBUF) /* \_SB_.TSC1._CRS.RBUF */
             }
@@ -16262,22 +18204,26 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x6B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x15,  // . ......
-                    /* 0008 */  0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x07,  // ...#....
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00,  // 01.. ...
-                    /* 0028 */  0x01, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 0038 */  0x00, 0x00, 0xC6, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 0040 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20,  // .PM01.. 
-                    /* 0048 */  0x00, 0x01, 0x00, 0x01, 0x00, 0x05, 0x00, 0x02,  // ........
-                    /* 0050 */  0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // ........
-                    /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x06, 0x00, 0x5C,  // .#.....\
-                    /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31,  // _SB.PM01
-                    /* 0068 */  0x00, 0x79, 0x00                                 // .y.
+                    GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDown, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0007
+                        }
+                    GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C6
+                        }
+                    GpioInt (Edge, ActiveBoth, Exclusive, PullDown, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0006
+                        }
                 })
                 Return (RBUF) /* \_SB_.BTNS._CRS.RBUF */
             }
@@ -16360,9 +18306,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.UAR8, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.UAR8
             })
             Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
             {
@@ -16373,17 +18319,19 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_S0W, 0x02)  // _S0W: S0 Device Wake State
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (PBUF, Buffer (0x45)
+                Name (PBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8E, 0x1D, 0x00, 0x01, 0x00, 0x03, 0x02, 0x35,  // .......5
-                    /* 0008 */  0x00, 0x01, 0x0A, 0x00, 0x00, 0xC2, 0x01, 0x00,  // ........
-                    /* 0010 */  0x20, 0x00, 0x20, 0x00, 0x00, 0xC0, 0x5C, 0x5F,  //  . ...\_
-                    /* 0018 */  0x53, 0x42, 0x2E, 0x55, 0x41, 0x52, 0x38, 0x00,  // SB.UAR8.
-                    /* 0020 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                    /* 0028 */  0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0030 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x41,  // ...#...A
-                    /* 0038 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0040 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                    UartSerialBusV2 (0x0001C200, DataBitsEight, StopBitsOne,
+                        0xC0, LittleEndian, ParityTypeNone, FlowControlHardware,
+                        0x0020, 0x0020, "\\_SB.UAR8",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioIo (Exclusive, PullDown, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0041
+                        }
                 })
                 Return (PBUF) /* \_SB_.BTH0._CRS.PBUF */
             }
@@ -16398,26 +18346,34 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.SPMI, , 
-                \_SB.PMIC, 
+                \_SB.SPMI, 
+                \_SB.PMIC
             })
             Name (_HID, "QCOM0911")  // _HID: Hardware ID
             Name (_UID, Zero)  // _UID: Unique ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (INTB, Buffer (0x4A)
+                Name (INTB, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x21, 0x00, 0x01, 0x00, 0x01, 0x00, 0x11,  // .!......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x01, 0x00, 0x20,  // ...#... 
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x02, 0x8C, 0x21, 0x00, 0x01,  // 01...!..
-                    /* 0028 */  0x00, 0x01, 0x00, 0x11, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23,  // .......#
-                    /* 0038 */  0x00, 0x01, 0x00, 0x28, 0x00, 0x5C, 0x5F, 0x53,  // ...(.\_S
-                    /* 0040 */  0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x02,  // B.PM01..
-                    /* 0048 */  0x79, 0x00                                       // y.
+                    GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x02
+                        })
+                        {   // Pin list
+                            0x0020
+                        }
+                    GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x02
+                        })
+                        {   // Pin list
+                            0x0028
+                        }
                 })
                 Name (NAM, Buffer (0x0A)
                 {

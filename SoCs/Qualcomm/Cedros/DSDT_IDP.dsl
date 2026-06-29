@@ -193,11 +193,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, One)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xD8, 0x01,  // .....@..
-                    /* 0008 */  0x00, 0xC0, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x29, 0x01, 0x00, 0x00, 0x79, 0x00         // .)...y.
+                    Memory32Fixed (ReadWrite,
+                        0x01D84000,         // Address Base
+                        0x0001C000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000129,
+                    }
                 })
                 Return (RBUF) /* \_SB_.UFS0._CRS.RBUF */
             }
@@ -232,7 +237,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM24BF")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -240,11 +245,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x7C, 0x00,  // .....@|.
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0xAC, 0x02, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x007C4000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002AC,
+                    }
                 })
                 Return (RBUF) /* \_SB_.SDC1._CRS.RBUF */
             }
@@ -271,8 +281,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GIO0, 
+                \_SB.PEP0, 
+                \_SB.GIO0
             })
             Name (_HID, "QCOM2466")  // _HID: Hardware ID
             Name (_UID, One)  // _UID: Unique ID
@@ -280,20 +290,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x5D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x80, 0x08,  // .....@..
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0xEF, 0x00, 0x00, 0x00, 0x8C, 0x20, 0x00,  // ...... .
-                    /* 0018 */  0x01, 0x00, 0x01, 0x00, 0x1D, 0x00, 0x01, 0x00,  // ........
-                    /* 0020 */  0x00, 0x88, 0x13, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0028 */  0x23, 0x00, 0x00, 0x00, 0xC0, 0x00, 0x5C, 0x5F,  // #.....\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00,  // SB.GIO0.
-                    /* 0038 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x08,  // . ......
-                    /* 0040 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0048 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x5C,  // ...#...\
-                    /* 0050 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0058 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                    Memory32Fixed (ReadWrite,
+                        0x08804000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000EF,
+                    }
+                    GpioInt (Edge, ActiveBoth, SharedAndWake, PullUp, 0x1388,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C0
+                        }
+                    GpioIo (Shared, PullUp, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x005C
+                        }
                 })
                 Return (RBUF) /* \_SB_.SDC2._CRS.RBUF */
             }
@@ -312,7 +330,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM0427")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -334,7 +352,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.SPMI, 
+                \_SB.SPMI
             })
             Name (_HID, "QCOM092B")  // _HID: Hardware ID
             Name (_CID, "PNP0CA3")  // _CID: Compatible ID
@@ -390,7 +408,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IC14, 
+                \_SB.IC14
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -399,31 +417,36 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0xB8)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8E, 0x19, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x01, 0x06, 0x00, 0xA0, 0x86, 0x01, 0x00,  // ........
-                    /* 0010 */  0x08, 0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x49,  // ..\_SB.I
-                    /* 0018 */  0x43, 0x31, 0x34, 0x00, 0x8E, 0x19, 0x00, 0x01,  // C14.....
-                    /* 0020 */  0x00, 0x01, 0x02, 0x00, 0x00, 0x01, 0x06, 0x00,  // ........
-                    /* 0028 */  0xA0, 0x86, 0x01, 0x00, 0x09, 0x00, 0x5C, 0x5F,  // ......\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x49, 0x43, 0x31, 0x34, 0x00,  // SB.IC14.
-                    /* 0038 */  0x8E, 0x19, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00,  // ........
-                    /* 0040 */  0x00, 0x01, 0x06, 0x00, 0xA0, 0x86, 0x01, 0x00,  // ........
-                    /* 0048 */  0x0C, 0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x49,  // ..\_SB.I
-                    /* 0050 */  0x43, 0x31, 0x34, 0x00, 0x8E, 0x19, 0x00, 0x01,  // C14.....
-                    /* 0058 */  0x00, 0x01, 0x02, 0x00, 0x00, 0x01, 0x06, 0x00,  // ........
-                    /* 0060 */  0xA0, 0x86, 0x01, 0x00, 0x0D, 0x00, 0x5C, 0x5F,  // ......\_
-                    /* 0068 */  0x53, 0x42, 0x2E, 0x49, 0x43, 0x31, 0x34, 0x00,  // SB.IC14.
-                    /* 0070 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                    /* 0078 */  0x00, 0x03, 0xC8, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0080 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x16,  // ...#....
-                    /* 0088 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0090 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // 01.. ...
-                    /* 0098 */  0x01, 0x00, 0x00, 0x00, 0x03, 0xC8, 0x00, 0x00,  // ........
-                    /* 00A0 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 00A8 */  0x00, 0x00, 0x17, 0x01, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 00B0 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x79, 0x00   // .PM01.y.
+                    I2cSerialBusV2 (0x0008, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x0009, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x000C, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    I2cSerialBusV2 (0x000D, ControllerInitiated, 0x000186A0,
+                        AddressingMode7Bit, "\\_SB.IC14",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioIo (Exclusive, PullNone, 0x0000, 0x00C8, IoRestrictionNone,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0116
+                        }
+                    GpioIo (Exclusive, PullNone, 0x0000, 0x00C8, IoRestrictionNone,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0117
+                        }
                 })
                 Return (RBUF) /* \_SB_.PML0._CRS.RBUF */
             }
@@ -436,14 +459,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0x01, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x00000201,
+                    }
                 })
                 Return (RBUF) /* \_SB_.PM01._CRS.RBUF */
             }
@@ -504,9 +529,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PMIC, , 
-                \_SB.ABD, , 
-                \_SB.SCM0, 
+                \_SB.PMIC, 
+                \_SB.ABD, 
+                \_SB.SCM0
             })
             Method (GEPT, 0, NotSerialized)
             {
@@ -587,7 +612,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMGK, 
+                \_SB.PMGK
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -610,48 +635,60 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x011A)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x0B,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x08,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00,  // 01.. ...
-                    /* 0028 */  0x01, 0x00, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 0038 */  0x00, 0x00, 0x09, 0x01, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 0040 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20,  // .PM01.. 
-                    /* 0048 */  0x00, 0x01, 0x00, 0x01, 0x00, 0x09, 0x00, 0x01,  // ........
-                    /* 0050 */  0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // ........
-                    /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x0A, 0x01, 0x5C,  // .#.....\
-                    /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31,  // _SB.PM01
-                    /* 0068 */  0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00,  // .. .....
-                    /* 0070 */  0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17,  // ........
-                    /* 0078 */  0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00,  // ....#...
-                    /* 0080 */  0x0B, 0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50,  // ..\_SB.P
-                    /* 0088 */  0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01,  // M01.. ..
-                    /* 0090 */  0x00, 0x01, 0x00, 0x0B, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0098 */  0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23,  // .......#
-                    /* 00A0 */  0x00, 0x00, 0x00, 0x10, 0x02, 0x5C, 0x5F, 0x53,  // .....\_S
-                    /* 00A8 */  0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C,  // B.PM01..
-                    /* 00B0 */  0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09, 0x00,  //  .......
-                    /* 00B8 */  0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00,  // ........
-                    /* 00C0 */  0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x11, 0x02,  // ..#.....
-                    /* 00C8 */  0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30,  // \_SB.PM0
-                    /* 00D0 */  0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01,  // 1.. ....
-                    /* 00D8 */  0x00, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,  // ........
-                    /* 00E0 */  0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00,  // .....#..
-                    /* 00E8 */  0x00, 0x12, 0x02, 0x5C, 0x5F, 0x53, 0x42, 0x2E,  // ...\_SB.
-                    /* 00F0 */  0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20, 0x00,  // PM01.. .
-                    /* 00F8 */  0x01, 0x00, 0x01, 0x00, 0x09, 0x00, 0x01, 0x00,  // ........
-                    /* 0100 */  0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0108 */  0x23, 0x00, 0x00, 0x00, 0x13, 0x02, 0x5C, 0x5F,  // #.....\_
-                    /* 0110 */  0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00,  // SB.PM01.
-                    /* 0118 */  0x79, 0x00                                       // y.
+                    GpioInt (Edge, ActiveLow, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0108
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0109
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x010A
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x010B
+                        }
+                    GpioInt (Edge, ActiveLow, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0210
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0211
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0212
+                        }
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0213
+                        }
                 })
                 Return (RBUF) /* \_SB_.BCL1._CRS.RBUF */
             }
@@ -679,8 +716,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.ABD, 
+                \_SB.GLNK, 
+                \_SB.ABD
             })
             Name (LKUP, Zero)
             Method (_STA, 0, NotSerialized)  // _STA: Status
@@ -2617,7 +2654,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPCC, 
+                \_SB.IPCC
             })
             Method (_SUB, 0, NotSerialized)  // _SUB: Subsystem ID
             {
@@ -2816,21 +2853,52 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x65)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x11, 0x01, 0x1A, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x11, 0x01, 0x1C, 0x02,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x11, 0x01, 0x1B,  // ........
-                    /* 0018 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x11, 0x01,  // ........
-                    /* 0020 */  0x1D, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0028 */  0x01, 0x25, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // .%......
-                    /* 0030 */  0x01, 0x01, 0x3E, 0x00, 0x00, 0x00, 0x89, 0x06,  // ..>.....
-                    /* 0038 */  0x00, 0x01, 0x01, 0x3F, 0x00, 0x00, 0x00, 0x89,  // ...?....
-                    /* 0040 */  0x06, 0x00, 0x01, 0x01, 0x33, 0x00, 0x00, 0x00,  // ....3...
-                    /* 0048 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x65, 0x02, 0x00,  // .....e..
-                    /* 0050 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x0D, 0x01,  // ........
-                    /* 0058 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x13,  // ........
-                    /* 0060 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021A,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021C,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021B,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, ExclusiveAndWake, ,, )
+                    {
+                        0x0000021D,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000025,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000003E,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000003F,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000033,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000265,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000010D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000113,
+                    }
                 })
             }
 
@@ -2899,7 +2967,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Return (STNX) /* \_SB_.PEP0.STNX */
             }
 
-            Name (STNX, Package (0x0B)
+            Name (STNX, Package (0x0A)
             {
                 "DMPO", 
                 "MMVD", 
@@ -2910,8 +2978,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 "DMPL", 
                 "DMWE", 
                 "XMPL", 
-                "XMPT", 
-                "DMEP"
+                "XMPT"
             })
             Name (DCVS, Zero)
             Method (PGDS, 0, NotSerialized)
@@ -3156,6 +3223,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
         Scope (\_SB.PEP0)
         {
+            Method (PREL, 0, NotSerialized)
+            {
+                Name (PREX, Package (0x03)
+                {
+                    "DM0G", 
+                    "DM5G", 
+                    "DMEP"
+                })
+                Return (PREX) /* \_SB_.PEP0.PREL.PREX */
+            }
+        }
+
+        Scope (\_SB.PEP0)
+        {
             Method (PEPH, 0, NotSerialized)
             {
                 Return (Package (0x01)
@@ -3238,6 +3319,1198 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     }
                 }
             })
+        }
+
+        Scope (\_SB.PEP0)
+        {
+            Method (G0MD, 0, NotSerialized)
+            {
+                Name (GPCC, Package (0x01)
+                {
+                    Package (0x04)
+                    {
+                        "DEVICE", 
+                        0x82, 
+                        "\\_SB.GPU0", 
+                        Package (0x0C)
+                        {
+                            "COMPONENT", 
+                            Zero, 
+                            Package (0x03)
+                            {
+                                "FSTATE", 
+                                Zero, 
+                                Package (0x17)
+                                {
+                                    "EXIT", 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "FOOTSWITCH", 
+                                        Package (0x03)
+                                        {
+                                            "disp_cc_mdss_core_gdsc", 
+                                            One, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_pclk0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_esc0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_intf_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO6_B", 
+                                            One, 
+                                            0x00124F80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO10_C", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "TLMMGPIO", 
+                                        Package (0x06)
+                                        {
+                                            0x52, 
+                                            One, 
+                                            One, 
+                                            Zero, 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "TLMMGPIO", 
+                                        Package (0x06)
+                                        {
+                                            0x17, 
+                                            One, 
+                                            Zero, 
+                                            One, 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }
+                                }
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "INIT_FSTATE", 
+                                Zero
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "PRELOAD_FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                Zero, 
+                                Package (0x02)
+                                {
+                                    "PSTATE", 
+                                    Zero
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                One, 
+                                Package (0x0D)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_pclk0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_esc0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_byte0_intf_clk", 
+                                            One
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x02, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x03, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x04, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x05, 
+                                Package (0x07)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            0x02
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            0x02
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }
+                        }
+                    }
+                })
+                Return (GPCC) /* \_SB_.PEP0.G0MD.GPCC */
+            }
+
+            Method (G5MD, 0, NotSerialized)
+            {
+                Name (GPCC, Package (0x01)
+                {
+                    Package (0x04)
+                    {
+                        "DEVICE", 
+                        0x82, 
+                        "\\_SB.GPU0", 
+                        Package (0x0B)
+                        {
+                            "COMPONENT", 
+                            0x05, 
+                            Package (0x03)
+                            {
+                                "FSTATE", 
+                                Zero, 
+                                Package (0x1C)
+                                {
+                                    "EXIT", 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_xo_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "FOOTSWITCH", 
+                                        Package (0x03)
+                                        {
+                                            "disp_cc_mdss_core_gdsc", 
+                                            One, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_disp_hf_axi_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_pipe_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb30_prim_sleep_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "gcc_usb3_prim_phy_com_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_rscc_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_ahb_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_vsync_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_pixel_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_intf_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO6_B", 
+                                            One, 
+                                            0x00124F80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO1_B", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO1_C", 
+                                            One, 
+                                            0x001B7740, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO2_B", 
+                                            One, 
+                                            0x002EE000, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "PMICVREGVOTE", 
+                                        Package (0x08)
+                                        {
+                                            "PPP_RESOURCE_ID_LDO10_C", 
+                                            One, 
+                                            0x000D6D80, 
+                                            One, 
+                                            0x07, 
+                                            Zero, 
+                                            "HLOS_DRV", 
+                                            "REQUIRED"
+                                        }
+                                    }
+                                }
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "INIT_FSTATE", 
+                                Zero
+                            }, 
+
+                            Package (0x02)
+                            {
+                                "PRELOAD_FSTATE", 
+                                One
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                Zero, 
+                                Package (0x02)
+                                {
+                                    "PSTATE", 
+                                    Zero
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                One, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x04)
+                                        {
+                                            "disp_cc_mdss_mdp_clk", 
+                                            0x03, 
+                                            0x11E1A300, 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_APPSS_PROC", 
+                                            "ICBID_SLAVE_DISPLAY_CFG", 
+                                            0x047868C0, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x02, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            Zero, 
+                                            0x77359400
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x03, 
+                                Package (0x04)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MDP0", 
+                                            "ICBID_SLAVE_MNOC_HF_MEM_NOC", 
+                                            Zero, 
+                                            Zero
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "BUSARB", 
+                                        Package (0x05)
+                                        {
+                                            0x03, 
+                                            "ICBID_MASTER_MNOC_HF_MEM_NOC", 
+                                            "ICBID_SLAVE_EBI1", 
+                                            0x2FAF0800, 
+                                            Zero
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }, 
+
+                            Package (0x04)
+                            {
+                                "PSTATE_SET", 
+                                0x04, 
+                                Package (0x06)
+                                {
+                                    "PSTATE", 
+                                    Zero, 
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_aux_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_pixel_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_clk", 
+                                            One
+                                        }
+                                    }, 
+
+                                    Package (0x02)
+                                    {
+                                        "CLOCK", 
+                                        Package (0x02)
+                                        {
+                                            "disp_cc_mdss_dp_link_intf_clk", 
+                                            One
+                                        }
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PRELOAD_PSTATE", 
+                                    Zero
+                                }
+                            }
+                        }
+                    }
+                })
+                Return (GPCC) /* \_SB_.PEP0.G5MD.GPCC */
+            }
         }
 
         Scope (\_SB.PEP0)
@@ -8910,6 +10183,372 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
         Scope (\_SB.PEP0)
         {
+            Method (PEMD, 0, NotSerialized)
+            {
+                Return (PEMC) /* \_SB_.PEP0.PEMC */
+            }
+
+            Name (PEMC, Package (0x02)
+            {
+                Package (0x03)
+                {
+                    "DEVICE", 
+                    "\\_SB.PCI0", 
+                    Package (0x06)
+                    {
+                        "COMPONENT", 
+                        Zero, 
+                        Package (0x03)
+                        {
+                            "FSTATE", 
+                            Zero, 
+                            Package (0x17)
+                            {
+                                "EXIT", 
+                                Package (0x02)
+                                {
+                                    "TLMMGPIO", 
+                                    Package (0x06)
+                                    {
+                                        0x40, 
+                                        One, 
+                                        Zero, 
+                                        One, 
+                                        0x03, 
+                                        0x04
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS11_B", 
+                                        0x02, 
+                                        0x001C5200, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS2_C", 
+                                        0x02, 
+                                        0x000E86C0, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS12_B", 
+                                        0x02, 
+                                        0x00132A40, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_LDO11_C", 
+                                        One, 
+                                        0x002AB980, 
+                                        One, 
+                                        0x07, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "PMICVREGVOTE", 
+                                    Package (0x06)
+                                    {
+                                        "PPP_RESOURCE_ID_SMPS10_B", 
+                                        0x02, 
+                                        0x001B7740, 
+                                        One, 
+                                        0x06, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "FOOTSWITCH", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_gdsc", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "BUSARB", 
+                                    Package (0x05)
+                                    {
+                                        0x03, 
+                                        "ICBID_MASTER_APPSS_PROC", 
+                                        "ICBID_SLAVE_PCIE_0_CFG", 
+                                        0x047868C0, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "BUSARB", 
+                                    Package (0x05)
+                                    {
+                                        0x03, 
+                                        "ICBID_MASTER_PCIE_0", 
+                                        "ICBID_SLAVE_EBI1", 
+                                        0xB2D05E00, 
+                                        0xB2D05E00
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x09)
+                                    {
+                                        "gcc_pcie_0_pipe_clk", 
+                                        0x06, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero, 
+                                        Zero
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_aux_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_pipe_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_slv_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_slv_q2a_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_throttle_core_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_throttle_pcie_ahb_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_mstr_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_aggre_noc_pcie_0_axi_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x02)
+                                    {
+                                        "gcc_pcie_0_cfg_ahb_clk", 
+                                        One
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x04)
+                                    {
+                                        "gcc_pcie_0_aux_clk", 
+                                        0x08, 
+                                        0x0124F800, 
+                                        0x03
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "CLOCK", 
+                                    Package (0x04)
+                                    {
+                                        "gcc_pcie0_phy_rchng_clk", 
+                                        0x08, 
+                                        0x05F5E100, 
+                                        0x03
+                                    }
+                                }, 
+
+                                Package (0x02)
+                                {
+                                    "TLMMGPIO", 
+                                    Package (0x07)
+                                    {
+                                        0x5F, 
+                                        Zero, 
+                                        One, 
+                                        Zero, 
+                                        0x03, 
+                                        Zero, 
+                                        Zero
+                                    }
+                                }
+                            }
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            One
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "INIT_FSTATE", 
+                            Zero
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "PRELOAD_FSTATE", 
+                            One
+                        }
+                    }
+                }, 
+
+                Package (0x08)
+                {
+                    "DEVICE", 
+                    "\\_SB.PCI0.RP1", 
+                    Package (0x04)
+                    {
+                        "COMPONENT", 
+                        Zero, 
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            Zero
+                        }, 
+
+                        Package (0x02)
+                        {
+                            "FSTATE", 
+                            One
+                        }
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        Zero
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        One
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        0x02
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "DSTATE", 
+                        0x03
+                    }, 
+
+                    Package (0x02)
+                    {
+                        "ABANDON_DSTATE", 
+                        Zero
+                    }
+                }
+            })
+        }
+
+        Scope (\_SB.PEP0)
+        {
         }
 
         Device (BAM1)
@@ -8920,11 +10559,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xDC, 0x01,  // .....@..
-                    /* 0008 */  0x00, 0x40, 0x02, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x30, 0x01, 0x00, 0x00, 0x79, 0x00         // .0...y.
+                    Memory32Fixed (ReadWrite,
+                        0x01DC4000,         // Address Base
+                        0x00024000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000130,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAM1._CRS.RBUF */
             }
@@ -8938,11 +10582,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA8, 0x03,  // .....@..
-                    /* 0008 */  0x00, 0x20, 0x03, 0x00, 0x89, 0x06, 0x00, 0x01,  // . ......
-                    /* 0010 */  0x01, 0xC4, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x03A84000,         // Address Base
+                        0x00032000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000C4,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAM5._CRS.RBUF */
             }
@@ -8956,11 +10605,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x06, 0x06,  // .....@..
-                    /* 0008 */  0x00, 0x50, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // .P......
-                    /* 0010 */  0x01, 0xC7, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x06064000,         // Address Base
+                        0x00015000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000C7,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAME._CRS.RBUF */
             }
@@ -8974,11 +10628,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x70, 0x0A,  // .....@p.
-                    /* 0008 */  0x00, 0x70, 0x01, 0x00, 0x89, 0x06, 0x00, 0x01,  // .p......
-                    /* 0010 */  0x01, 0xA4, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0A704000,         // Address Base
+                        0x00017000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000A4,
+                    }
                 })
                 Return (RBUF) /* \_SB_.BAMF._CRS.RBUF */
             }
@@ -8991,22 +10650,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, 0x08)  // _UID: Unique ID
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_STR, Unicode ("QUP_0_SE_7,4W,BT"))  // _STR: Description String
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x3A)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xC0, 0x99, 0x00,  // ........
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x80, 0x02, 0x00, 0x00, 0x8C, 0x20, 0x00,  // ...... .
-                    /* 0018 */  0x01, 0x00, 0x01, 0x00, 0x03, 0x00, 0x02, 0x00,  // ........
-                    /* 0020 */  0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00,  // ........
-                    /* 0028 */  0x23, 0x00, 0x00, 0x00, 0x1F, 0x00, 0x5C, 0x5F,  // #.....\_
-                    /* 0030 */  0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00,  // SB.GIO0.
-                    /* 0038 */  0x79, 0x00                                       // y.
+                    Memory32Fixed (ReadWrite,
+                        0x0099C000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000280,
+                    }
+                    GpioInt (Edge, ActiveLow, Exclusive, PullDown, 0x0000,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x001F
+                        }
                 })
                 Return (RBUF) /* \_SB_.UAR8._CRS.RBUF */
             }
@@ -9024,19 +10689,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, 0x0E)  // _UID: Unique ID
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.QGP1, , 
-                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.QGP1, 
+                \_SB.MMU0
             })
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_STR, Unicode ("QUP_1_SE_5"))  // _STR: Description String
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x17)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA9, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x89, 0x06, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x01, 0x86, 0x01, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x00A94000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000186,
+                    }
                 })
                 Return (RBUF) /* \_SB_.IC14._CRS.RBUF */
             }
@@ -9065,8 +10735,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PILC, , 
-                \_SB.RPEN, 
+                \_SB.PILC, 
+                \_SB.RPEN
             })
             Name (_HID, "QCOM092F")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -9080,15 +10750,15 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x09)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PILC, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.ARPC, , 
-                \_SB.TFTP, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.PILC, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.ARPC, 
+                \_SB.TFTP, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM091B")  // _HID: Hardware ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
@@ -9098,10 +10768,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x06, 0x02, 0x00,  // ........
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000206,
+                    }
                 })
                 Return (RBUF) /* \_SB_.ADSP._CRS.RBUF */
             }
@@ -9112,11 +10784,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
                 Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
-                    Name (RBUF, Buffer (0x17)
+                    Name (RBUF, ResourceTemplate ()
                     {
-                        /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xAC, 0x03,  // ........
-                        /* 0008 */  0x00, 0xC0, 0x02, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                        /* 0010 */  0x01, 0xC3, 0x00, 0x00, 0x00, 0x79, 0x00         // .....y.
+                        Memory32Fixed (ReadWrite,
+                            0x03AC0000,         // Address Base
+                            0x0002C000,         // Address Length
+                            )
+                        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                        {
+                            0x000000C3,
+                        }
                     })
                     Return (RBUF) /* \_SB_.ADSP.SLM1._CRS.RBUF */
                 }
@@ -9127,8 +10804,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 Name (_ADR, One)  // _ADR: Address
                 Name (_DEP, Package (0x02)  // _DEP: Dependencies
                 {
-                    \_SB.MMU0, , 
-                    \_SB.IMM0, 
+                    \_SB.MMU0, 
+                    \_SB.IMM0
                 })
                 Method (_STA, 0, NotSerialized)  // _STA: Status
                 {
@@ -9153,30 +10830,44 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
-                        Name (RBUF, Buffer (0xA9)
+                        Name (RBUF, ResourceTemplate ()
                         {
-                            /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                            /* 0008 */  0x00, 0x03, 0x40, 0x06, 0x00, 0x00, 0x17, 0x00,  // ..@.....
-                            /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x53,  // ...#...S
-                            /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                            /* 0020 */  0x4F, 0x30, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // O0.. ...
-                            /* 0028 */  0x01, 0x00, 0x00, 0x00, 0x03, 0x40, 0x06, 0x00,  // .....@..
-                            /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                            /* 0038 */  0x00, 0x00, 0x3E, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ..>.\_SB
-                            /* 0040 */  0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00, 0x8C, 0x20,  // .GIO0.. 
-                            /* 0048 */  0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x03,  // ........
-                            /* 0050 */  0x40, 0x06, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // @.......
-                            /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x5C,  // .#...?.\
-                            /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49, 0x4F, 0x30,  // _SB.GIO0
-                            /* 0068 */  0x00, 0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00,  // .. .....
-                            /* 0070 */  0x15, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17,  // ........
-                            /* 0078 */  0x00, 0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00,  // ....#...
-                            /* 0080 */  0x00, 0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47,  // ..\_SB.G
-                            /* 0088 */  0x49, 0x4F, 0x30, 0x00, 0x89, 0x06, 0x00, 0x03,  // IO0.....
-                            /* 0090 */  0x01, 0x10, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                            /* 0098 */  0x03, 0x01, 0xBB, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                            /* 00A0 */  0x00, 0x03, 0x01, 0xCA, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 00A8 */  0x00                                             // .
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x0053
+                                }
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x003E
+                                }
+                            GpioIo (Exclusive, PullNone, 0x0000, 0x0640, IoRestrictionNone,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x003F
+                                }
+                            GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDown, 0x0000,
+                                "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                                )
+                                {   // Pin list
+                                    0x0100
+                                }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x00000210,
+                            }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x000000BB,
+                            }
+                            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                            {
+                                0x000000CA,
+                            }
                         })
                         Return (RBUF) /* \_SB_.ADSP.ADCM.AUCD._CRS.RBUF */
                     }
@@ -9208,23 +10899,25 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_DEP, Package (0x09)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GLNK, , 
-                \_SB.PILC, , 
-                \_SB.RFS0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.IPC0, , 
-                \_SB.TFTP, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.GLNK, 
+                \_SB.PILC, 
+                \_SB.RFS0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.IPC0, 
+                \_SB.TFTP, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM091C")  // _HID: Hardware ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x28, 0x01, 0x00,  // .....(..
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000128,
+                    }
                 })
                 Return (RBUF) /* \_SB_.AMSS._CRS.RBUF */
             }
@@ -9236,10 +10929,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.PILC, , 
-                \_SB.RPEN, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.PILC, 
+                \_SB.RPEN
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9253,7 +10946,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9267,9 +10960,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.PEP0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9281,23 +10974,25 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x08)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PILC, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.RPEN, , 
-                \_SB.SSDD, , 
-                \_SB.ARPC, , 
-                \_SB.PDSR, 
+                \_SB.PEP0, 
+                \_SB.PILC, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.RPEN, 
+                \_SB.SSDD, 
+                \_SB.ARPC, 
+                \_SB.PDSR
             })
             Name (_HID, "QCOM09B0")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x62, 0x02, 0x00,  // .....b..
-                    /* 0008 */  0x00, 0x79, 0x00                                 // .y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000262,
+                    }
                 })
                 Return (RBUF) /* \_SB_.NSP0._CRS.RBUF */
             }
@@ -9310,8 +11005,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.NSP0, , 
-                \_SB.SBTD, 
+                \_SB.NSP0, 
+                \_SB.SBTD
             })
         }
 
@@ -9327,7 +11022,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9419,18 +11114,23 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (_HID, "QCOM0983")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Alias (\_SB.SVMJ, _HRV)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x17)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x60, 0x09,  // ......`.
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0x2A, 0x01, 0x00, 0x00, 0x79, 0x00         // .*...y.
+                    Memory32Fixed (ReadWrite,
+                        0x09600000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012A,
+                    }
                 })
             }
         }
@@ -9443,87 +11143,276 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.SVMJ, _HRV)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x0257)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x15,  // ........
-                    /* 0008 */  0x00, 0x00, 0x10, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0x83, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x03, 0x01, 0x84, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x03, 0x01, 0x85, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x03, 0x01, 0x86, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x87, 0x00, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x88, 0x00,  // ........
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x89,  // ........
-                    /* 0048 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0050 */  0x8A, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0058 */  0x01, 0x8B, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0060 */  0x03, 0x01, 0x8C, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0068 */  0x00, 0x03, 0x01, 0x8D, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0070 */  0x06, 0x00, 0x03, 0x01, 0x8E, 0x00, 0x00, 0x00,  // ........
-                    /* 0078 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x8F, 0x00, 0x00,  // ........
-                    /* 0080 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x90, 0x00,  // ........
-                    /* 0088 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x91,  // ........
-                    /* 0090 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0098 */  0x92, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00A0 */  0x01, 0x93, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00A8 */  0x03, 0x01, 0x94, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00B0 */  0x00, 0x03, 0x01, 0x95, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 00B8 */  0x06, 0x00, 0x03, 0x01, 0x96, 0x00, 0x00, 0x00,  // ........
-                    /* 00C0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xD5, 0x00, 0x00,  // ........
-                    /* 00C8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD6, 0x00,  // ........
-                    /* 00D0 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD7,  // ........
-                    /* 00D8 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 00E0 */  0xD8, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00E8 */  0x01, 0xD9, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00F0 */  0x03, 0x01, 0xDA, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00F8 */  0x00, 0x03, 0x01, 0xDB, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0100 */  0x06, 0x00, 0x03, 0x01, 0xDC, 0x00, 0x00, 0x00,  // ........
-                    /* 0108 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xDD, 0x00, 0x00,  // ........
-                    /* 0110 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xDE, 0x00,  // ........
-                    /* 0118 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xDF,  // ........
-                    /* 0120 */  0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0128 */  0xE0, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0130 */  0x01, 0x5B, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .[......
-                    /* 0138 */  0x03, 0x01, 0x5C, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..\.....
-                    /* 0140 */  0x00, 0x03, 0x01, 0x5D, 0x01, 0x00, 0x00, 0x89,  // ...]....
-                    /* 0148 */  0x06, 0x00, 0x03, 0x01, 0x5E, 0x01, 0x00, 0x00,  // ....^...
-                    /* 0150 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x5F, 0x01, 0x00,  // ....._..
-                    /* 0158 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x60, 0x01,  // ......`.
-                    /* 0160 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x61,  // .......a
-                    /* 0168 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0170 */  0x62, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // b.......
-                    /* 0178 */  0x01, 0x63, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .c......
-                    /* 0180 */  0x03, 0x01, 0x64, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..d.....
-                    /* 0188 */  0x00, 0x03, 0x01, 0x65, 0x01, 0x00, 0x00, 0x89,  // ...e....
-                    /* 0190 */  0x06, 0x00, 0x03, 0x01, 0x66, 0x01, 0x00, 0x00,  // ....f...
-                    /* 0198 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x67, 0x01, 0x00,  // .....g..
-                    /* 01A0 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x68, 0x01,  // ......h.
-                    /* 01A8 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x69,  // .......i
-                    /* 01B0 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 01B8 */  0x6A, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // j.......
-                    /* 01C0 */  0x01, 0x6B, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .k......
-                    /* 01C8 */  0x03, 0x01, 0x6C, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..l.....
-                    /* 01D0 */  0x00, 0x03, 0x01, 0x6D, 0x01, 0x00, 0x00, 0x89,  // ...m....
-                    /* 01D8 */  0x06, 0x00, 0x03, 0x01, 0x6E, 0x01, 0x00, 0x00,  // ....n...
-                    /* 01E0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x6F, 0x01, 0x00,  // .....o..
-                    /* 01E8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x70, 0x01,  // ......p.
-                    /* 01F0 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x71,  // .......q
-                    /* 01F8 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0200 */  0x72, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // r.......
-                    /* 0208 */  0x01, 0x73, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .s......
-                    /* 0210 */  0x03, 0x01, 0x74, 0x01, 0x00, 0x00, 0x89, 0x06,  // ..t.....
-                    /* 0218 */  0x00, 0x03, 0x01, 0x75, 0x01, 0x00, 0x00, 0x89,  // ...u....
-                    /* 0220 */  0x06, 0x00, 0x03, 0x01, 0x76, 0x01, 0x00, 0x00,  // ....v...
-                    /* 0228 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x77, 0x01, 0x00,  // .....w..
-                    /* 0230 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x78, 0x01,  // ......x.
-                    /* 0238 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x79,  // .......y
-                    /* 0240 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0248 */  0xAB, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0250 */  0x01, 0xAC, 0x01, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Memory32Fixed (ReadWrite,
+                        0x15000000,         // Address Base
+                        0x00100000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000083,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000084,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000085,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000086,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000087,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000088,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000089,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000008F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000090,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000091,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000092,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000093,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000094,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000095,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000096,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D5,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D6,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D7,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D8,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000D9,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000DF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000E0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000015F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000160,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000161,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000162,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000163,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000164,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000165,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000166,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000167,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000168,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000169,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016B,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016C,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016D,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016E,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000016F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000170,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000171,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000172,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000173,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000174,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000175,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000176,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000177,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000178,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000179,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001AB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001AC,
+                    }
                 })
             }
         }
@@ -9536,7 +11425,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.SVMJ, _HRV)
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -9545,23 +11434,56 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x71)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xDA, 0x03,  // ........
-                    /* 0008 */  0x00, 0x00, 0x02, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0xC3, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x03, 0x01, 0xC6, 0x02, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x03, 0x01, 0xC7, 0x02, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x03, 0x01, 0xC8, 0x02, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xC9, 0x02, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xCA, 0x02,  // ........
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xCB,  // ........
-                    /* 0048 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0050 */  0xCC, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0058 */  0x01, 0xCD, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0060 */  0x03, 0x01, 0xCE, 0x02, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0068 */  0x00, 0x03, 0x01, 0xCF, 0x02, 0x00, 0x00, 0x79,  // .......y
-                    /* 0070 */  0x00                                             // .
+                    Memory32Fixed (ReadWrite,
+                        0x03DA0000,         // Address Base
+                        0x00020000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C6,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C7,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C8,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002C9,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CB,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002CF,
+                    }
                 })
             }
         }
@@ -9600,44 +11522,79 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (0x0A)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.MMU1, , 
-                \_SB.IMM0, , 
-                \_SB.IMM1, , 
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.PILC, , 
-                \_SB.RPEN, , 
-                \_SB.TREE, , 
-                \_SB.SCM0, 
+                \_SB.MMU0, 
+                \_SB.MMU1, 
+                \_SB.IMM0, 
+                \_SB.IMM1, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.PILC, 
+                \_SB.RPEN, 
+                \_SB.TREE, 
+                \_SB.SCM0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (ABUF, Buffer (0xB8)
+                Name (ABUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xE0, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x00, 0x20, 0x00, 0x86, 0x09, 0x00, 0x01,  // .. .....
-                    /* 0010 */  0x00, 0x00, 0x8E, 0x08, 0x00, 0x00, 0x01, 0x00,  // ........
-                    /* 0018 */  0x89, 0x06, 0x00, 0x01, 0x01, 0x73, 0x00, 0x00,  // .....s..
-                    /* 0020 */  0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xD0,  // ........
-                    /* 0028 */  0x03, 0x10, 0xF0, 0x03, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0030 */  0x01, 0x00, 0x00, 0xD6, 0x03, 0x00, 0xF0, 0x03,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x01, 0x01, 0x4C, 0x01,  // ......L.
-                    /* 0040 */  0x00, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0048 */  0x29, 0x0B, 0x00, 0x00, 0x01, 0x00, 0x86, 0x09,  // ).......
-                    /* 0050 */  0x00, 0x01, 0x00, 0x00, 0x49, 0x0B, 0x00, 0x00,  // ....I...
-                    /* 0058 */  0x01, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0060 */  0xD9, 0x03, 0x00, 0x90, 0x00, 0x00, 0x86, 0x09,  // ........
-                    /* 0068 */  0x00, 0x01, 0x00, 0x00, 0xDE, 0x03, 0x00, 0x00,  // ........
-                    /* 0070 */  0x01, 0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0078 */  0x20, 0x0C, 0xFF, 0xFF, 0x00, 0x00, 0x86, 0x09,  //  .......
-                    /* 0080 */  0x00, 0x01, 0x00, 0x00, 0xA0, 0x0A, 0x00, 0x00,  // ........
-                    /* 0088 */  0x20, 0x00, 0x89, 0x06, 0x00, 0x01, 0x01, 0xCE,  //  .......
-                    /* 0090 */  0x00, 0x00, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x01,  // .... ...
-                    /* 0098 */  0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 00A0 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 00A8 */  0x00, 0x00, 0x2C, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ..,.\_SB
-                    /* 00B0 */  0x2E, 0x47, 0x49, 0x4F, 0x30, 0x00, 0x79, 0x00   // .GIO0.y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AE00000,         // Address Base
+                        0x00200000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x088E0000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000073,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x03D00000,         // Address Base
+                        0x0003F010,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03D60000,         // Address Base
+                        0x0003F000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000014C,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x0B290000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0B490000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03D90000,         // Address Base
+                        0x00009000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x03DE0000,         // Address Base
+                        0x00010000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0C200000,         // Address Base
+                        0x0000FFFF,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AA00000,         // Address Base
+                        0x00200000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000000CE,
+                    }
+                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0010
+                        }
                 })
                 Return (ABUF) /* \_SB_.GPU0._CRS.ABUF */
             }
@@ -11183,9 +13140,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                 Name (_DEP, Package (0x03)  // _DEP: Dependencies
                 {
-                    \_SB.MMU0, , 
-                    \_SB.IMM0, , 
-                    \_SB.VFE0, 
+                    \_SB.MMU0, 
+                    \_SB.IMM0, 
+                    \_SB.VFE0
                 })
             }
 
@@ -11225,7 +13182,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_HID, "QCOM04DD")  // _HID: Hardware ID
             Name (_DEP, Package (0x01)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Alias (\_SB.PSUB, _SUB)
             Name (_UID, Zero)  // _UID: Unique ID
@@ -11245,18 +13202,21 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x31)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x03,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x68,  // ...#...h
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0020 */  0x4F, 0x30, 0x00, 0x86, 0x09, 0x00, 0x01, 0xEF,  // O0......
-                    /* 0028 */  0xBE, 0xAD, 0xDE, 0xAD, 0xDE, 0xEF, 0xBE, 0x79,  // .......y
-                    /* 0030 */  0x00                                             // .
+                    GpioInt (Edge, ActiveLow, Exclusive, PullUp, 0x0000,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0068
+                        }
+                    Memory32Fixed (ReadWrite,
+                        0xDEADBEEF,         // Address Base
+                        0xBEEFDEAD,         // Address Length
+                        _Y00)
                 })
-                CreateDWordField (RBUF, 0x27, TGCA)
-                CreateDWordField (RBUF, 0x2B, TGCL)
+                CreateDWordField (RBUF, \_SB.TREE._CRS._Y00._BAS, TGCA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.TREE._CRS._Y00._LEN, TGCL)  // _LEN: Length
                 TGCA = \_SB.TCMA
                 TGCL = \_SB.TCML
                 Return (RBUF) /* \_SB_.TREE._CRS.RBUF */
@@ -11272,10 +13232,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0E)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x40, 0x0C,  // ......@.
-                    /* 0008 */  0x00, 0x00, 0x80, 0x02, 0x79, 0x00               // ....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0C400000,         // Address Base
+                        0x02800000,         // Address Length
+                        )
                 })
                 Return (RBUF) /* \_SB_.SPMI._CRS.RBUF */
             }
@@ -11300,15 +13262,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x32)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x10, 0x0F,  // ........
-                    /* 0008 */  0x00, 0x00, 0x30, 0x00, 0x89, 0x06, 0x00, 0x09,  // ..0.....
-                    /* 0010 */  0x01, 0xF0, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x09, 0x01, 0xF0, 0x00, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0020 */  0x00, 0x09, 0x01, 0xF0, 0x00, 0x00, 0x00, 0x89,  // ........
-                    /* 0028 */  0x06, 0x00, 0x09, 0x01, 0xF0, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x79, 0x00                                       // y.
+                    Memory32Fixed (ReadWrite,
+                        0x0F100000,         // Address Base
+                        0x00300000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000F0,
+                    }
                 })
                 Return (RBUF) /* \_SB_.GIO0._CRS.RBUF */
             }
@@ -11378,12 +13353,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x1D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x05, 0x01, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x06, 0x01,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x07,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000105,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000106,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000107,
+                    }
                 })
                 Return (RBUF) /* \_SB_.IPCC._CRS.RBUF */
             }
@@ -11402,32 +13385,47 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x26)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x21, 0x00, 0x01, 0x01, 0x01, 0x00, 0x08,  // .!......
-                    /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x01, 0x00, 0x5E,  // ...#...^
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0020 */  0x4F, 0x30, 0x00, 0x01, 0x79, 0x00               // O0..y.
+                    GpioIo (Shared, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x01
+                        })
+                        {   // Pin list
+                            0x005E
+                        }
+                    GpioIo (Shared, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x01
+                        })
+                        {   // Pin list
+                            0x0061
+                        }
                 })
                 Return (RBUF) /* \_SB_.QPPX._CRS.RBUF */
             }
 
             Method (_QPG, 0, Serialized)
             {
-                Return (Package (0x01)
+                Return (Package (0x02)
                 {
+                    One, 
                     One
                 })
             }
 
-            Name (GWLE, Buffer (0x25)
+            Name (GWLE, ResourceTemplate ()
             {
-                /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x40,  // ...#...@
-                /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                /* 0020 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                GpioIo (Exclusive, PullNone, 0x0000, 0x0000, IoRestrictionNone,
+                    "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                    )
+                    {   // Pin list
+                        0x0040
+                    }
             })
             Scope (\_SB.GIO0)
             {
@@ -11469,8 +13467,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.QPPX, 
+                \_SB.PEP0, 
+                \_SB.QPPX
             })
             Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
             Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
@@ -11535,14 +13533,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x2C)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x87, 0x17, 0x00, 0x00, 0x0C, 0x01, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x70, 0x61, 0xFF, 0xFF,  // ....pa..
-                    /* 0010 */  0xFF, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // .c......
-                    /* 0018 */  0x90, 0x02, 0x88, 0x0D, 0x00, 0x02, 0x0C, 0x00,  // ........
-                    /* 0020 */  0x00, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,  // ........
-                    /* 0028 */  0x10, 0x00, 0x79, 0x00                           // ..y.
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
+                        0x00000000,         // Granularity
+                        0x61700000,         // Range Minimum
+                        0x63FFFFFF,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x02900000,         // Length
+                        ,, , AddressRangeMemory, TypeStatic)
+                    WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
+                        0x0000,             // Granularity
+                        0x0000,             // Range Minimum
+                        0x000F,             // Range Maximum
+                        0x0000,             // Translation Offset
+                        0x0010,             // Length
+                        ,, )
                 })
                 Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
             }
@@ -11727,11 +13733,11 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
             Name (_PR0, Package (0x01)  // _PR0: Power Resources for D0
             {
-                \_SB.P0RR, 
+                \_SB.P0RR
             })
             Name (_PR3, Package (0x01)  // _PR3: Power Resources for D3hot
             {
-                \_SB.P0RR, 
+                \_SB.P0RR
             })
             Device (RP1)
             {
@@ -11742,15 +13748,15 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
                 Name (_PR0, Package (0x01)  // _PR0: Power Resources for D0
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_PR3, Package (0x01)  // _PR3: Power Resources for D3hot
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_PRR, Package (0x01)  // _PRR: Power Resource for Reset
                 {
-                    \_SB.R0RR, 
+                    \_SB.R0RR
                 })
                 Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
                 Name (_DSD, Package (0x02)  // _DSD: Device-Specific Data
@@ -11767,13 +13773,14 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 })
                 Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
-                    Name (RBUF, Buffer (0x25)
+                    Name (RBUF, ResourceTemplate ()
                     {
-                        /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x13,  // . ......
-                        /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                        /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x60,  // ...#...`
-                        /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                        /* 0020 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                        GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                            "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                            )
+                            {   // Pin list
+                                0x0060
+                            }
                     })
                     Return (RBUF) /* \_SB_.PCI0.RP1_._CRS.RBUF */
                 }
@@ -11862,7 +13869,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Name (_HID, "QCOM090D")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -11872,8 +13879,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.IPCC, , 
-                \_SB.RPEN, 
+                \_SB.IPCC, 
+                \_SB.RPEN
             })
             Name (_HID, "QCOM0984")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -11884,10 +13891,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.GLNK, , 
-                \_SB.SCM0, , 
-                \_SB.IMM0, 
+                \_SB.MMU0, 
+                \_SB.GLNK, 
+                \_SB.SCM0, 
+                \_SB.IMM0
             })
             Name (_HID, "QCOM095C")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -11897,8 +13904,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM0982")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -11908,8 +13915,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM09E5")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -11919,26 +13926,33 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0915")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x26)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x88, 0x88, 0x88, 0x88,  // ........
-                    /* 0008 */  0x99, 0x99, 0x99, 0x99, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x11, 0x11, 0x11, 0x11, 0x22, 0x22, 0x22, 0x22,  // ....""""
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x33, 0x33, 0x33, 0x33,  // ....3333
-                    /* 0020 */  0x44, 0x44, 0x44, 0x44, 0x79, 0x00               // DDDDy.
+                    Memory32Fixed (ReadWrite,
+                        0x88888888,         // Address Base
+                        0x99999999,         // Address Length
+                        _Y01)
+                    Memory32Fixed (ReadWrite,
+                        0x11111111,         // Address Base
+                        0x22222222,         // Address Length
+                        _Y02)
+                    Memory32Fixed (ReadWrite,
+                        0x33333333,         // Address Base
+                        0x44444444,         // Address Length
+                        _Y03)
                 })
-                CreateDWordField (RBUF, 0x04, RMTA)
-                CreateDWordField (RBUF, 0x08, RMTL)
-                CreateDWordField (RBUF, 0x10, RFMA)
-                CreateDWordField (RBUF, 0x14, RFML)
-                CreateDWordField (RBUF, 0x1C, RFAA)
-                CreateDWordField (RBUF, 0x20, RFAL)
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y01._BAS, RMTA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y01._LEN, RMTL)  // _LEN: Length
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y02._BAS, RFMA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y02._LEN, RFML)  // _LEN: Length
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y03._BAS, RFAA)  // _BAS: Base Address
+                CreateDWordField (RBUF, \_SB.RFS0._CRS._Y03._LEN, RFAL)  // _LEN: Length
                 RMTA = \_SB.RMTB
                 RMTL = \_SB.RMTX
                 RFMA = \_SB.RFMB
@@ -11961,13 +13975,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x07)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.RPEN, , 
-                \_SB.TREE, , 
-                \_SB.MMU0, , 
-                \_SB.GLNK, , 
-                \_SB.IPC0, , 
-                \_SB.IMM0, 
+                \_SB.PEP0, 
+                \_SB.RPEN, 
+                \_SB.TREE, 
+                \_SB.MMU0, 
+                \_SB.GLNK, 
+                \_SB.IPC0, 
+                \_SB.IMM0
             })
             Name (HHID, "QCOM096A")
             Name (PHID, "QCOM09E6")
@@ -11987,14 +14001,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x2C)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xE4, 0x01,  // ........
-                    /* 0008 */  0x00, 0x00, 0x06, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0010 */  0x01, 0xAE, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0xE0, 0x01, 0x00, 0x00, 0x03,  // ........
-                    /* 0020 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xD0, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Memory32Fixed (ReadWrite,
+                        0x01E40000,         // Address Base
+                        0x00060000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002AE,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x01E00000,         // Address Base
+                        0x00030000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001D0,
+                    }
                 })
             }
 
@@ -12016,8 +14040,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0913")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12027,8 +14051,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.TREE, 
+                \_SB.GLNK, 
+                \_SB.TREE
             })
             Name (_HID, "QCOM0914")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -12056,18 +14080,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     Zero, 
                     Zero, 
                     0xB300, 
-                    Buffer (0x11)
+                    ResourceTemplate ()
                     {
-                        /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                        /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                        /* 0010 */  0x00                                             // .
+                        Register (SystemMemory, 
+                            0x00,               // Bit Width
+                            0x00,               // Bit Offset
+                            0x0000000000000000, // Address
+                            ,)
                     }, 
 
-                    Buffer (0x11)
+                    ResourceTemplate ()
                     {
-                        /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                        /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                        /* 0010 */  0x00                                             // .
+                        Register (SystemMemory, 
+                            0x00,               // Bit Width
+                            0x00,               // Bit Offset
+                            0x0000000000000000, // Address
+                            ,)
                     }, 
 
                     "platform.DRIPS"
@@ -12091,18 +14119,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                         Zero, 
                         Zero, 
                         0x20, 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
                         "L3Cluster.D2"
@@ -12117,18 +14149,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                         Zero, 
                         One, 
                         0x40, 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
-                        Buffer (0x11)
+                        ResourceTemplate ()
                         {
-                            /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                            /* 0010 */  0x00                                             // .
+                            Register (SystemMemory, 
+                                0x00,               // Bit Width
+                                0x00,               // Bit Offset
+                                0x0000000000000000, // Address
+                                ,)
                         }, 
 
                         "L3Cluster.D4"
@@ -12156,25 +14192,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C1"
@@ -12188,25 +14231,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C2"
@@ -12220,25 +14270,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C3"
@@ -12252,25 +14309,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver0.C4"
@@ -12300,25 +14364,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C1"
@@ -12332,25 +14403,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C2"
@@ -12364,25 +14442,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C3"
@@ -12396,25 +14481,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver1.C4"
@@ -12444,25 +14536,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C1"
@@ -12476,25 +14575,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C2"
@@ -12508,25 +14614,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C3"
@@ -12540,25 +14653,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver2.C4"
@@ -12588,25 +14708,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C1"
@@ -12620,25 +14747,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C2"
@@ -12652,25 +14786,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C3"
@@ -12684,25 +14825,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoSilver3.C4"
@@ -12732,25 +14880,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C1"
@@ -12764,25 +14919,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C2"
@@ -12796,25 +14958,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C3"
@@ -12828,25 +14997,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold0.C4"
@@ -12876,25 +15052,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C1"
@@ -12908,25 +15091,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C2"
@@ -12940,25 +15130,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C3"
@@ -12972,25 +15169,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold1.C4"
@@ -13027,25 +15231,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C1"
@@ -13059,25 +15270,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C2"
@@ -13091,25 +15309,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C3"
@@ -13123,25 +15348,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoGold2.C4"
@@ -13178,25 +15410,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             Zero, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0xFF,  // .... ...
-                                /* 0008 */  0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x00000000FFFFFFFF, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C1"
@@ -13210,25 +15449,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             Zero, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x02,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000002, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C2"
@@ -13242,25 +15488,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             One, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x03,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000003, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C3"
@@ -13274,25 +15527,32 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                             One, 
                             Zero, 
                             0x02, 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x7F, 0x20, 0x00, 0x03, 0x04,  // .... ...
-                                /* 0008 */  0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x79,  // ..@....y
-                                /* 0010 */  0x00                                             // .
+                                Register (FFixedHW, 
+                                    0x20,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000040000004, // Address
+                                    0x03,               // Access Size
+                                    )
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
-                            Buffer (0x11)
+                            ResourceTemplate ()
                             {
-                                /* 0000 */  0x82, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79,  // .......y
-                                /* 0010 */  0x00                                             // .
+                                Register (SystemMemory, 
+                                    0x00,               // Bit Width
+                                    0x00,               // Bit Offset
+                                    0x0000000000000000, // Address
+                                    ,)
                             }, 
 
                             "KryoPrime0.C4"
@@ -13306,8 +15566,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.GLNK, , 
-                \_SB.IPC0, 
+                \_SB.GLNK, 
+                \_SB.IPC0
             })
             Name (_HID, "QCOM0912")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13317,7 +15577,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.GLNK, 
+                \_SB.GLNK
             })
             Name (_HID, "QCOM096C")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13340,12 +15600,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x20)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0x90, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x14, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0018 */  0x01, 0x01, 0x15, 0x01, 0x00, 0x00, 0x79, 0x00   // ......y.
+                    Memory32Fixed (ReadWrite,
+                        0x00904000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000114,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000115,
+                    }
                 })
                 Return (RBUF) /* \_SB_.QGP0._CRS.RBUF */
             }
@@ -13359,12 +15627,20 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x20)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x40, 0xA0, 0x00,  // .....@..
-                    /* 0008 */  0x00, 0x00, 0x05, 0x00, 0x89, 0x06, 0x00, 0x01,  // ........
-                    /* 0010 */  0x01, 0x37, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // .7......
-                    /* 0018 */  0x01, 0x01, 0x38, 0x01, 0x00, 0x00, 0x79, 0x00   // ..8...y.
+                    Memory32Fixed (ReadWrite,
+                        0x00A04000,         // Address Base
+                        0x00050000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000137,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000138,
+                    }
                 })
                 Return (RBUF) /* \_SB_.QGP1._CRS.RBUF */
             }
@@ -13381,8 +15657,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.MMU0
             })
             Name (_HID, "QCOM0956")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13394,15 +15670,28 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (Buffer (0x38)
+                Return (ResourceTemplate ()
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x03, 0x01, 0x2E, 0x01, 0x00,  // ........
-                    /* 0008 */  0x00, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0010 */  0x06, 0x00, 0xA0, 0x04, 0x00, 0x86, 0x09, 0x00,  // ........
-                    /* 0018 */  0x01, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00,  // ........
-                    /* 0020 */  0x01, 0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0028 */  0x07, 0x00, 0x00, 0xA0, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0030 */  0x03, 0x01, 0x43, 0x00, 0x00, 0x00, 0x79, 0x00   // ..C...y.
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012E,
+                    }
+                    Memory32Fixed (ReadWrite,
+                        0x06000000,         // Address Base
+                        0x0004A000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x16000000,         // Address Base
+                        0x01000000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x07000000,         // Address Base
+                        0x00A00000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000043,
+                    }
                 })
             }
         }
@@ -13509,8 +15798,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.IPC0, , 
-                \_SB.QDIG, 
+                \_SB.IPC0, 
+                \_SB.QDIG
             })
             Name (_HID, "QCOM06DB")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13569,10 +15858,10 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x04)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.ARPC, , 
-                \_SB.NSP0, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.ARPC, 
+                \_SB.NSP0
             })
             Name (_HID, "QCOM0932")  // _HID: Hardware ID
             Name (_UID, 0x1B)  // _UID: Unique ID
@@ -13584,18 +15873,36 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x4D)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xC4, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x10, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x00, 0x20, 0xC4, 0x0A, 0x00, 0x80, 0x00, 0x00,  // . ......
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xF0, 0xC4, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x10, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0xC5, 0x0A, 0x00, 0x10, 0x00, 0x00,  // ........
-                    /* 0030 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xEC, 0x01, 0x00,  // ........
-                    /* 0038 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0x2F, 0x01,  // ....../.
-                    /* 0040 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xEB,  // ........
-                    /* 0048 */  0x01, 0x00, 0x00, 0x79, 0x00                     // ...y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC40000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC42000,         // Address Base
+                        0x00008000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC4F000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC50000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000012F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EB,
+                    }
                 })
                 Return (RBUF) /* \_SB_.CAMP._CRS.RBUF */
             }
@@ -13605,7 +15912,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0926")  // _HID: Hardware ID
             Name (_UID, 0x15)  // _UID: Unique ID
@@ -13620,7 +15927,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0906")  // _HID: Hardware ID
             Name (_UID, 0x1A)  // _UID: Unique ID
@@ -13635,7 +15942,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM0999")  // _HID: Hardware ID
             Name (_UID, 0x1C)  // _UID: Unique ID
@@ -13650,7 +15957,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM09CE")  // _HID: Hardware ID
             Name (_UID, 0x1D)  // _UID: Unique ID
@@ -13665,7 +15972,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.MPCS, 
+                \_SB.MPCS
             })
             Name (_HID, "QCOM09CF")  // _HID: Hardware ID
             Name (_UID, 0x1E)  // _UID: Unique ID
@@ -13680,7 +15987,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.CAMP, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0927")  // _HID: Hardware ID
             Name (_UID, 0x19)  // _UID: Unique ID
@@ -13704,7 +16011,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.CAMP, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0998")  // _HID: Hardware ID
             Name (_UID, 0x18)  // _UID: Unique ID
@@ -13716,24 +16023,56 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x80)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xA0, 0xC6, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0010 */  0x00, 0xC0, 0xC6, 0x0A, 0x00, 0x20, 0x00, 0x00,  // ..... ..
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0xE0, 0xC6, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0028 */  0x00, 0x00, 0xC7, 0x0A, 0x00, 0x20, 0x00, 0x00,  // ..... ..
-                    /* 0030 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x20, 0xC7, 0x0A,  // ..... ..
-                    /* 0038 */  0x00, 0x20, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // . ......
-                    /* 0040 */  0x00, 0x20, 0xC7, 0x0A, 0x00, 0x20, 0x00, 0x00,  // . ... ..
-                    /* 0048 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xFD, 0x01, 0x00,  // ........
-                    /* 0050 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFE, 0x01,  // ........
-                    /* 0058 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFF,  // ........
-                    /* 0060 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0068 */  0xE0, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 0070 */  0x01, 0x9A, 0x00, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0078 */  0x03, 0x01, 0x79, 0x00, 0x00, 0x00, 0x79, 0x00   // ..y...y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6A000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6C000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6E000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC70000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC72000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC72000,         // Address Base
+                        0x00002000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FD,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001E0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x0000009A,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000079,
+                    }
                 })
                 Return (RBUF) /* \_SB_.MPCS._CRS.RBUF */
             }
@@ -13743,8 +16082,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.CAMP, , 
-                \_SB.MMU0, 
+                \_SB.CAMP, 
+                \_SB.MMU0
             })
             Name (_HID, "QCOM0933")  // _HID: Hardware ID
             Name (_UID, 0x17)  // _UID: Unique ID
@@ -13756,14 +16095,24 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x2C)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x30, 0xC5, 0x0A,  // .....0..
-                    /* 0008 */  0x00, 0x40, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // .@......
-                    /* 0010 */  0x00, 0x70, 0xC5, 0x0A, 0x00, 0x40, 0x00, 0x00,  // .p...@..
-                    /* 0018 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xFA, 0x01, 0x00,  // ........
-                    /* 0020 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xFB, 0x01,  // ........
-                    /* 0028 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC53000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC57000,         // Address Base
+                        0x00004000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FA,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FB,
+                    }
                 })
                 Return (RBUF) /* \_SB_.JPGE._CRS.RBUF */
             }
@@ -13773,9 +16122,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.MMU0, , 
-                \_SB.PEP0, , 
-                \_SB.CAMP, 
+                \_SB.MMU0, 
+                \_SB.PEP0, 
+                \_SB.CAMP
             })
             Name (_HID, "QCOM0925")  // _HID: Hardware ID
             Name (_UID, 0x16)  // _UID: Unique ID
@@ -13787,43 +16136,116 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0116)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0xC0, 0x0A,  // ........
-                    /* 0008 */  0x00, 0x00, 0x02, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0010 */  0x00, 0xD0, 0xC4, 0x0A, 0x00, 0x02, 0x00, 0x00,  // ........
-                    /* 0018 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x82, 0xC4, 0x0A,  // ........
-                    /* 0020 */  0x00, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0028 */  0x00, 0x84, 0xC4, 0x0A, 0x00, 0x02, 0x00, 0x00,  // ........
-                    /* 0030 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x86, 0xC4, 0x0A,  // ........
-                    /* 0038 */  0x00, 0x02, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ........
-                    /* 0040 */  0x00, 0xB0, 0xC6, 0x0A, 0x00, 0x10, 0x00, 0x00,  // ........
-                    /* 0048 */  0x86, 0x09, 0x00, 0x00, 0x00, 0xA0, 0xC7, 0x0A,  // ........
-                    /* 0050 */  0x00, 0x80, 0x00, 0x00, 0x86, 0x09, 0x00, 0x00,  // ........
-                    /* 0058 */  0x00, 0xA0, 0xC9, 0x0A, 0x00, 0x20, 0x01, 0x00,  // ..... ..
-                    /* 0060 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x90, 0xCD, 0x0A,  // ........
-                    /* 0068 */  0x00, 0x22, 0x00, 0x00, 0x86, 0x09, 0x00, 0x01,  // ."......
-                    /* 0070 */  0x00, 0xB2, 0xCD, 0x0A, 0x00, 0x22, 0x00, 0x00,  // ....."..
-                    /* 0078 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x80, 0x85,  // ........
-                    /* 0080 */  0x00, 0x00, 0x50, 0x00, 0x89, 0x06, 0x00, 0x03,  // ..P.....
-                    /* 0088 */  0x01, 0xED, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 0090 */  0x03, 0x01, 0xEE, 0x01, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 0098 */  0x00, 0x03, 0x01, 0xE3, 0x01, 0x00, 0x00, 0x89,  // ........
-                    /* 00A0 */  0x06, 0x00, 0x03, 0x01, 0x99, 0x01, 0x00, 0x00,  // ........
-                    /* 00A8 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xEF, 0x01, 0x00,  // ........
-                    /* 00B0 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF1, 0x01,  // ........
-                    /* 00B8 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF3,  // ........
-                    /* 00C0 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 00C8 */  0xA1, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03,  // ........
-                    /* 00D0 */  0x01, 0xF5, 0x01, 0x00, 0x00, 0x89, 0x06, 0x00,  // ........
-                    /* 00D8 */  0x03, 0x01, 0x88, 0x01, 0x00, 0x00, 0x89, 0x06,  // ........
-                    /* 00E0 */  0x00, 0x03, 0x01, 0xFC, 0x01, 0x00, 0x00, 0x89,  // ........
-                    /* 00E8 */  0x06, 0x00, 0x03, 0x01, 0xF0, 0x01, 0x00, 0x00,  // ........
-                    /* 00F0 */  0x89, 0x06, 0x00, 0x03, 0x01, 0xF2, 0x01, 0x00,  // ........
-                    /* 00F8 */  0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xA0, 0x02,  // ........
-                    /* 0100 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01, 0xF4,  // ........
-                    /* 0108 */  0x01, 0x00, 0x00, 0x89, 0x06, 0x00, 0x03, 0x01,  // ........
-                    /* 0110 */  0x87, 0x01, 0x00, 0x00, 0x79, 0x00               // ....y.
+                    Memory32Fixed (ReadWrite,
+                        0x0AC00000,         // Address Base
+                        0x00020000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC4D000,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48200,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48400,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC48600,         // Address Base
+                        0x00000200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0AC6B000,         // Address Base
+                        0x00001000,         // Address Length
+                        )
+                    Memory32Fixed (ReadOnly,
+                        0x0AC7A000,         // Address Base
+                        0x00008000,         // Address Length
+                        )
+                    Memory32Fixed (ReadOnly,
+                        0x0AC9A000,         // Address Base
+                        0x00012000,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0ACD9000,         // Address Base
+                        0x00002200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x0ACDB200,         // Address Base
+                        0x00002200,         // Address Length
+                        )
+                    Memory32Fixed (ReadWrite,
+                        0x85800000,         // Address Base
+                        0x00500000,         // Address Length
+                        )
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001ED,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EE,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001E3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000199,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001EF,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F1,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F3,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002A1,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F5,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000188,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001FC,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F2,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000002A0,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x000001F4,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive, ,, )
+                    {
+                        0x00000187,
+                    }
                 })
                 Return (RBUF) /* \_SB_.VFE0._CRS.RBUF */
             }
@@ -13833,9 +16255,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.IPC0, , 
-                \_SB.ADSP, , 
-                \_SB.ARPC, 
+                \_SB.IPC0, 
+                \_SB.ADSP, 
+                \_SB.ARPC
             })
             Name (_HID, "QCOM0693")  // _HID: Hardware ID
             Alias (\_SB.PSUB, _SUB)
@@ -13913,26 +16335,42 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_CCA, Zero)  // _CCA: Cache Coherency Attribute
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.UCS0, 
+                \_SB.PEP0, 
+                \_SB.UCS0
             })
-            Name (_CRS, Buffer (0x0E)  // _CRS: Current Resource Settings
+            Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
-                /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x60, 0x0A,  // ......`.
-                /* 0008 */  0xFF, 0xFF, 0x0F, 0x00, 0x79, 0x00               // ....y.
+                Memory32Fixed (ReadWrite,
+                    0x0A600000,         // Address Base
+                    0x000FFFFF,         // Address Length
+                    )
             })
             Device (USB0)
             {
                 Name (_ADR, Zero)  // _ADR: Address
                 Name (_S0W, 0x03)  // _S0W: S0 Device Wake State
-                Name (_CRS, Buffer (0x2F)  // _CRS: Current Resource Settings
+                Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0xA5, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0xA2, 0x00,  // ........
-                    /* 0010 */  0x00, 0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0x11,  // ........
-                    /* 0018 */  0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x1B, 0x01,  // ........
-                    /* 0020 */  0x0F, 0x02, 0x00, 0x00, 0x89, 0x06, 0x00, 0x1B,  // ........
-                    /* 0028 */  0x01, 0x0E, 0x02, 0x00, 0x00, 0x79, 0x00         // .....y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000A5,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x000000A2,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x00000211,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x0000020F,
+                    }
+                    Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x0000020E,
+                    }
                 })
                 Device (RHUB)
                 {
@@ -14138,11 +16576,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                     }
                 }
 
-                Name (_CRS, Buffer (0x14)  // _CRS: Current Resource Settings
+                Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
                 {
-                    /* 0000 */  0x89, 0x06, 0x00, 0x09, 0x01, 0xA5, 0x00, 0x00,  // ........
-                    /* 0008 */  0x00, 0x89, 0x06, 0x00, 0x19, 0x01, 0xA2, 0x00,  // ........
-                    /* 0010 */  0x00, 0x00, 0x79, 0x00                           // ..y.
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
+                    {
+                        0x000000A5,
+                    }
+                    Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
+                    {
+                        0x000000A2,
+                    }
                 })
                 Method (CCVL, 0, NotSerialized)
                 {
@@ -14297,8 +16740,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_DDN, "USB Type-C")  // _DDN: DOS Device Name
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.PMGK, , 
-                \_SB.UCS0, 
+                \_SB.PMGK, 
+                \_SB.UCS0
             })
             Device (UCN0)
             {
@@ -14344,10 +16787,12 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
                 })
             }
 
-            Name (_CRS, Buffer (0x0E)  // _CRS: Current Resource Settings
+            Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
-                /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0xA0,  // ........
-                /* 0008 */  0x30, 0x00, 0x00, 0x00, 0x79, 0x00               // 0...y.
+                Memory32Fixed (ReadWrite,
+                    0xA0000000,         // Address Base
+                    0x00000030,         // Address Length
+                    )
             })
             OperationRegion (USBC, SystemMemory, 0xA0000000, 0x30)
             Field (USBC, ByteAcc, NoLock, Preserve)
@@ -14428,14 +16873,16 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_HID, "QCOM09A4")  // _HID: Hardware ID
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x0E)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x86, 0x09, 0x00, 0x01, 0x40, 0x00, 0x00, 0xA0,  // ....@...
-                    /* 0008 */  0x20, 0x00, 0x00, 0x00, 0x79, 0x00               //  ...y.
+                    Memory32Fixed (ReadWrite,
+                        0xA0000040,         // Address Base
+                        0x00000020,         // Address Length
+                        )
                 })
                 Return (RBUF) /* \_SB_.UCS0._CRS.RBUF */
             }
@@ -14505,7 +16952,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14522,7 +16969,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14554,7 +17001,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14567,7 +17014,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14584,7 +17031,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14616,7 +17063,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14629,7 +17076,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14646,7 +17093,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, One)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14678,7 +17125,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14689,7 +17136,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.GPU0, 
+                \_SB.GPU0
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -14722,7 +17169,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14735,7 +17182,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14754,7 +17201,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14771,7 +17218,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MJCT, 
+                \_SB.MJCT
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -14809,7 +17256,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14820,7 +17267,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.CSW0, 
+                \_SB.CSW0
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -14856,7 +17303,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -14869,7 +17316,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
 
@@ -14886,17 +17333,17 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x04)  // _TZD: Thermal Zone Devices
             {
-                \_SB.WLTM, , 
-                \_SB.CSW0, , 
-                \_SB.GPU0, , 
-                _SB.MBCL, 
+                \_SB.WLTM, 
+                \_SB.CSW0, 
+                \_SB.GPU0, 
+                _SB.MBCL
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.BCL1, 
+                    \_SB.PEP0, 
+                    \_SB.BCL1
                 })
             }
         }
@@ -14907,20 +17354,21 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0xC0,  // ...#....
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Exclusive, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C0
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ15._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.PEP0, 
+                \_SB.PEP0
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15018,8 +17466,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15030,21 +17478,22 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x00,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0100
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ16._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x02)  // _TZD: Thermal Zone Devices
             {
-                \_SB.WLTM, , 
-                \_SB.MJCT, 
+                \_SB.WLTM, 
+                \_SB.MJCT
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15141,8 +17590,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15153,22 +17602,23 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x09,  // . ......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x80,  // ...#....
-                    /* 0018 */  0x01, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x79, 0x00                     // 01.y.
+                    GpioInt (Edge, ActiveHigh, Shared, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0180
+                        }
                 })
                 Return (RBUF) /* \_SB_.TZ18._CRS.RBUF */
             }
 
             Name (_TZD, Package (0x03)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS0, , 
-                \_SB.MBS1, , 
-                \_SB.MBS2, 
+                \_SB.MBS0, 
+                \_SB.MBS1, 
+                \_SB.MBS2
             })
             Name (PROD, Zero)
             Name (PSV1, 0x0EC4)
@@ -15270,8 +17720,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.PMIC, 
+                    \_SB.PEP0, 
+                    \_SB.PMIC
                 })
             }
         }
@@ -15282,19 +17732,19 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x0D)  // _TZD: Thermal Zone Devices
             {
-                \_SB.SYSM.CLUS.CPU0, , 
-                \_SB.SYSM.CLUS.CPU1, , 
-                \_SB.SYSM.CLUS.CPU2, , 
-                \_SB.SYSM.CLUS.CPU3, , 
-                \_SB.SYSM.CLUS.CPU4, , 
-                \_SB.SYSM.CLUS.CPU5, , 
-                \_SB.SYSM.CLUS.CPU6, , 
-                \_SB.SYSM.CLUS.CPU7, , 
-                \_SB.PEP0, , 
-                \_SB.WLTM, , 
-                \_SB.CSW0, , 
-                \_SB.GPU0, , 
-                \_SB.MJCT, 
+                \_SB.SYSM.CLUS.CPU0, 
+                \_SB.SYSM.CLUS.CPU1, 
+                \_SB.SYSM.CLUS.CPU2, 
+                \_SB.SYSM.CLUS.CPU3, 
+                \_SB.SYSM.CLUS.CPU4, 
+                \_SB.SYSM.CLUS.CPU5, 
+                \_SB.SYSM.CLUS.CPU6, 
+                \_SB.SYSM.CLUS.CPU7, 
+                \_SB.PEP0, 
+                \_SB.WLTM, 
+                \_SB.CSW0, 
+                \_SB.GPU0, 
+                \_SB.MJCT
             })
             Name (TPSV, 0x0EC4)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15332,7 +17782,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.PEP0, 
+                    \_SB.PEP0
                 })
             }
         }
@@ -15343,7 +17793,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15357,7 +17807,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15371,7 +17821,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15385,7 +17835,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15399,7 +17849,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15413,7 +17863,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15427,7 +17877,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15441,7 +17891,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15455,7 +17905,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15469,7 +17919,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15483,7 +17933,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15497,7 +17947,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.IPC0, 
+                \_SB.IPC0
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
@@ -15511,7 +17961,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MPA, 
+                \_SB.MPA
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15547,7 +17997,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MPA, 
+                    \_SB.MPA
                 })
             }
         }
@@ -15558,7 +18008,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MPA1, 
+                \_SB.MPA1
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15594,7 +18044,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MPA1, 
+                    \_SB.MPA1
                 })
             }
         }
@@ -15605,13 +18055,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ0, 
+                \_SB.MBJ0
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ0, 
+                    \_SB.MBJ0
                 })
             }
         }
@@ -15622,13 +18072,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ1, 
+                \_SB.MBJ1
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ1, 
+                    \_SB.MBJ1
                 })
             }
         }
@@ -15639,13 +18089,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ2, 
+                \_SB.MBJ2
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ2, 
+                    \_SB.MBJ2
                 })
             }
         }
@@ -15656,13 +18106,13 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBJ3, 
+                \_SB.MBJ3
             })
             Method (_DEP, 0, NotSerialized)  // _DEP: Dependencies
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBJ3, 
+                    \_SB.MBJ3
                 })
             }
         }
@@ -15673,7 +18123,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS0, 
+                \_SB.MBS0
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15709,7 +18159,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS0, 
+                    \_SB.MBS0
                 })
             }
         }
@@ -15720,7 +18170,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS1, 
+                \_SB.MBS1
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15756,7 +18206,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS1, 
+                    \_SB.MBS1
                 })
             }
         }
@@ -15767,7 +18217,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_TZD, Package (0x01)  // _TZD: Thermal Zone Devices
             {
-                \_SB.MBS2, 
+                \_SB.MBS2
             })
             Name (TPSV, 0x0E60)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15803,7 +18253,7 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x01)
                 {
-                    \_SB.MBS2, 
+                    \_SB.MBS2
                 })
             }
         }
@@ -15835,8 +18285,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
         }
@@ -15849,18 +18299,18 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
 
             Name (_TZD, Package (0x05)  // _TZD: Thermal Zone Devices
             {
-                \_SB.SYSM.CLUS.CPU4, , 
-                \_SB.SYSM.CLUS.CPU5, , 
-                \_SB.SYSM.CLUS.CPU6, , 
-                \_SB.SYSM.CLUS.CPU7, , 
-                \_SB.GPU0, 
+                \_SB.SYSM.CLUS.CPU4, 
+                \_SB.SYSM.CLUS.CPU5, 
+                \_SB.SYSM.CLUS.CPU6, 
+                \_SB.SYSM.CLUS.CPU7, 
+                \_SB.GPU0
             })
             Name (TPSV, 0x0E2E)
             Method (_PSV, 0, NotSerialized)  // _PSV: Passive Temperature
@@ -15903,8 +18353,8 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             {
                 Return (Package (0x02)
                 {
-                    \_SB.PEP0, , 
-                    \_SB.ADC1, 
+                    \_SB.PEP0, 
+                    \_SB.ADC1
                 })
             }
 
@@ -15949,17 +18399,18 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
 
             Name (_DEP, Package (One)  // _DEP: Dependencies
             {
-                \_SB.PMIC, 
+                \_SB.PMIC
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x25)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,  // . ......
-                    /* 0008 */  0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x00,  // ...#....
-                    /* 0018 */  0x0E, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x32, 0x00, 0x79, 0x00                     // 02.y.
+                    GpioInt (Level, ActiveHigh, Exclusive, PullNone, 0x0000,
+                        "\\_SB.PM02", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0E00
+                        }
                 })
                 Return (RBUF) /* \_SB_.HWN1._CRS.RBUF */
             }
@@ -16013,22 +18464,26 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (RBUF, Buffer (0x6B)
+                Name (RBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x20, 0x00, 0x01, 0x00, 0x01, 0x00, 0x15,  // . ......
-                    /* 0008 */  0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x07,  // ...#....
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x8C, 0x20, 0x00, 0x01, 0x00,  // 01.. ...
-                    /* 0028 */  0x01, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23, 0x00,  // ......#.
-                    /* 0038 */  0x00, 0x00, 0xC6, 0x00, 0x5C, 0x5F, 0x53, 0x42,  // ....\_SB
-                    /* 0040 */  0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x8C, 0x20,  // .PM01.. 
-                    /* 0048 */  0x00, 0x01, 0x00, 0x01, 0x00, 0x05, 0x00, 0x02,  // ........
-                    /* 0050 */  0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x19,  // ........
-                    /* 0058 */  0x00, 0x23, 0x00, 0x00, 0x00, 0x06, 0x00, 0x5C,  // .#.....\
-                    /* 0060 */  0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31,  // _SB.PM01
-                    /* 0068 */  0x00, 0x79, 0x00                                 // .y.
+                    GpioInt (Edge, ActiveBoth, ExclusiveAndWake, PullDown, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0007
+                        }
+                    GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x00C6
+                        }
+                    GpioInt (Edge, ActiveBoth, Exclusive, PullDown, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0006
+                        }
                 })
                 Return (RBUF) /* \_SB_.BTNS._CRS.RBUF */
             }
@@ -16111,9 +18566,9 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Alias (\_SB.PSUB, _SUB)
             Name (_DEP, Package (0x03)  // _DEP: Dependencies
             {
-                \_SB.PEP0, , 
-                \_SB.PMIC, , 
-                \_SB.UAR8, 
+                \_SB.PEP0, 
+                \_SB.PMIC, 
+                \_SB.UAR8
             })
             Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
             {
@@ -16124,17 +18579,19 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
             Name (_S0W, 0x02)  // _S0W: S0 Device Wake State
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (PBUF, Buffer (0x45)
+                Name (PBUF, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8E, 0x1D, 0x00, 0x01, 0x00, 0x03, 0x02, 0x35,  // .......5
-                    /* 0008 */  0x00, 0x01, 0x0A, 0x00, 0x00, 0xC2, 0x01, 0x00,  // ........
-                    /* 0010 */  0x20, 0x00, 0x20, 0x00, 0x00, 0xC0, 0x5C, 0x5F,  //  . ...\_
-                    /* 0018 */  0x53, 0x42, 0x2E, 0x55, 0x41, 0x52, 0x38, 0x00,  // SB.UAR8.
-                    /* 0020 */  0x8C, 0x20, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00,  // . ......
-                    /* 0028 */  0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0030 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x00, 0x00, 0x41,  // ...#...A
-                    /* 0038 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x47, 0x49,  // .\_SB.GI
-                    /* 0040 */  0x4F, 0x30, 0x00, 0x79, 0x00                     // O0.y.
+                    UartSerialBusV2 (0x0001C200, DataBitsEight, StopBitsOne,
+                        0xC0, LittleEndian, ParityTypeNone, FlowControlHardware,
+                        0x0020, 0x0020, "\\_SB.UAR8",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioIo (Exclusive, PullDown, 0x0000, 0x0000, IoRestrictionNone,
+                        "\\_SB.GIO0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0041
+                        }
                 })
                 Return (PBUF) /* \_SB_.BTH0._CRS.PBUF */
             }
@@ -16149,26 +18606,34 @@ DefinitionBlock ("", "DSDT", 2, "QCOMM ", "SDM7350 ", 0x00000003)
         {
             Name (_DEP, Package (0x02)  // _DEP: Dependencies
             {
-                \_SB.SPMI, , 
-                \_SB.PMIC, 
+                \_SB.SPMI, 
+                \_SB.PMIC
             })
             Name (_HID, "QCOM0911")  // _HID: Hardware ID
             Name (_UID, Zero)  // _UID: Unique ID
             Alias (\_SB.PSUB, _SUB)
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Name (INTB, Buffer (0x4A)
+                Name (INTB, ResourceTemplate ()
                 {
-                    /* 0000 */  0x8C, 0x21, 0x00, 0x01, 0x00, 0x01, 0x00, 0x11,  // .!......
-                    /* 0008 */  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00,  // ........
-                    /* 0010 */  0x00, 0x19, 0x00, 0x23, 0x00, 0x01, 0x00, 0x20,  // ...#... 
-                    /* 0018 */  0x00, 0x5C, 0x5F, 0x53, 0x42, 0x2E, 0x50, 0x4D,  // .\_SB.PM
-                    /* 0020 */  0x30, 0x31, 0x00, 0x02, 0x8C, 0x21, 0x00, 0x01,  // 01...!..
-                    /* 0028 */  0x00, 0x01, 0x00, 0x11, 0x00, 0x01, 0x00, 0x00,  // ........
-                    /* 0030 */  0x00, 0x00, 0x17, 0x00, 0x00, 0x19, 0x00, 0x23,  // .......#
-                    /* 0038 */  0x00, 0x01, 0x00, 0x28, 0x00, 0x5C, 0x5F, 0x53,  // ...(.\_S
-                    /* 0040 */  0x42, 0x2E, 0x50, 0x4D, 0x30, 0x31, 0x00, 0x02,  // B.PM01..
-                    /* 0048 */  0x79, 0x00                                       // y.
+                    GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x02
+                        })
+                        {   // Pin list
+                            0x0020
+                        }
+                    GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullUp, 0x0000,
+                        "\\_SB.PM01", 0x00, ResourceConsumer, ,
+                        RawDataBuffer (0x01)  // Vendor Data
+                        {
+                            0x02
+                        })
+                        {   // Pin list
+                            0x0028
+                        }
                 })
                 Name (NAM, Buffer (0x0A)
                 {
