@@ -11,25 +11,25 @@
 [024h 0036 008h]       Counter Block Address : FFFFFFFFFFFFFFFF
 [02Ch 0044 004h]                    Reserved : 00000000
 
-[030h 0048 004h]        Secure EL1 Interrupt : 11
+[030h 0048 004h]        Secure EL1 Interrupt : 00000011
 [034h 0052 004h]   EL1 Flags (decoded below) : 00000000
                                 Trigger Mode : 0
                                     Polarity : 0
                                    Always On : 0
 
-[038h 0056 004h]    Non-Secure EL1 Interrupt : 12
+[038h 0056 004h]    Non-Secure EL1 Interrupt : 00000012
 [03Ch 0060 004h]  NEL1 Flags (decoded below) : 00000000
                                 Trigger Mode : 0
                                     Polarity : 0
                                    Always On : 0
 
-[040h 0064 004h]     Virtual Timer Interrupt : 13
+[040h 0064 004h]     Virtual Timer Interrupt : 00000013
 [044h 0068 004h]    VT Flags (decoded below) : 00000000
                                 Trigger Mode : 0
                                     Polarity : 0
                                    Always On : 0
 
-[048h 0072 004h]    Non-Secure EL2 Interrupt : 10
+[048h 0072 004h]    Non-Secure EL2 Interrupt : 00000010
 [04Ch 0076 004h]  NEL2 Flags (decoded below) : 00000000
                                 Trigger Mode : 0
                                     Polarity : 0
@@ -48,8 +48,8 @@
 
 [074h 0116 001h]                Frame Number : 00
 [075h 0117 003h]                    Reserved : 000000
-[078h 0120 008h]                Base Address : 000000017C210000
-[080h 0128 008h]            EL0 Base Address : 000000017C220000
+[078h 0120 008h]                Base Address : 0000000017C21000
+[080h 0128 008h]            EL0 Base Address : 0000000017C22000
 [088h 0136 004h]             Timer Interrupt : 00000028
 [08Ch 0140 004h] Timer Flags (decoded below) : 00000000
                                 Trigger Mode : 0
