@@ -90,7 +90,7 @@ Device (URS0)
     {
 
 		/* Device USB controller is at 0xe00000: run "getprop | grep usb" = [ro.boot.usbcontroller]: [4e00000.dwc3]
-		On sm6125.dtsi (SM6225 does not have mainline) usb device with 0xe00000 address is soc@0 { > usb_1: usb@4ef8800 { > usb_1_dwc3: usb@4e00000 */
+		On talos.dtsi usb device with 0xe00000 address is soc@0 { > usb_1: usb@a600000 { > usb_2: usb@a800000 */
 
         Memory32Fixed (ReadWrite,
             0x0A600000,         // Address Base
@@ -154,7 +154,7 @@ Device (URS0)
 				If SPI: + 32 + 0
 			Non GIC interrupts must be incremented by 512
 
-			soc@0 { usb_1: usb@4ef8800 { usb_1_dwc3: usb@4e00000 { interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
+			soc@0 { usb_1: usb@a600000 { usb_1_dwc3: usb@a800000 { interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
 			255 + 32 + 0 = 287, in hex = 11F */
             Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
             {
