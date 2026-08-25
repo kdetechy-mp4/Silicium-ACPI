@@ -1,7 +1,7 @@
 [000h 0000 004h]                   Signature : "GTDT"    [Generic Timer Description Table]
 [004h 0004 004h]                Table Length : 0000009C
 [008h 0008 001h]                    Revision : 02
-[009h 0009 001h]                    Checksum : 00
+[009h 0009 001h]                    Checksum : 1D
 [00Ah 0010 006h]                      Oem ID : "QCOM  "
 [010h 0016 008h]                Oem Table ID : "QCOMEDK2"
 [018h 0024 004h]                Oem Revision : 00006150
