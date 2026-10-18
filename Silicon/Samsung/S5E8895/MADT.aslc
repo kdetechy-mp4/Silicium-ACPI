@@ -48,12 +48,12 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
       .Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x000,
+      .MPIDR                         = 0x100,
       .PerformanceInterruptGsiv      = 56,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 0,
       .AcpiProcessorUid              = 0,
-      .ProcessorPowerEfficiencyClass = 1
+      .ProcessorPowerEfficiencyClass = 0
     },
 
     //
@@ -65,13 +65,13 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .PhysicalBaseAddress           = FixedPcdGet64 (PcdGicInterruptInterfaceBase),
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
-      .Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x001,
+    //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
+      .MPIDR                         = 0x101,
       .PerformanceInterruptGsiv      = 57,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 1,
       .AcpiProcessorUid              = 1,
-      .ProcessorPowerEfficiencyClass = 1
+      .ProcessorPowerEfficiencyClass = 0
     },
 
     //
@@ -83,13 +83,13 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .PhysicalBaseAddress           = FixedPcdGet64 (PcdGicInterruptInterfaceBase),
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
-      .Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x002,
+    //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
+      .MPIDR                         = 0x102,
       .PerformanceInterruptGsiv      = 58,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 2,
       .AcpiProcessorUid              = 2,
-      .ProcessorPowerEfficiencyClass = 1
+      .ProcessorPowerEfficiencyClass = 0
     },
 
     //
@@ -101,13 +101,13 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .PhysicalBaseAddress           = FixedPcdGet64 (PcdGicInterruptInterfaceBase),
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
-      .Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x003,
+    //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
+      .MPIDR                         = 0x103,
       .PerformanceInterruptGsiv      = 59,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 3,
       .AcpiProcessorUid              = 3,
-      .ProcessorPowerEfficiencyClass = 1
+      .ProcessorPowerEfficiencyClass = 0
     },
 
     //
@@ -120,12 +120,12 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
     //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x100,
+      .MPIDR                         = 0x000,
       .PerformanceInterruptGsiv      = 72,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 4,
       .AcpiProcessorUid              = 4,
-      .ProcessorPowerEfficiencyClass = 0
+      .ProcessorPowerEfficiencyClass = 1
     },
 
     //
@@ -138,12 +138,12 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
     //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x101,
+      .MPIDR                         = 0x001,
       .PerformanceInterruptGsiv      = 73,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 5,
       .AcpiProcessorUid              = 5,
-      .ProcessorPowerEfficiencyClass = 0
+      .ProcessorPowerEfficiencyClass = 1
     },
 
     //
@@ -156,12 +156,12 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
     //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x102,
+      .MPIDR                         = 0x002,
       .PerformanceInterruptGsiv      = 74,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 6,
       .AcpiProcessorUid              = 6,
-      .ProcessorPowerEfficiencyClass = 0
+      .ProcessorPowerEfficiencyClass = 1
     },
 
     //
@@ -174,12 +174,12 @@ EFI_ACPI_6_6_MULTIPLE_APIC_DESCRIPTION_TABLE MadtTable = {
       .GICV                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x4000,
       .GICH                          = FixedPcdGet64 (PcdGicInterruptInterfaceBase) + 0x2000,
     //.Flags                         = EFI_ACPI_6_6_GIC_ENABLED,
-      .MPIDR                         = 0x103,
+      .MPIDR                         = 0x003,
       .PerformanceInterruptGsiv      = 75,
       .VGICMaintenanceInterrupt      = 25,
       .CPUInterfaceNumber            = 7,
       .AcpiProcessorUid              = 7,
-      .ProcessorPowerEfficiencyClass = 0
+      .ProcessorPowerEfficiencyClass = 1
     }
   },
 
